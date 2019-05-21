@@ -12,6 +12,12 @@ module.exports = {
     dexie: 'Dexie',
     'fs-extra': '{}',
   },
+  loaders: [
+    {
+      loaders: ['wasm-loader'],
+      test: /\.wasm$/,
+    },
+  ],
   mode: 'production',
   node: {
     path: 'empty',
