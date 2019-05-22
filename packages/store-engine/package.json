@@ -4,10 +4,11 @@
     "@types/filesystem": "0.0.29",
     "@types/fs-extra": "7.0.0",
     "@types/node": "~10",
+    "@types/sql.js": "0.0.29",
     "bro-fs": "0.5.0",
     "dexie": "2.0.4",
     "fs-extra": "8.0.1",
-    "sql.js": "1.0.0",
+    "sql.js": "https://github.com/pwnsdx/sqleet.js",
     "wasm-loader": "1.3.0"
   },
   "devDependencies": {

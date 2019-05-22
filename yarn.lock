@@ -1872,6 +1872,13 @@
   resolved "https://registry.yarnpkg.com/@types/spark-md5/-/spark-md5-3.0.1.tgz#351b383b32fa7a6a579b836ef8786293c4a7e73b"
   integrity sha512-sjiWYRmuuFZMo/DdysQe/yX6x40Q0WZXsNgvbUIg7gUaQYNoXx4CqWq27rDikQyc+0JKkqsoNiIBAA0GUxbUXw==
 
+"@types/sql.js@0.0.29":
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/@types/sql.js/-/sql.js-0.0.29.tgz#dccd3fa0c29dd2fd17ace5a4bdb90bb1e637d096"
+  integrity sha512-QDdqZ0k+p1YnphkSdZerpuH/hOs/wE9VftNgsw56IIG5Qm3X+VZ6NbnnvmFNkRoBn5Ke/juE/gypZ/y4Cr3faw==
+  dependencies:
+    "@types/node" "*"
+
 "@types/tough-cookie@2.3.5":
   version "2.3.5"
   resolved "https://registry.yarnpkg.com/@types/tough-cookie/-/tough-cookie-2.3.5.tgz#9da44ed75571999b65c37b60c9b2b88db54c585d"
@@ -11866,10 +11873,9 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
-sql.js@1.0.0:
+"sql.js@https://github.com/pwnsdx/sqleet.js":
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/sql.js/-/sql.js-1.0.0.tgz#5d65dd0fa84081f094ba66569c4f34fb99433d91"
-  integrity sha512-fl/cQu8hDbu9bXNXTrmwwtS2wvHttWrXS9fzINVtedOBOJJWMjwSADR1aQ+DKmCdGNF4jrg/15AedJ5kcrWRJA==
+  resolved "https://github.com/pwnsdx/sqleet.js#0fdaa48e2f279df79738b7e4c3bdb29ac1c7bc77"
 
 sshpk@^1.7.0:
   version "1.16.1"

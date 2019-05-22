@@ -17,11 +17,11 @@
  *
  */
 
-import sqlite from 'sql.js/dist/sql-wasm.wasm';
+import * as sqlite from 'sql.js';
 import {CRUDEngine} from './CRUDEngine';
 import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError} from './error/';
 
-console.log(sqlite);
+console.error(sqlite);
 
 export interface SQLiteStore {
   [index: string]: {[index: string]: any};
@@ -38,6 +38,8 @@ export class SQLiteEngine implements CRUDEngine {
   public async init(storeName: string): Promise<SQLiteStore> {
     this.storeName = storeName;
     this.stores[this.storeName] = this.stores[this.storeName] || {};
+    console.warn(sqlite);
+    console.warn('hi hell');
     return this.stores;
   }
 
