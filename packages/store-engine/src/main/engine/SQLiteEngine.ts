@@ -21,7 +21,7 @@ import * as sqlite from 'sql.js';
 import {CRUDEngine} from './CRUDEngine';
 import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError} from './error/';
 
-console.error(sqlite);
+console.warn(sqlite);
 
 export interface SQLiteStore {
   [index: string]: {[index: string]: any};
@@ -39,7 +39,6 @@ export class SQLiteEngine implements CRUDEngine {
     this.storeName = storeName;
     this.stores[this.storeName] = this.stores[this.storeName] || {};
     console.warn(sqlite);
-    console.warn('hi hell');
     return this.stores;
   }
 
