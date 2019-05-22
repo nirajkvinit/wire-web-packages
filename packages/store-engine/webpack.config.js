@@ -14,6 +14,7 @@ module.exports = {
   },
   mode: 'production',
   node: {
+    fs: 'empty',
     path: 'empty',
   },
   output: {

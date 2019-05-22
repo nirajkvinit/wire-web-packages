@@ -23,5 +23,6 @@ import {FileSystemEngine} from './FileSystemEngine';
 import {IndexedDBEngine} from './IndexedDBEngine';
 import {LocalStorageEngine} from './LocalStorageEngine';
 import {MemoryEngine} from './MemoryEngine';
+import {SQLiteEngine} from './SQLiteEngine';
 
-export {CRUDEngine, FileEngine, FileSystemEngine, IndexedDBEngine, MemoryEngine, LocalStorageEngine};
+export {CRUDEngine, FileEngine, FileSystemEngine, IndexedDBEngine, MemoryEngine, LocalStorageEngine, SQLiteEngine};
