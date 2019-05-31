@@ -17,12 +17,13 @@
  *
  */
 
-import {CRUDEngine} from './CRUDEngine';
+import {CRUDEngine, Entity} from './CRUDEngine';
 import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError} from './error/';
 
+export {Entity} from './CRUDEngine';
 export type MemoryStore = Record<string, Record<string, any>>;
 
-export class MemoryEngine implements CRUDEngine {
+export class MemoryEngine implements CRUDEngine<MemoryStore> {
   public storeName = '';
   private readonly stores: MemoryStore = {};
 
@@ -46,7 +47,7 @@ export class MemoryEngine implements CRUDEngine {
     }
   }
 
-  public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  public create<T extends Entity>(tableName: string, primaryKey: string, entity: T): Promise<string> {
     if (entity) {
       this.prepareTable(tableName);
 
@@ -66,22 +67,18 @@ export class MemoryEngine implements CRUDEngine {
     return Promise.reject(new RecordTypeError(message));
   }
 
-  public delete(tableName: string, primaryKey: string): Promise<string> {
+  public async delete(tableName: string, primaryKey: string): Promise<string> {
     this.prepareTable(tableName);
-    return Promise.resolve().then(() => {
-      delete this.stores[this.storeName][tableName][primaryKey];
-      return primaryKey;
-    });
+    delete this.stores[this.storeName][tableName][primaryKey];
+    return primaryKey;
   }
 
-  public deleteAll(tableName: string): Promise<boolean> {
-    return Promise.resolve().then(() => {
-      delete this.stores[this.storeName][tableName];
-      return true;
-    });
+  public async deleteAll(tableName: string): Promise<boolean> {
+    delete this.stores[this.storeName][tableName];
+    return true;
   }
 
-  public read<T>(tableName: string, primaryKey: string): Promise<T> {
+  public read<T extends Entity>(tableName: string, primaryKey: string): Promise<T> {
     this.prepareTable(tableName);
     if (this.stores[this.storeName][tableName].hasOwnProperty(primaryKey)) {
       return Promise.resolve(this.stores[this.storeName][tableName][primaryKey]);
@@ -91,13 +88,12 @@ export class MemoryEngine implements CRUDEngine {
     }
   }
 
-  public readAll<T>(tableName: string): Promise<T[]> {
+  public readAll<T extends Entity>(tableName: string): Promise<T[]> {
     this.prepareTable(tableName);
-    const promises: Promise<T>[] = [];
 
-    for (const primaryKey of Object.keys(this.stores[this.storeName][tableName])) {
-      promises.push(this.read(tableName, primaryKey));
-    }
+    const promises = Object.keys(this.stores[this.storeName][tableName]).map(primaryKey =>
+      this.read<T>(tableName, primaryKey)
+    );
 
     return Promise.all(promises);
   }
@@ -107,37 +103,41 @@ export class MemoryEngine implements CRUDEngine {
     return Promise.resolve(Object.keys(this.stores[this.storeName][tableName]));
   }
 
-  public async update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async update<T extends Entity>(tableName: string, primaryKey: string, changes: T): Promise<string> {
     this.prepareTable(tableName);
-    const entity: Object = await this.read(tableName, primaryKey);
-    const updatedEntity: Object = {...entity, ...changes};
+    const entity = await this.read<T>(tableName, primaryKey);
+    const updatedEntity = {...entity, ...changes};
     this.stores[this.storeName][tableName][primaryKey] = updatedEntity;
     return primaryKey;
   }
 
-  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  public async updateOrCreate<T extends Entity>(tableName: string, primaryKey: string, changes: T): Promise<string> {
     this.prepareTable(tableName);
-    return this.update(tableName, primaryKey, changes)
-      .catch(error => {
-        if (error instanceof RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
-        }
-        throw error;
-      })
-      .then(() => primaryKey);
+
+    try {
+      await this.update<T>(tableName, primaryKey, changes);
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        return this.create<T>(tableName, primaryKey, changes);
+      }
+      throw error;
+    }
+    return primaryKey;
   }
 
-  append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+  async append(tableName: string, primaryKey: string, additions: string): Promise<string> {
     this.prepareTable(tableName);
-    return this.read(tableName, primaryKey).then((record: any) => {
-      if (typeof record === 'string') {
-        record += additions;
-      } else {
-        const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
-        throw new RecordTypeError(message);
-      }
-      this.stores[this.storeName][tableName][primaryKey] = record;
-      return primaryKey;
-    });
+
+    let record = await this.read<string>(tableName, primaryKey);
+
+    if (typeof record === 'string') {
+      record += additions;
+    } else {
+      const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
+      throw new RecordTypeError(message);
+    }
+
+    this.stores[this.storeName][tableName][primaryKey] = record;
+    return primaryKey;
   }
 }

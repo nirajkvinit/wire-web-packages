@@ -17,7 +17,6 @@
  *
  */
 
-import {CRUDEngine} from '../engine/CRUDEngine';
 import {RecordAlreadyExistsError} from '../engine/error';
 import {LocalStorageEngine} from '../engine/LocalStorageEngine';
 import {TransientStore} from './TransientStore';
@@ -26,15 +25,14 @@ describe('store.TransientStore', () => {
   const STORE_NAME = 'database-name';
   const TABLE_NAME = 'table-name';
 
-  let engine: CRUDEngine;
-  let store: TransientStore;
+  let engine: LocalStorageEngine;
+  let store: TransientStore<Storage>;
 
-  beforeEach(async done => {
+  beforeEach(async () => {
     engine = new LocalStorageEngine();
     await engine.init(STORE_NAME);
     store = new TransientStore(engine);
     await store.init(TABLE_NAME);
-    done();
   });
 
   afterEach(() => {

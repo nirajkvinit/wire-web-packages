@@ -28,15 +28,14 @@ import {readAllSpec} from '../test/readAllSpec';
 import {readSpec} from '../test/readSpec';
 import {updateOrCreateSpec} from '../test/updateOrCreateSpec';
 import {updateSpec} from '../test/updateSpec';
-import {CRUDEngine} from './CRUDEngine';
 import {LowDiskSpaceError} from './error';
 import {IndexedDBEngine} from './IndexedDBEngine';
 
 const STORE_NAME = 'store-name';
 
-let engine: CRUDEngine;
+let engine: IndexedDBEngine;
 
-async function initEngine(shouldCreateNewEngine = true): Promise<IndexedDBEngine | CRUDEngine> {
+async function initEngine(shouldCreateNewEngine = true): Promise<IndexedDBEngine> {
   const storeEngine = shouldCreateNewEngine ? new IndexedDBEngine() : engine;
   const db = await storeEngine.init(STORE_NAME);
   db.version(1).stores({
@@ -52,8 +51,8 @@ describe('IndexedDBEngine', () => {
   });
 
   afterEach(async () => {
-    if (engine && engine.db) {
-      await engine.db.delete();
+    if (engine && engine['db']) {
+      await engine['db'].delete();
     }
   });
 
@@ -101,8 +100,8 @@ describe('IndexedDBEngine', () => {
         .then(primaryKey => {
           expect(primaryKey).toEqual(PRIMARY_KEY);
           expect(engine.storeName).toBe(name);
-          expect(engine.db.name).toBe(name);
-          expect(Object.keys(engine.db._dbSchema).length).toBe(1);
+          expect(engine['db']!.name).toBe(name);
+          expect(Object.keys(engine['db']!._dbSchema).length).toBe(1);
           done();
         })
         .catch(done.fail);
@@ -125,7 +124,7 @@ describe('IndexedDBEngine', () => {
     it('says if there is enough storage available to use IndexedDB', async () => {
       engine = new IndexedDBEngine();
       expect(async () => {
-        await engine.hasEnoughQuota();
+        await engine['hasEnoughQuota']();
       }).not.toThrow();
     });
 
@@ -140,7 +139,7 @@ describe('IndexedDBEngine', () => {
       engine = new IndexedDBEngine();
 
       try {
-        await engine.hasEnoughQuota();
+        await engine['hasEnoughQuota']();
         done.fail();
       } catch (error) {
         expect(error instanceof LowDiskSpaceError).toBe(true);
@@ -159,7 +158,7 @@ describe('IndexedDBEngine', () => {
       engine = new IndexedDBEngine();
 
       try {
-        await engine.hasEnoughQuota();
+        await engine['hasEnoughQuota']();
         done.fail();
       } catch (error) {
         expect(error instanceof LowDiskSpaceError).toBe(true);

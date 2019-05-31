@@ -22,7 +22,7 @@ import {CRUDEngine} from '../engine';
 const TABLE_NAME = 'the-simpsons';
 
 export const readAllPrimaryKeysSpec = {
-  'gets the primary keys of all records in a table.': (done: DoneFn, engine: CRUDEngine) => {
+  'gets the primary keys of all records in a table.': <T>(done: DoneFn, engine: CRUDEngine<T>) => {
     const homer = {
       entity: {
         firstName: 'Homer',

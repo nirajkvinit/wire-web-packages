@@ -17,18 +17,10 @@
  *
  */
 
-import {LowDiskSpaceError} from './LowDiskSpaceError';
-import {PathValidationError} from './PathValidationError';
-import {RecordAlreadyExistsError} from './RecordAlreadyExistsError';
-import {RecordNotFoundError} from './RecordNotFoundError';
-import {RecordTypeError} from './RecordTypeError';
-import {UnsupportedError} from './UnsupportedError';
-
-export {
-  LowDiskSpaceError,
-  PathValidationError,
-  RecordAlreadyExistsError,
-  RecordNotFoundError,
-  RecordTypeError,
-  UnsupportedError,
-};
+export * from './LowDiskSpaceError';
+export * from './NotInitializedError';
+export * from './PathValidationError';
+export * from './RecordAlreadyExistsError';
+export * from './RecordNotFoundError';
+export * from './RecordTypeError';
+export * from './UnsupportedError';

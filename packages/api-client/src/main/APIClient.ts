@@ -21,6 +21,7 @@ import {CRUDEngine, MemoryEngine} from '@wireapp/store-engine';
 import EventEmitter from 'events';
 import logdown from 'logdown';
 
+import {MemoryStore} from '@wireapp/store-engine/dist/commonjs/engine/MemoryEngine';
 import {AccountAPI} from './account/AccountAPI';
 import {AssetAPI} from './asset/';
 import {AccessTokenStore, AuthAPI, Context, InvalidTokenError, LoginData, RegisterData} from './auth/';
@@ -50,12 +51,12 @@ import {UserAPI} from './user/';
 
 const {version}: {version: string} = require('../../package.json');
 
-const defaultConfig: Config = {
+const defaultConfig: Config<MemoryStore> = {
   store: new MemoryEngine(),
   urls: Backend.PRODUCTION,
 };
 
-class APIClient extends EventEmitter {
+class APIClient<T> extends EventEmitter {
   private readonly logger: logdown.Logger;
 
   private readonly STORE_NAME_PREFIX = 'wire';
@@ -85,7 +86,7 @@ class APIClient extends EventEmitter {
   private readonly accessTokenStore: AccessTokenStore;
   public context?: Context;
   public transport: {http: HttpClient; ws: WebSocketClient};
-  public config: Config;
+  public config: Config<T>;
 
   public static BACKEND = Backend;
   public static TOPIC = {
@@ -93,7 +94,7 @@ class APIClient extends EventEmitter {
   };
   public static VERSION = version;
 
-  constructor(config?: Config) {
+  constructor(config?: Config<T>) {
     super();
     this.config = {...defaultConfig, ...config};
     this.accessTokenStore = new AccessTokenStore();
@@ -259,12 +260,12 @@ class APIClient extends EventEmitter {
     this.transport.ws.disconnect(reason);
   }
 
-  private async initEngine(context: Context): Promise<CRUDEngine> {
+  private async initEngine(context: Context): Promise<CRUDEngine<T>> {
     const clientType = context.clientType === ClientType.NONE ? '' : `@${context.clientType}`;
     const dbName = `${this.STORE_NAME_PREFIX}@${this.config.urls.name}@${context.userId}${clientType}`;
     this.logger.log(`Initialising store with name "${dbName}"`);
     try {
-      const db = await this.config.store.init(dbName);
+      const db = await this.config.store.init<T>(dbName);
       const isDexieStore = db && db.constructor.name === 'Dexie';
       if (isDexieStore) {
         if (this.config.schemaCallback) {

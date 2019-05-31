@@ -27,7 +27,7 @@ interface DomainEntity {
 }
 
 export const readSpec = {
-  'returns a database record.': (done: DoneFn, engine: CRUDEngine) => {
+  'returns a database record.': <T>(done: DoneFn, engine: CRUDEngine<T>) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = {
@@ -43,7 +43,7 @@ export const readSpec = {
       })
       .catch(error => done.fail(error));
   },
-  'throws an error if a record cannot be found.': (done: DoneFn, engine: CRUDEngine) => {
+  'throws an error if a record cannot be found.': <T>(done: DoneFn, engine: CRUDEngine<T>) => {
     const PRIMARY_KEY = 'primary-key';
 
     engine

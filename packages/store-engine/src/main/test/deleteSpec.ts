@@ -22,7 +22,7 @@ import {CRUDEngine} from '../engine';
 const TABLE_NAME = 'the-simpsons';
 
 export const deleteSpec = {
-  'deletes a record.': (done: DoneFn, engine: CRUDEngine) => {
+  'deletes a record.': <T>(done: DoneFn, engine: CRUDEngine<T>) => {
     const homer = {
       entity: {
         firstName: 'Homer',
@@ -64,7 +64,7 @@ export const deleteSpec = {
       })
       .catch(error => done.fail(error));
   },
-  'returns the primary key of a deleted record.': (done: DoneFn, engine: CRUDEngine) => {
+  'returns the primary key of a deleted record.': <T>(done: DoneFn, engine: CRUDEngine<T>) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = {

@@ -18,9 +18,11 @@
  */
 
 import * as fs from 'bro-fs';
-import {CRUDEngine} from './CRUDEngine';
+import {CRUDEngine, Entity} from './CRUDEngine';
 import {isBrowser} from './EnvironmentUtil';
 import {RecordAlreadyExistsError, RecordNotFoundError, RecordTypeError, UnsupportedError} from './error/';
+
+export {Entity} from './CRUDEngine';
 
 export interface FileSystemEngineOptions {
   fileExtension: string;
@@ -30,7 +32,7 @@ export interface FileSystemEngineOptions {
 
 const TEN_MEGABYTES = 1024 * 1024 * 10;
 
-export class FileSystemEngine implements CRUDEngine {
+export class FileSystemEngine implements CRUDEngine<FileSystem> {
   public storeName = '';
 
   private config: FileSystemEngineOptions = {
@@ -79,7 +81,7 @@ export class FileSystemEngine implements CRUDEngine {
     }
   }
 
-  async create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  async create<T extends Entity>(tableName: string, primaryKey: string, entity: T): Promise<string> {
     if (!entity) {
       const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
       throw new RecordTypeError(message);
@@ -125,9 +127,10 @@ export class FileSystemEngine implements CRUDEngine {
     }
   }
 
-  async read<T>(tableName: string, primaryKey: string): Promise<T> {
+  async read<T extends Entity>(tableName: string, primaryKey: string): Promise<T> {
     const filePath = this.createFilePath(tableName, primaryKey);
     let data: string;
+
     try {
       data = await fs.readFile(filePath, {type: 'Text'});
     } catch (error) {
@@ -136,19 +139,15 @@ export class FileSystemEngine implements CRUDEngine {
     }
 
     try {
-      return JSON.parse(data);
+      return JSON.parse(data) as T;
     } catch (error) {
-      return data as any;
+      return data as T;
     }
   }
 
-  async readAll<T>(tableName: string): Promise<T[]> {
+  async readAll<T extends Entity>(tableName: string): Promise<T[]> {
     const primaryKeys = await this.readAllPrimaryKeys(tableName);
-    const promises: Promise<T>[] = [];
-
-    for (const primaryKey of primaryKeys) {
-      promises.push(this.read(tableName, primaryKey));
-    }
+    const promises = primaryKeys.map(primaryKey => this.read<T>(tableName, primaryKey));
 
     return Promise.all(promises);
   }
@@ -175,32 +174,31 @@ export class FileSystemEngine implements CRUDEngine {
     return primaryKeys;
   }
 
-  update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  async update<T extends Entity>(tableName: string, primaryKey: string, changes: T): Promise<string> {
     const filePath = this.createFilePath(tableName, primaryKey);
-    return this.read(tableName, primaryKey)
-      .then((record: any) => {
-        if (typeof record === 'string') {
-          record = JSON.parse(record);
-        }
-        const updatedRecord: Object = {...record, ...changes};
-        return JSON.stringify(updatedRecord);
-      })
-      .then((updatedRecord: any) => fs.writeFile(filePath, updatedRecord))
-      .then(() => primaryKey);
+    let record = await this.read<T>(tableName, primaryKey);
+    if (typeof record === 'string') {
+      record = JSON.parse(record);
+    }
+    const updatedRecord = JSON.stringify({...record, ...changes});
+    await fs.writeFile(filePath, updatedRecord);
+
+    return primaryKey;
   }
 
   async purge(): Promise<void> {
     await fs.rmdir(this.storeName);
   }
 
-  updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.update(tableName, primaryKey, changes)
-      .catch(error => {
-        if (error instanceof RecordNotFoundError) {
-          return this.create(tableName, primaryKey, changes);
-        }
-        throw error;
-      })
-      .then(() => primaryKey);
+  async updateOrCreate<T extends Entity>(tableName: string, primaryKey: string, changes: T): Promise<string> {
+    try {
+      await this.update<T>(tableName, primaryKey, changes);
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        return this.create(tableName, primaryKey, changes);
+      }
+      throw error;
+    }
+    return primaryKey;
   }
 }

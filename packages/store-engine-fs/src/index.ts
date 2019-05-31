@@ -94,7 +94,7 @@ export class FileEngine implements CRUDEngine {
     });
   }
 
-  create<T>(tableName: string, primaryKey: string, entity: any): Promise<string> {
+  create<T extends object>(tableName: string, primaryKey: string, entity: any): Promise<string> {
     return new Promise((resolve, reject) => {
       if (entity) {
         this.resolvePath(tableName, primaryKey)
@@ -147,7 +147,7 @@ export class FileEngine implements CRUDEngine {
     });
   }
 
-  read<T>(tableName: string, primaryKey: string): Promise<T> {
+  read<T extends object>(tableName: string, primaryKey: string): Promise<T> {
     return this.resolvePath(tableName, primaryKey).then(file => {
       return new Promise<T>((resolve, reject) => {
         fs.readFile(file, {encoding: 'utf8', flag: 'r'}, (error, data: any) => {

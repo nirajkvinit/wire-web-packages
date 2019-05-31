@@ -23,7 +23,7 @@ import {RecordAlreadyExistsError, RecordNotFoundError} from '../engine/error/';
 import {ExpiredBundle} from './ExpiredBundle';
 import {TransientBundle} from './TransientBundle';
 
-export class TransientStore extends EventEmitter {
+export class TransientStore<T> extends EventEmitter {
   private readonly bundles: Record<string, TransientBundle> = {};
   private tableName = '';
 
@@ -31,7 +31,7 @@ export class TransientStore extends EventEmitter {
     EXPIRED: 'expired',
   };
 
-  constructor(private readonly engine: CRUDEngine) {
+  constructor(private readonly engine: CRUDEngine<T>) {
     super();
   }
 
@@ -68,8 +68,8 @@ export class TransientStore extends EventEmitter {
 
   /**
    * Returns a fully qualified name (FQN) which can be used to cache a transient bundle.
-   * @param {string} primaryKey - Primary key from which the FQN is created
-   * @returns {string} A fully qualified name
+   * @param primaryKey Primary key from which the FQN is created
+   * @returns A fully qualified name
    */
   private constructCacheKey(primaryKey: string): string {
     return `${this.engine.storeName}@${this.tableName}@${primaryKey}`;
@@ -110,10 +110,10 @@ export class TransientStore extends EventEmitter {
 
   /**
    * Saves a transient record to the store and starts a timer to remove this record when the time to live (TTL) ended.
-   * @param {string} primaryKey - Primary key from which the FQN is created
-   * @param {string} record - A payload which should be kept in the TransientStore
-   * @param {number} ttl - The time to live (TTL) in milliseconds (ex. 1000 is 1s)
-   * @returns {Promise<TransientBundle>} A transient bundle, wrapping the initial record
+   * @param primaryKey Primary key from which the FQN is created
+   * @param record A payload which should be kept in the TransientStore
+   * @param ttl The time to live (TTL) in milliseconds (ex. 1000 is 1s)
+   * @returns A transient bundle, wrapping the initial record
    */
   public set<T>(primaryKey: string, record: T, ttl: number): Promise<TransientBundle> {
     const bundle: TransientBundle = this.createTransientBundle(record, ttl);

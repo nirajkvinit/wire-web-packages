@@ -28,14 +28,13 @@ import {readAllSpec} from '../test/readAllSpec';
 import {readSpec} from '../test/readSpec';
 import {updateOrCreateSpec} from '../test/updateOrCreateSpec';
 import {updateSpec} from '../test/updateSpec';
-import {CRUDEngine} from './CRUDEngine';
 import {FileSystemEngine} from './FileSystemEngine';
 
 const STORE_NAME = 'store-name';
 
-let engine: CRUDEngine;
+let engine: FileSystemEngine;
 
-async function initEngine(shouldCreateNewEngine = true): Promise<FileSystemEngine | CRUDEngine> {
+async function initEngine(shouldCreateNewEngine = true): Promise<FileSystemEngine> {
   const storeEngine = shouldCreateNewEngine ? new FileSystemEngine() : engine;
   await storeEngine.init(STORE_NAME);
   return storeEngine;

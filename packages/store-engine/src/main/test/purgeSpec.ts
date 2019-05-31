@@ -22,10 +22,10 @@ import {CRUDEngine} from '../engine';
 const TABLE_NAME = 'the-simpsons';
 
 export const purgeSpec = {
-  'database can be reinitialized after purge': async (
+  'database can be reinitialized after purge': async <T>(
     done: DoneFn,
-    engine: CRUDEngine,
-    initEngine: (shouldCreateNewEngine?: boolean) => Promise<CRUDEngine>
+    engine: CRUDEngine<T>,
+    initEngine: (shouldCreateNewEngine?: boolean) => Promise<CRUDEngine<T>>
   ) => {
     await engine.create(TABLE_NAME, 'one', {name: 'Alpha'});
     const SAVED_RECORDS = 1;
@@ -45,10 +45,10 @@ export const purgeSpec = {
 
     done();
   },
-  'deletes the database and all of its records.': async (
+  'deletes the database and all of its records.': async <T>(
     done: DoneFn,
-    engine: CRUDEngine,
-    initEngine: (shouldCreateNewEngine?: boolean) => Promise<CRUDEngine>
+    engine: CRUDEngine<T>,
+    initEngine: (shouldCreateNewEngine?: boolean) => Promise<CRUDEngine<T>>
   ) => {
     await engine.create(TABLE_NAME, 'one', {name: 'Alpha'});
     await engine.create(TABLE_NAME, 'two', {name: 'Bravo'});

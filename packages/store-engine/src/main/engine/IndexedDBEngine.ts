@@ -3,34 +3,36 @@
  * Copyright (C) 2018 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU General License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * GNU General License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU General License
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
 
 import Dexie from 'dexie';
-import {CRUDEngine} from './CRUDEngine';
-import {LowDiskSpaceError, RecordTypeError, UnsupportedError} from './error/';
+import {CRUDEngine, Entity} from './CRUDEngine';
+import {LowDiskSpaceError, NotInitializedError, RecordTypeError, UnsupportedError} from './error/';
 import {RecordAlreadyExistsError} from './error/RecordAlreadyExistsError';
 import {RecordNotFoundError} from './error/RecordNotFoundError';
+
+export {Entity} from './CRUDEngine';
 
 /** @see https://dexie.org/docs/Typescript#create-a-subclass */
 export interface DexieInstance extends Dexie {
   [index: string]: any;
 }
 
-export class IndexedDBEngine implements CRUDEngine {
+export class IndexedDBEngine implements CRUDEngine<DexieInstance> {
   private db?: DexieInstance;
-  public storeName = '';
+  storeName = '';
 
   // Check if IndexedDB is accessible (which won't be the case when browsing with Firefox in private mode or being on
   // page "about:blank")
@@ -71,17 +73,17 @@ export class IndexedDBEngine implements CRUDEngine {
     return Promise.resolve();
   }
 
-  public async isSupported(): Promise<void> {
+  async isSupported(): Promise<void> {
     await this.canUseIndexedDB();
     await this.hasEnoughQuota();
   }
 
-  public async init(storeName: string): Promise<DexieInstance> {
+  async init(storeName: string): Promise<DexieInstance> {
     await this.isSupported();
     return this.assignDb(new Dexie(storeName));
   }
 
-  public initWithDb(db: DexieInstance): Promise<DexieInstance> {
+  initWithDb(db: DexieInstance): Promise<DexieInstance> {
     return Promise.resolve(this.assignDb(db));
   }
 
@@ -93,7 +95,7 @@ export class IndexedDBEngine implements CRUDEngine {
     return this.db;
   }
 
-  public purge(): Promise<void> {
+  purge(): Promise<void> {
     return this.db ? this.db.delete() : Dexie.delete(this.storeName);
   }
 
@@ -114,45 +116,72 @@ export class IndexedDBEngine implements CRUDEngine {
     }
   }
 
-  public create<T>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+  async create<T extends Entity>(tableName: string, primaryKey: string, entity: T): Promise<string> {
+    if (!this.db) {
+      throw new NotInitializedError();
+    }
+
     if (entity) {
-      return this.db![tableName].add(entity, primaryKey).catch((error: Dexie.DexieError) => {
+      try {
+        const createdKey = await this.db[tableName].add(entity, primaryKey);
+        return createdKey;
+      } catch (error) {
         throw this.mapDatabaseError(error, tableName, primaryKey);
-      });
+      }
     }
     const message = `Record "${primaryKey}" cannot be saved in "${tableName}" because it's "undefined" or "null".`;
-    return Promise.reject(new RecordTypeError(message));
+    throw new RecordTypeError(message);
   }
 
-  public delete(tableName: string, primaryKey: string): Promise<string> {
-    return Promise.resolve()
-      .then(() => this.db![tableName].delete(primaryKey))
-      .then(() => primaryKey);
+  async delete(tableName: string, primaryKey: string): Promise<string> {
+    if (!this.db) {
+      throw new NotInitializedError();
+    }
+
+    await this.db[tableName].delete(primaryKey);
+    return primaryKey;
   }
 
-  public deleteAll(tableName: string): Promise<boolean> {
-    return this.db![tableName].clear().then(() => true);
+  async deleteAll(tableName: string): Promise<boolean> {
+    if (!this.db) {
+      throw new NotInitializedError();
+    }
+    await this.db[tableName].clear();
+    return true;
   }
 
-  public read<T>(tableName: string, primaryKey: string): Promise<T> {
-    return this.db![tableName].get(primaryKey).then((record: T) => {
-      if (record) {
-        return record;
-      }
-      const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
-      throw new RecordNotFoundError(message);
-    });
+  async read<T extends Entity>(tableName: string, primaryKey: string): Promise<T> {
+    if (!this.db) {
+      throw new Error('Database not yet initialized');
+    }
+
+    const record = await this.db[tableName].get(primaryKey);
+    if (record) {
+      return record;
+    }
+
+    const message = `Record "${primaryKey}" in "${tableName}" could not be found`;
+    throw new RecordNotFoundError(message);
   }
 
-  public readAll<T>(tableName: string): Promise<T[]> {
-    return this.db![tableName].toArray();
+  readAll<T extends Entity>(tableName: string): Promise<T[]> {
+    if (!this.db) {
+      throw new NotInitializedError();
+    }
+    return this.db[tableName].toArray();
   }
 
-  public readAllPrimaryKeys(tableName: string): Promise<string[]> {
-    return this.db![tableName].toCollection().keys();
+  readAllPrimaryKeys(tableName: string): Promise<string[]> {
+    if (!this.db) {
+      throw new NotInitializedError();
+    }
+    return this.db[tableName].toCollection().keys();
   }
 
-  public update(tableName: string, primaryKey: string, changes: Object): Promise<string> {
+  update<T extends Entity>(tableName: string, primaryKey: string, changes: T): Promise<string> {
+    if (!this.db) {
+      throw new NotInitializedError();
+    }
     return this.db![tableName].update(primaryKey, changes).then((updatedRecords: number) => {
       if (updatedRecords === 0) {
         const message = `Record "${primaryKey}" in "${tableName}" could not be found.`;
@@ -162,19 +191,26 @@ export class IndexedDBEngine implements CRUDEngine {
     });
   }
 
-  public updateOrCreate(tableName: string, primaryKey: string, changes: Object): Promise<string> {
-    return this.db![tableName].put(changes, primaryKey);
+  updateOrCreate<T extends Entity>(tableName: string, primaryKey: string, changes: T): Promise<string> {
+    if (!this.db) {
+      throw new NotInitializedError();
+    }
+    return this.db[tableName].put(changes, primaryKey);
   }
 
-  public append(tableName: string, primaryKey: string, additions: string): Promise<string> {
-    return this.db![tableName].get(primaryKey).then((record: any) => {
-      if (typeof record === 'string') {
-        record += additions;
-      } else {
-        const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
-        throw new RecordTypeError(message);
-      }
-      return this.updateOrCreate(tableName, primaryKey, record);
-    });
+  async append(tableName: string, primaryKey: string, additions: string): Promise<string> {
+    if (!this.db) {
+      throw new NotInitializedError();
+    }
+
+    let record: Entity = await this.db[tableName].get(primaryKey);
+
+    if (typeof record === 'string') {
+      record += additions;
+    } else {
+      const message = `Cannot append text to record "${primaryKey}" because it's not a string.`;
+      throw new RecordTypeError(message);
+    }
+    return this.updateOrCreate(tableName, primaryKey, record);
   }
 }

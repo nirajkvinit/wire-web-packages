@@ -32,7 +32,7 @@ interface DomainEntity {
 }
 
 export const updateSpec = {
-  'fails if the record does not exist.': async (done: DoneFn, engine: CRUDEngine) => {
+  'fails if the record does not exist.': async <T>(done: DoneFn, engine: CRUDEngine<T>) => {
     const PRIMARY_KEY = 'primary-key';
 
     const updates = {
@@ -50,7 +50,7 @@ export const updateSpec = {
       done();
     }
   },
-  'updates an existing database record.': (done: DoneFn, engine: CRUDEngine) => {
+  'updates an existing database record.': <T>(done: DoneFn, engine: CRUDEngine<T>) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = {

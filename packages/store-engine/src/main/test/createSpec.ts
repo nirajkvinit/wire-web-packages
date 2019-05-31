@@ -23,7 +23,7 @@ import {RecordAlreadyExistsError, RecordTypeError} from '../engine/error';
 const TABLE_NAME = 'the-simpsons';
 
 export const createSpec = {
-  'creates a serialized database record.': (done: DoneFn, engine: CRUDEngine) => {
+  'creates a serialized database record.': <T>(done: DoneFn, engine: CRUDEngine<T>) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = {
@@ -38,10 +38,10 @@ export const createSpec = {
       })
       .catch(done.fail);
   },
-  "doesn't save empty values.": (done: DoneFn, engine: CRUDEngine) => {
+  "doesn't save empty values.": <T>(done: DoneFn, engine: CRUDEngine<T>) => {
     const PRIMARY_KEY = 'primary-key';
 
-    const entity = undefined;
+    const entity = undefined as any;
 
     engine
       .create(TABLE_NAME, PRIMARY_KEY, entity)
@@ -51,10 +51,10 @@ export const createSpec = {
         done();
       });
   },
-  "doesn't save null values.": (done: DoneFn, engine: CRUDEngine) => {
+  "doesn't save null values.": <T>(done: DoneFn, engine: CRUDEngine<T>) => {
     const PRIMARY_KEY = 'primary-key';
 
-    const entity = undefined;
+    const entity = undefined as any;
 
     engine
       .create(TABLE_NAME, PRIMARY_KEY, entity)
@@ -64,7 +64,7 @@ export const createSpec = {
         done();
       });
   },
-  'throws an error when attempting to overwrite a record.': (done: DoneFn, engine: CRUDEngine) => {
+  'throws an error when attempting to overwrite a record.': <T>(done: DoneFn, engine: CRUDEngine<T>) => {
     const PRIMARY_KEY = 'primary-key';
 
     const firstEntity = {

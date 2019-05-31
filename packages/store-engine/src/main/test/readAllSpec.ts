@@ -27,7 +27,7 @@ interface DomainEntity {
 }
 
 export const readAllSpec = {
-  'returns multiple database records.': (done: DoneFn, engine: CRUDEngine) => {
+  'returns multiple database records.': <T>(done: DoneFn, engine: CRUDEngine<T>) => {
     const homer = {
       entity: {
         firstName: 'Homer',

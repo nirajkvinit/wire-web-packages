@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2019 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,16 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine';
-import {BackendData} from './env/';
+export class NotInitializedError extends Error {
+  public code: number;
 
-type SchemaCallbackFunction<T> = (db: T) => void;
+  constructor(public message: string = 'Database not yet initialized') {
+    super(message);
+    Object.setPrototypeOf(this, NotInitializedError.prototype);
 
-interface Config<T> {
-  store: CRUDEngine<T>;
-  urls: BackendData;
-  schemaCallback?: SchemaCallbackFunction<T>;
+    this.code = 5;
+    this.message = message;
+    this.name = this.constructor.name;
+    this.stack = new Error().stack;
+  }
 }
-
-export {Config, SchemaCallbackFunction};

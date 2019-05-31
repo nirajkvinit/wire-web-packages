@@ -26,7 +26,7 @@ interface DomainEntity {
 }
 
 export const updateOrCreateSpec = {
-  'creates a record if it does not exist in the database.': (done: DoneFn, engine: CRUDEngine) => {
+  'creates a record if it does not exist in the database.': <T>(done: DoneFn, engine: CRUDEngine<T>) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = {
@@ -45,7 +45,7 @@ export const updateOrCreateSpec = {
       })
       .catch(done.fail);
   },
-  'updates an existing database record.': (done: DoneFn, engine: CRUDEngine) => {
+  'updates an existing database record.': <T>(done: DoneFn, engine: CRUDEngine<T>) => {
     const PRIMARY_KEY = 'primary-key';
 
     const entity = {
