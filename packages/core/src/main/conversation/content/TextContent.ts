@@ -17,13 +17,9 @@
  *
  */
 
-import {LegalHoldStatus, LinkPreviewUploadedContent, MentionContent, QuoteContent} from '../content/';
+import {ILinkPreview, IText} from '@wireapp/protocol-messaging';
 
-export interface TextContent {
-  expectsReadConfirmation?: boolean;
-  legalHoldStatus?: LegalHoldStatus;
-  linkPreviews?: LinkPreviewUploadedContent[];
-  mentions?: MentionContent[];
-  quote?: QuoteContent;
+export interface TextContent extends Exclude<IText, 'content' | 'linkPreview'> {
+  linkPreviews?: ILinkPreview[] | null;
   text: string;
 }

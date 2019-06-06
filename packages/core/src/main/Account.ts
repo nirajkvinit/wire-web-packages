@@ -283,35 +283,10 @@ class Account extends EventEmitter {
     throw decryptedMessage.error;
   }
 
-  private mapGenericMessage(genericMessage: any, event: ConversationOtrMessageAddEvent): PayloadBundle {
+  private mapGenericMessage(genericMessage: GenericMessage, event: ConversationOtrMessageAddEvent): PayloadBundle {
     switch (genericMessage.content) {
       case GenericMessageType.TEXT: {
-        const {
-          content: text,
-          expectsReadConfirmation,
-          legalHoldStatus,
-          linkPreview: linkPreviews,
-          mentions,
-          quote,
-        } = genericMessage[GenericMessageType.TEXT];
-
-        const content: TextContent = {expectsReadConfirmation, legalHoldStatus, text};
-
-        if (linkPreviews && linkPreviews.length) {
-          content.linkPreviews = linkPreviews;
-        }
-
-        if (mentions && mentions.length) {
-          content.mentions = mentions;
-        }
-
-        if (quote) {
-          content.quote = quote;
-        }
-
-        if (typeof legalHoldStatus !== 'undefined') {
-          content.legalHoldStatus = legalHoldStatus;
-        }
+        const content = genericMessage[GenericMessageType.TEXT]!;
 
         return {
           content,
@@ -325,9 +300,7 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.CONFIRMATION: {
-        const {firstMessageId, moreMessageIds, type} = genericMessage[GenericMessageType.CONFIRMATION];
-
-        const content: ConfirmationContent = {firstMessageId, moreMessageIds, type};
+        const content = genericMessage[GenericMessageType.CONFIRMATION];
 
         return {
           content,
@@ -341,7 +314,7 @@ class Account extends EventEmitter {
         };
       }
       case GenericMessageType.CLEARED: {
-        const content: ClearedContent = genericMessage[GenericMessageType.CLEARED];
+        const content = genericMessage[GenericMessageType.CLEARED];
 
         return {
           content,
