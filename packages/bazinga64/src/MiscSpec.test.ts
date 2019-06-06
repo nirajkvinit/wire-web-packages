@@ -17,7 +17,7 @@
  *
  */
 
-import * as bazinga64 from './index';
+import * as bazinga64 from './';
 
 describe('Test Vectors from RFC 4648', () => {
   it('handles empty strings', () => {

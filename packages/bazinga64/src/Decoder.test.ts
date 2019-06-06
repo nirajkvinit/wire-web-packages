@@ -17,7 +17,7 @@
  *
  */
 
-import * as bazinga64 from './index';
+import * as bazinga64 from './';
 import {
   helloDecodedArray,
   helloDecodedString,

@@ -24,7 +24,7 @@ import {
   RecordNotFoundError,
   RecordTypeError,
   UnsupportedError,
-} from '@wireapp/store-engine/dist/commonjs/engine/error/';
+} from '@wireapp/store-engine/dist/engine/error/';
 import fs from 'fs-extra';
 import path from 'path';
 
