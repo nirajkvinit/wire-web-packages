@@ -21,7 +21,7 @@
 
 import program from 'commander';
 
-import {generateClient, readSpec, writeClient} from './Swaxios';
+import {generateFiles, readSpec, writeClient} from './Swaxios';
 
 const {bin, description, name, version} = require('../package.json');
 const binName = Object.keys(bin)[0] || name;
@@ -41,7 +41,7 @@ if (!program.input || !program.output) {
 }
 
 readSpec(program.input)
-  .then(spec => generateClient(spec))
+  .then(spec => generateFiles(spec))
   .then(client => writeClient(client, program.output))
   .then(outputDir => console.log(`Created API client in "${outputDir}".`))
   .catch(error => {

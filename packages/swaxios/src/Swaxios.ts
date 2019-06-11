@@ -18,28 +18,14 @@
  */
 
 import {Spec} from 'swagger-schema-official';
-import {ClassesGenerator, InterfacesGenerator, MainGenerator} from './generators';
+import {inspect} from 'util';
+import {ClassesGenerator, IndexGenerator, InterfacesGenerator, MainGenerator} from './generators';
 import {FileUtil, OpenAPIUtil} from './util';
-
-export enum TypeScriptType {
-  ANY = 'any',
-  ARRAY = 'Array',
-  BOOLEAN = 'boolean',
-  EMPTY_OBJECT = '{}',
-  NUMBER = 'number',
-  STRING = 'string',
-}
-
-export interface ClientValue {
-  immutable?: boolean;
-  name: string;
-  readonly?: boolean;
-  type: TypeScriptType;
-}
 
 export interface Client {
   classes: ClassesGenerator;
   interfaces: InterfacesGenerator;
+  indices: IndexGenerator;
   main: MainGenerator;
 }
 
@@ -47,7 +33,7 @@ export interface GeneratedClient {
   /** A record of path and content */
   classes: Record<string, string>;
   /** A record of path and content */
-  indexFiles: Record<string, string>;
+  indices: Record<string, string>;
   /** A record of path and content */
   interfaces: Record<string, string>;
   main: string;
@@ -65,45 +51,49 @@ export async function readSpec(inputFile: string): Promise<Spec> {
   return specification;
 }
 
-async function buildClient(specification: Spec): Promise<Client> {
+export async function generateClient(specification: Spec): Promise<Client> {
   const interfaces = new InterfacesGenerator(specification);
   const classes = new ClassesGenerator(specification, interfaces);
   const main = new MainGenerator(specification, interfaces, classes);
+  const indices = new IndexGenerator(interfaces, classes, main);
 
   return {
     classes,
+    indices,
     interfaces,
     main,
   };
 }
 
-export async function generateClient(specification: Spec): Promise<GeneratedClient> {
-  const client = await buildClient(specification);
-  /** A map of paths and files to export */
-  const indices: Record<string, string[]> = {};
+export async function generateFiles(specification: Spec): Promise<GeneratedClient> {
+  const {classes, indices, interfaces, main} = await generateClient(specification);
 
-  const classes = client.classes.reduce((result: Record<string, string>, clientClass) => {
-    indices[clientClass.dirName] = [...indices[clientClass.dirName], clientClass.fileName];
+  const generatedClasses = classes.getValues().reduce((result: Record<string, string>, clientClass) => {
     result[clientClass.name] = clientClass.toString();
     return result;
   }, {});
 
-  const interfaces = client.interfaces.reduce((result: Record<string, string>, clientInterface) => {
-    indices[clientInterface.dirName] = [...indices[clientInterface.dirName], clientInterface.fileName];
-    result[clientInterface.name] = clientInterface.toString();
+  const generatedInterfaces = interfaces.getValues().reduce((result: Record<string, string>, clientInterface) => {
+    const equalSign = clientInterface.type === 'interface' ? '' : ' =';
+    result[clientInterface.name] = `export ${clientInterface.type} ${clientInterface.name}${equalSign} ${inspect(
+      clientInterface.values
+    )}`;
     return result;
   }, {});
 
-  const indexFiles = Object.keys(indices).reduce((result: Record<string, string>, indexPath) => {
-    result[indexPath] = indices[indexPath].toString();
-    return result;
-  }, {});
+  const generatedIndices = Object.entries(indices.indexFiles).reduce(
+    (result: Record<string, string>, [indexPath, index]) => {
+      result[indexPath] = index.map(indexFile => `export * from '${indexFile}';`).join('\n');
+      return result;
+    },
+    {}
+  );
 
   return {
-    classes,
-    indexFiles,
-    interfaces,
-    main: client.main.toString(),
+    classes: generatedClasses,
+    indices: generatedIndices,
+    interfaces: generatedInterfaces,
+    main: main.toString(),
   };
 }
 

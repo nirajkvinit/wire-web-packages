@@ -19,7 +19,7 @@
 
 export * from './ClassesGenerator';
 export * from './MainGenerator';
-export * from './IndexFileGenerator';
+export * from './IndexGenerator';
 export * from './InterfacesGenerator';
 export * from './MethodGenerator';
 export * from './ResourceGenerator';

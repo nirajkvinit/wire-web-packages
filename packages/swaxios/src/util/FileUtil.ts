@@ -93,25 +93,26 @@ export async function writeClient(
   forceDeletion?: boolean
 ): Promise<string> {
   const resolvedOutput = await checkOutputDirectory(outputDirectory, forceDeletion);
-  const {classes, interfaces, indexFiles} = client;
+  const {interfaces} = client;
+  // const {classes, interfaces, indices: indexFiles} = client;
 
-  for (const [filePath, content] of Object.entries(classes)) {
-    const fullPath = path.join(resolvedOutput, filePath);
-    await fs.ensureDir(path.dirname(fullPath));
-    await fs.outputFile(fullPath, content, 'utf-8');
-  }
+  // for (const [filePath, content] of Object.entries(classes)) {
+  //   const fullPath = path.join(resolvedOutput, `${filePath}.ts`);
+  //   await fs.ensureDir(path.dirname(fullPath));
+  //   await fs.outputFile(fullPath, content, 'utf-8');
+  // }
 
   for (const [filePath, content] of Object.entries(interfaces)) {
-    const fullPath = path.join(resolvedOutput, filePath);
+    const fullPath = path.join(resolvedOutput, `${filePath}.ts`);
     await fs.ensureDir(path.dirname(fullPath));
     await fs.outputFile(fullPath, content, 'utf-8');
   }
 
-  for (const [filePath, content] of Object.entries(indexFiles)) {
-    const fullPath = path.join(resolvedOutput, filePath);
-    await fs.ensureDir(path.dirname(fullPath));
-    await fs.outputFile(fullPath, content, 'utf-8');
-  }
+  // for (const [filePath, content] of Object.entries(indexFiles)) {
+  //   const fullPath = path.join(resolvedOutput, `${filePath}.ts`);
+  //   await fs.ensureDir(path.dirname(fullPath));
+  //   await fs.outputFile(fullPath, content, 'utf-8');
+  // }
 
   return resolvedOutput;
 }

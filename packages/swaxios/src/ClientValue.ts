@@ -17,10 +17,18 @@
  *
  */
 
-export class IndexFileGenerator {
-  constructor() {}
+export enum TypeScriptType {
+  ANY = 'any',
+  ARRAY = 'Array',
+  BOOLEAN = 'boolean',
+  EMPTY_OBJECT = '{}',
+  NUMBER = 'number',
+  STRING = 'string',
+}
 
-  toString(): string {
-    return this.fileNames.map(file => `export * from ${file};`).join('\n');
-  }
+export interface ClientValue {
+  name: string;
+  readonly?: boolean;
+  required?: boolean;
+  type: string;
 }

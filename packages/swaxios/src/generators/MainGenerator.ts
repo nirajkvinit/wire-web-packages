@@ -23,17 +23,17 @@ import {ClassesGenerator} from './ClassesGenerator';
 import {InterfacesGenerator} from './InterfacesGenerator';
 
 export class MainGenerator {
-  private readonly classes: ClassesGenerator;
-  private readonly interfaces: InterfacesGenerator;
-  private readonly specification: Spec;
+  readonly classes: ClassesGenerator;
+  readonly interfaces: InterfacesGenerator;
+  readonly specification: Spec;
+
+  readonly fileName: string;
 
   constructor(specification: Spec, interfaces: InterfacesGenerator, classes: ClassesGenerator) {
     this.classes = classes;
     this.interfaces = interfaces;
     this.specification = specification;
-  }
 
-  toString(): string {
-    return '';
+    this.fileName = 'APIClient.ts';
   }
 }

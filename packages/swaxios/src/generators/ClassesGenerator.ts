@@ -19,7 +19,7 @@
 
 import {Spec} from 'swagger-schema-official';
 
-import {ClientValue} from '../Swaxios';
+import {ClientValue} from '../ClientValue';
 import {InterfacesGenerator} from './InterfacesGenerator';
 
 export interface ClientClass {
@@ -30,17 +30,26 @@ export interface ClientClass {
 }
 
 export class ClassesGenerator {
-  private readonly specification: Spec;
-  private readonly interfaces: InterfacesGenerator;
+  readonly specification: Spec;
+  readonly interfaces: InterfacesGenerator;
 
-  public classes: ClientClass[];
+  classes: Map<string, ClientClass>;
 
   constructor(specification: Spec, interfaces: InterfacesGenerator) {
     this.specification = specification;
     this.interfaces = interfaces;
+    this.classes = new Map();
   }
 
-  toString(): string {
-    return '';
+  getValues(): ClientClass[] {
+    return Array.from(this.classes.values());
+  }
+
+  getKeys(): string[] {
+    return Array.from(this.classes.keys());
+  }
+
+  getByName(name: string): ClientClass | void {
+    return this.classes.get(name);
   }
 }
