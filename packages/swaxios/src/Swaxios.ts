@@ -18,6 +18,7 @@
  */
 
 import {Spec} from 'swagger-schema-official';
+import {ClassesGenerator, InterfacesGenerator, MainGenerator} from './generators';
 import {FileUtil, OpenAPIUtil} from './util';
 
 export enum TypeScriptType {
@@ -36,23 +37,10 @@ export interface ClientValue {
   type: TypeScriptType;
 }
 
-export interface ClientInterface {
-  dirName: string;
-  fileName: string;
-  name: string;
-  values: Record<string, TypeScriptType>;
-}
-
-export interface ClientClass {
-  dirName: string;
-  fileName: string;
-  name: string;
-  values: ClientValue[];
-}
-
 export interface Client {
-  classes: ClientClass[];
-  interfaces: ClientInterface[];
+  classes: ClassesGenerator;
+  interfaces: InterfacesGenerator;
+  main: MainGenerator;
 }
 
 export interface GeneratedClient {
@@ -62,6 +50,7 @@ export interface GeneratedClient {
   indexFiles: Record<string, string>;
   /** A record of path and content */
   interfaces: Record<string, string>;
+  main: string;
 }
 
 /**
@@ -77,25 +66,15 @@ export async function readSpec(inputFile: string): Promise<Spec> {
 }
 
 async function buildClient(specification: Spec): Promise<Client> {
-  // const classes = ts.buildClasses(client.classes)
-  // const interfaces = ts.buildInterfaces(client.interfaaces)
+  const interfaces = new InterfacesGenerator(specification);
+  const classes = new ClassesGenerator(specification, interfaces);
+  const main = new MainGenerator(specification, interfaces, classes);
 
   return {
-    classes: [],
-    interfaces: [],
+    classes,
+    interfaces,
+    main,
   };
-}
-
-function generateClass(clientClass: ClientClass): string {
-  return '';
-}
-
-function generateInterface(clientInterface: ClientInterface): string {
-  return '';
-}
-
-function generateIndex(fileNames: string[]): string {
-  return fileNames.map(file => `export * from ${file};`).join('\n');
 }
 
 export async function generateClient(specification: Spec): Promise<GeneratedClient> {
@@ -105,18 +84,18 @@ export async function generateClient(specification: Spec): Promise<GeneratedClie
 
   const classes = client.classes.reduce((result: Record<string, string>, clientClass) => {
     indices[clientClass.dirName] = [...indices[clientClass.dirName], clientClass.fileName];
-    result[clientClass.name] = generateClass(clientClass);
+    result[clientClass.name] = clientClass.toString();
     return result;
   }, {});
 
   const interfaces = client.interfaces.reduce((result: Record<string, string>, clientInterface) => {
     indices[clientInterface.dirName] = [...indices[clientInterface.dirName], clientInterface.fileName];
-    result[clientInterface.name] = generateInterface(clientInterface);
+    result[clientInterface.name] = clientInterface.toString();
     return result;
   }, {});
 
   const indexFiles = Object.keys(indices).reduce((result: Record<string, string>, indexPath) => {
-    result[indexPath] = generateIndex(indices[indexPath]);
+    result[indexPath] = indices[indexPath].toString();
     return result;
   }, {});
 
@@ -124,6 +103,7 @@ export async function generateClient(specification: Spec): Promise<GeneratedClie
     classes,
     indexFiles,
     interfaces,
+    main: client.main.toString(),
   };
 }
 
