@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.2.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.2.3...@wireapp/api-client@5.2.4) (2019-06-12)
+
+
+### Bug Fixes
+
+* **api-client:** Payment exports ([#1930](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1930)) ([b9abc3c](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/b9abc3c))
+
+
+
+
+
+## [5.2.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.2.2...@wireapp/api-client@5.2.3) (2019-06-11)
+
+
+### Bug Fixes
+
+* **api-client:** Export UserAssetType ([#1926](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1926)) ([b4d1836](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/b4d1836))
+
+
+
+
+
+## [5.2.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.2.1...@wireapp/api-client@5.2.2) (2019-06-11)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [5.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.2.0...@wireapp/api-client@5.2.1) (2019-06-11)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
 # [5.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.1.0...@wireapp/api-client@5.2.0) (2019-06-11)
 
 
