@@ -1,0 +1,4 @@
+{
+  "enum": ["staging", "prod", "production"],
+  "type": "string"
+}

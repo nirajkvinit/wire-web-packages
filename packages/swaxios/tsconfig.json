@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "resolveJsonModule": true,
+    "rootDir": "src"
+  },
+  "exclude": ["dist", "karma.conf.ts", "node_modules"],
+  "extends": "../../tsconfig.json"
+}

@@ -1,0 +1,44 @@
+{
+  "dependencies": {
+    "axios": "0.19.0",
+    "ci-info": "2.0.0",
+    "cli-interact": "0.1.9",
+    "commander": "2.20.0",
+    "fs-extra": "8.0.1",
+    "handlebars": "4.1.2",
+    "handlebars-helpers": "0.10.0",
+    "swagger-parser": "6.0.5",
+    "yamljs": "0.3.0"
+  },
+  "description": "Base64 encoding and decoding with ASCII string representation.",
+  "devDependencies": {
+    "@types/ci-info": "2.0.0",
+    "@types/cli-interact": "0.1.0",
+    "@types/handlebars-helpers": "0.5.2",
+    "@types/jasmine": "3.3.13",
+    "@types/swagger-parser": "4.0.3",
+    "jasmine": "3.4.0",
+    "nyc": "14.1.1",
+    "rimraf": "2.6.3",
+    "ts-node": "8.2.0",
+    "typescript": "3.5.1"
+  },
+  "files": [
+    "dist"
+  ],
+  "license": "GPL-3.0",
+  "main": "dist/index.js",
+  "name": "swaxios",
+  "repository": "https://github.com/wireapp/wire-web-packages/tree/master/packages/swaxios",
+  "scripts": {
+    "build": "yarn build:node",
+    "build:node": "tsc",
+    "clear": "rimraf dist",
+    "dist": "yarn clear && yarn build",
+    "test": "yarn test:node",
+    "test:project": "yarn dist && yarn test",
+    "test:browser": "karma start",
+    "test:node": "nyc jasmine --config=jasmine.json"
+  },
+  "version": "0.0.12"
+}

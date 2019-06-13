@@ -1,0 +1,18 @@
+{
+  "items": {
+    "allOf": [
+      {
+        "$ref": "#/definitions/Confirmation"
+      },
+      {
+        "properties": {
+          "from": {
+            "format": "uuid",
+            "type": "string"
+          }
+        }
+      }
+    ]
+  },
+  "type": "array"
+}

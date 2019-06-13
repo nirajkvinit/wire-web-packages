@@ -1,0 +1,15 @@
+{
+  "properties": {
+    "expectsReadConfirmation": {
+      "type": "boolean"
+    },
+    "legalHoldStatus": {
+      "$ref": "#/definitions/LegalHoldStatus"
+    },
+    "text": {
+      "type": "string"
+    }
+  },
+  "required": ["text"],
+  "type": "object"
+}

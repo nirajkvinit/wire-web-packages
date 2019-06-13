@@ -1,0 +1,15 @@
+{
+  "properties": {
+    "data": {
+      "format": "base64",
+      "type": "string"
+    },
+    "height": {
+      "type": "integer"
+    },
+    "width": {
+      "type": "integer"
+    }
+  },
+  "type": "object"
+}
