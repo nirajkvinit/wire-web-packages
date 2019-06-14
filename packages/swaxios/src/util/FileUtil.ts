@@ -29,7 +29,7 @@ import yaml from 'yamljs';
 import {GeneratedClient} from '../Swaxios';
 
 const logger = logdown('swaxios/FileUtil', {
-  logger: console.log,
+  logger: console,
   markdown: false,
 });
 

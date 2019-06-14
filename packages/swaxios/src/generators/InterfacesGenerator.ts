@@ -70,7 +70,7 @@ export class InterfacesGenerator {
   constructor(specification: Spec) {
     this.specification = specification;
     this.logger = logdown('swaxios/InterfacesGenerator', {
-      logger: console.log,
+      logger: console,
       markdown: false,
     });
     this.interfaces = new Map();

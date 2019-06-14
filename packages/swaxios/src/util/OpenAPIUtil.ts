@@ -22,7 +22,7 @@ import SwaggerParser from 'swagger-parser';
 import {Spec} from 'swagger-schema-official';
 
 const logger = logdown('swaxios/SwaggerUtil', {
-  logger: console.log,
+  logger: console,
   markdown: false,
 });
 
