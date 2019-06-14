@@ -19,5 +19,6 @@
 
 import * as FileUtil from './FileUtil';
 import * as OpenAPIUtil from './OpenAPIUtil';
+import * as StringUtil from './StringUtil';
 
-export {FileUtil, OpenAPIUtil};
+export {FileUtil, StringUtil, OpenAPIUtil};

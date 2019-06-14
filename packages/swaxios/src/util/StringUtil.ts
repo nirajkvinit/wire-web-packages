@@ -17,20 +17,22 @@
  *
  */
 
-export enum TypeScriptType {
-  ANY = 'any',
-  ARRAY = 'Array',
-  BOOLEAN = 'boolean',
-  EMPTY_OBJECT = '{}',
-  INTERFACE = 'interface',
-  NUMBER = 'number',
-  STRING = 'string',
-  TYPE = 'type',
+export function titleCase(word: string): string {
+  return `${word[0].toUpperCase()}${word.slice(1)}`;
 }
 
-export interface ClientValue {
-  name: string;
-  readonly?: boolean;
-  required?: boolean;
-  type: string;
+export function pascalCase(words: string[]): string {
+  return words.map(titleCase).join('');
+}
+
+export function camelCase(words: string[]): string {
+  if (!words.length) {
+    return '';
+  }
+  if (words.length === 1) {
+    return words[0].toLowerCase();
+  }
+  const firstWord = words.shift() as string;
+  const otherWords = words.map(titleCase).join('');
+  return `${firstWord}${otherWords}`;
 }

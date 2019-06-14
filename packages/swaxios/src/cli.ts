@@ -42,7 +42,7 @@ if (!program.input || !program.output) {
 
 readSpec(program.input)
   .then(spec => generateFiles(spec))
-  .then(client => writeClient(client, program.output))
+  .then(client => writeClient(client, program.output, program.force))
   .then(outputDir => console.log(`Created API client in "${outputDir}".`))
   .catch(error => {
     console.error(error);

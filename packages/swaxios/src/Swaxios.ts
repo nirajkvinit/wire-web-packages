@@ -17,8 +17,11 @@
  *
  */
 
+import prettier from 'prettier';
 import {Spec} from 'swagger-schema-official';
 import {inspect} from 'util';
+
+import {ClientValue, TypeScriptType} from './ClientValue';
 import {ClassesGenerator, IndexGenerator, InterfacesGenerator, MainGenerator} from './generators';
 import {FileUtil, OpenAPIUtil} from './util';
 
@@ -41,8 +44,6 @@ export interface GeneratedClient {
 
 /**
  * @param inputFile File path (or URL) to OpenAPI Specification, i.e. `swagger.json`
- * @param outputDirectory Path to output directory for generated TypeScript code
- * @param forceDeletion Force deleting the output directory before generating
  */
 export async function readSpec(inputFile: string): Promise<Spec> {
   const isUrl = /^(https?|file|ftp):\/\/.+/.test(inputFile);
@@ -65,25 +66,72 @@ export async function generateClient(specification: Spec): Promise<Client> {
   };
 }
 
+function convert(obj: any, type: TypeScriptType): string {
+  const inspectOptions = {
+    breakLength: Infinity,
+    depth: Infinity,
+  };
+
+  switch (type) {
+    case TypeScriptType.ARRAY: {
+      return inspect(obj).replace(/[\[\]]/g, '');
+    }
+    case TypeScriptType.INTERFACE: {
+      return Object.entries(obj as Record<string, ClientValue>).reduce((result, [key, val]) => {
+        return `${result}  ${key}${val.required ? '' : '?'}: ${val.type};\n`;
+      }, '');
+    }
+    case TypeScriptType.STRING: {
+      return inspect(obj, inspectOptions);
+    }
+    case TypeScriptType.TYPE: {
+      return inspect(obj, inspectOptions).replace(/["']/g, '');
+    }
+    default: {
+      return inspect(obj, inspectOptions);
+    }
+  }
+}
+
+function format(code: string): string {
+  return prettier.format(code, {
+    bracketSpacing: false,
+    parser: 'typescript',
+    singleQuote: true,
+    trailingComma: 'es5',
+  });
+}
+
 export async function generateFiles(specification: Spec): Promise<GeneratedClient> {
   const {classes, indices, interfaces, main} = await generateClient(specification);
 
   const generatedClasses = classes.getValues().reduce((result: Record<string, string>, clientClass) => {
-    result[clientClass.name] = clientClass.toString();
+    result[clientClass.name] = format(clientClass.toString());
     return result;
   }, {});
 
   const generatedInterfaces = interfaces.getValues().reduce((result: Record<string, string>, clientInterface) => {
-    const equalSign = clientInterface.type === 'interface' ? '' : ' =';
-    result[clientInterface.name] = `export ${clientInterface.type} ${clientInterface.name}${equalSign} ${inspect(
-      clientInterface.values
-    )}`;
+    const equalSign = clientInterface.type === 'interface' ? ' {\n  ' : ' =';
+    const postFix = clientInterface.type === 'interface' ? '\n}' : ';';
+    const values = convert(clientInterface.values, clientInterface.type);
+    let connections = '';
+
+    if ('connections' in clientInterface) {
+      connections = clientInterface.connections
+        .map(connection => `import {${connection}} from './${connection}';`)
+        .join('\n');
+      connections += '\n\n';
+    }
+
+    const content = `${connections}export ${clientInterface.type} ${clientInterface.name}${equalSign}${values}${postFix}`;
+    result[`interfaces/${clientInterface.name}`] = format(content);
     return result;
   }, {});
 
   const generatedIndices = Object.entries(indices.indexFiles).reduce(
     (result: Record<string, string>, [indexPath, index]) => {
-      result[indexPath] = index.map(indexFile => `export * from '${indexFile}';`).join('\n');
+      const content = index.map(indexFile => `export * from '${indexFile}';`).join('\n');
+      result[indexPath] = format(content);
       return result;
     },
     {}

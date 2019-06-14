@@ -21,6 +21,7 @@ import logdown from 'logdown';
 import {Schema, Spec} from 'swagger-schema-official';
 
 import {ClientValue, TypeScriptType} from '../ClientValue';
+import {StringUtil} from '../util';
 
 export enum SwaggerType {
   ARRAY = 'array',
@@ -41,24 +42,19 @@ export enum HttpMethod {
 }
 
 export interface ClientInterface {
+  connections: string[];
   name: string;
-  type: 'interface';
+  type: TypeScriptType.INTERFACE;
   values: Record<string, ClientValue>;
 }
 
 export interface ClientType {
   name: string;
-  type: 'type';
+  type: TypeScriptType.TYPE;
   values: string;
 }
 
-export interface ClientEnum {
-  name: string;
-  type: 'enum';
-  values: (string | number | boolean | {})[];
-}
-
-export type ClientTypeValue = ClientInterface | ClientType | ClientEnum;
+export type ClientTypeValue = ClientInterface | ClientType;
 
 export class InterfacesGenerator {
   private readonly specification: Spec;
@@ -106,6 +102,7 @@ export class InterfacesGenerator {
   private buildInterface(schema: Schema, schemaName: string): ClientTypeValue {
     let {required: requiredProperties, properties, type: schemaType} = schema;
     const {allOf: multipleSchemas, enum: enumType} = schema;
+    const name = StringUtil.titleCase(schemaName);
 
     if (multipleSchemas) {
       const names = multipleSchemas
@@ -113,23 +110,23 @@ export class InterfacesGenerator {
           this.addInterface(includedSchema, schemaName);
           return schemaName;
         })
-        .join('|');
-      return {type: 'type', name: schemaName, values: names};
+        .join(' | ');
+      return {type: TypeScriptType.TYPE, name, values: names};
     }
 
     if (enumType) {
-      return {type: 'enum', name: schemaName, values: enumType};
+      return {type: TypeScriptType.TYPE, name, values: `"${enumType.join('" | "')}"`};
     }
 
     if (schema.$ref) {
       if (!schema.$ref.startsWith('#/definitions')) {
         console.warn(`Invalid reference "${schema.$ref}".`);
-        return {name: schemaName, type: 'interface', values: {}};
+        return {connections: [], name, type: TypeScriptType.INTERFACE, values: {}};
       }
 
       if (!this.specification.definitions) {
         console.warn(`No reference found for "${schema.$ref}".`);
-        return {name: schemaName, type: 'interface', values: {}};
+        return {connections: [], name, type: TypeScriptType.INTERFACE, values: {}};
       }
 
       const definition = schema.$ref.replace('#/definitions', '');
@@ -142,40 +139,48 @@ export class InterfacesGenerator {
 
     switch (schemaType.toLowerCase()) {
       case SwaggerType.STRING: {
-        return {name: schemaName, type: 'type', values: TypeScriptType.STRING};
+        return {name, type: TypeScriptType.TYPE, values: TypeScriptType.STRING};
       }
       case SwaggerType.NUMBER:
       case SwaggerType.INTEGER: {
-        return {name: schemaName, type: 'type', values: TypeScriptType.NUMBER};
+        return {name, type: TypeScriptType.TYPE, values: TypeScriptType.NUMBER};
       }
       case SwaggerType.OBJECT: {
+        const connections: string[] = [];
+
         if (!properties) {
           this.logger.warn(`Schema type for "${schemaName}" is "object" but has no properties.`);
-          return {name, type: 'interface', values: {}};
+          return {connections, name, type: TypeScriptType.INTERFACE, values: {}};
         }
 
-        const values = Object.entries(properties).reduce((result: Record<string, ClientValue>, [name, property]) => {
-          this.addInterface(property, name);
+        const values = Object.entries(properties).reduce(
+          (result: Record<string, ClientValue>, [propertyName, property]) => {
+            const newInterfaceName = StringUtil.titleCase(propertyName);
+            connections.push(newInterfaceName);
+            this.addInterface(property, newInterfaceName);
 
-          result[name] = {
-            name,
-            required: requiredProperties && requiredProperties.includes(name),
-            type: name,
-          };
-          return result;
-        }, {});
+            result[propertyName] = {
+              name: propertyName,
+              required: requiredProperties && requiredProperties.includes(propertyName),
+              type: newInterfaceName,
+            };
 
-        return {type: 'interface', name: schemaName, values};
+            return result;
+          },
+          {}
+        );
+
+        return {connections, type: TypeScriptType.INTERFACE, name, values};
       }
       case SwaggerType.ARRAY: {
         if (!schema.items) {
           this.logger.warn(`Schema type for "${schemaName}" is "array" but has no items.`);
-          return {name, type: 'type', values: `${TypeScriptType.ARRAY}<${TypeScriptType.ANY}>`};
+          return {name, type: TypeScriptType.TYPE, values: `${TypeScriptType.ARRAY}<${TypeScriptType.ANY}>`};
         }
 
         if (!(schema.items instanceof Array)) {
           const itemType = this.addInterface(schema.items, schemaName);
-          return {name: schemaName, type: 'type', values: `${TypeScriptType.ARRAY}<${itemType}>`};
+          return {name, type: TypeScriptType.TYPE, values: `${TypeScriptType.ARRAY}<${itemType}>`};
         }
 
         const schemas = schema.items
@@ -184,10 +189,10 @@ export class InterfacesGenerator {
             return schemaName;
           })
           .join('|');
-        return {name: schemaName, type: 'type', values: `${TypeScriptType.ARRAY}<${schemas}>`};
+        return {name, type: TypeScriptType.TYPE, values: `${TypeScriptType.ARRAY}<${schemas}>`};
       }
       default: {
-        return {name: schemaName, type: 'interface', values: {}};
+        return {name, type: TypeScriptType.TYPE, values: TypeScriptType.ANY};
       }
     }
   }

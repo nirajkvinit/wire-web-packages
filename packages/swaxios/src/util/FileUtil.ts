@@ -66,6 +66,10 @@ export async function readInputURL(inputUrl: string): Promise<Spec> {
   return data;
 }
 
+/**
+ * @param outputDirectory Path to output directory for generated TypeScript code
+ * @param forceDeletion Force deleting the output directory before generating
+ */
 export async function checkOutputDirectory(outputDirectory: string, forceDeletion?: boolean): Promise<string> {
   const resolvedDir = path.resolve(outputDirectory);
   const directoryExists = await fs.pathExists(resolvedDir);
