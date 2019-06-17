@@ -1,4 +1,5 @@
 {
+  "name": "pizza",
   "format": "my-format",
   "type": "string"
 }

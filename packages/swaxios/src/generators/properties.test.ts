@@ -21,7 +21,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import {ParameterType} from 'swagger-schema-official';
 
-import {generateSimpleType} from './properties';
+import {NoBodyParameter, generateProperty, generateSimpleType} from './properties';
 
 const snippetsDir = path.resolve(__dirname, '../../snippets');
 const propertiesDir = path.join(snippetsDir, 'definitions/properties');
@@ -45,6 +45,36 @@ describe('generateSimpleType', () => {
     const {type}: {type: ParameterType} = await fs.readJSON(path.join(propertiesDir, 'integer.json'));
     const expected = 'number';
     const actual = generateSimpleType(type);
+    expect(actual).toBe(expected);
+  });
+});
+
+describe('generateParameter', () => {
+  it('generates a string property', async () => {
+    const data: NoBodyParameter = await fs.readJSON(path.join(propertiesDir, 'string.json'));
+    const expected = `name?: string`;
+    const actual = generateProperty(data);
+    expect(actual).toBe(expected);
+  });
+
+  it('generates a required string property', async () => {
+    const data: NoBodyParameter = await fs.readJSON(path.join(propertiesDir, 'string-required.json'));
+    const expected = `name: string`;
+    const actual = generateProperty(data);
+    expect(actual).toBe(expected);
+  });
+
+  it('generates a base64 property', async () => {
+    const data: NoBodyParameter = await fs.readJSON(path.join(propertiesDir, 'string-format-base64.json'));
+    const expected = `/** format: base64 */\ncode?: string`;
+    const actual = generateProperty(data);
+    expect(actual).toBe(expected);
+  });
+
+  it('generates an url property', async () => {
+    const data: NoBodyParameter = await fs.readJSON(path.join(propertiesDir, 'string-format-url.json'));
+    const expected = `/** Your website (format: url) */\nwebsite?: string`;
+    const actual = generateProperty(data);
     expect(actual).toBe(expected);
   });
 });

@@ -65,9 +65,30 @@ export function generateSimpleType(type: ParameterType): TypeScriptType {
   }
 }
 
-export function generateParameter(data: NoBodyParameter): string {
-  const description = data.description ? `/** ${data.description} */\n` : '';
-  const required = data.required ? '' : '?';
-  const type = generateSimpleType(data.type);
-  return `${description}${data.name}${required}: ${type}`;
+export function generateProperty(data: NoBodyParameter): string {
+  const {description, format, name, required, type} = data;
+
+  const buildDescription = () => {
+    if (!description && !format) {
+      return '';
+    }
+
+    const formatString = `format: ${format}`;
+
+    let result = `/** `;
+
+    if (description) {
+      result += description;
+
+      if (format) {
+        result += ` (${formatString})`;
+      }
+    } else if (format) {
+      result += formatString;
+    }
+
+    return (result += ' */\n');
+  };
+
+  return `${buildDescription()}${name}${required ? '' : '?'}: ${generateSimpleType(type)}`;
 }
