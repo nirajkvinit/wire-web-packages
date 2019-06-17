@@ -24,10 +24,6 @@ describe('Swaxios', () => {
   it('parses string types', () => {
     const payload: Schema = sample;
 
-    if (payload.type) {
-      console.log(payload.type);
-    }
-
-    expect(sample.type).toBe('string');
+    expect(payload.type).toBe('string');
   });
 });

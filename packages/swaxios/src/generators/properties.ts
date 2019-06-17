@@ -17,11 +17,12 @@
  *
  */
 
-import {Parameter} from 'swagger-schema-official';
+import {Parameter, ParameterType} from 'swagger-schema-official';
 
 export enum TypeScriptType {
   ANY = 'any',
   ARRAY = 'Array',
+  BOOLEAN = 'boolean',
   EMPTY_OBJECT = '{}',
   INTERFACE = 'interface',
   NUMBER = 'number',
@@ -29,12 +30,35 @@ export enum TypeScriptType {
   TYPE = 'type',
 }
 
-export interface StringType {
-  type: 'string';
+export enum SwaggerType {
+  ARRAY = 'array',
+  BOOLEAN = 'boolean',
+  INTEGER = 'integer',
+  NUMBER = 'number',
+  OBJECT = 'object',
+  STRING = 'string',
 }
 
-export function generateType(data: StringType): string {
-  return `: ${data.type}`;
+export interface ParameterTypeObject {
+  type: ParameterType;
+}
+
+export function generateSimpleType(data: ParameterTypeObject): TypeScriptType {
+  switch (data.type.toLowerCase()) {
+    case SwaggerType.INTEGER:
+    case SwaggerType.NUMBER: {
+      return TypeScriptType.NUMBER;
+    }
+    case SwaggerType.STRING: {
+      return TypeScriptType.STRING;
+    }
+    case SwaggerType.BOOLEAN: {
+      return TypeScriptType.BOOLEAN;
+    }
+    default: {
+      return TypeScriptType.ANY;
+    }
+  }
 }
 
 export function generateParameter(data: Parameter): string {

@@ -14,6 +14,7 @@
   "devDependencies": {
     "@types/ci-info": "2.0.0",
     "@types/cli-interact": "0.1.0",
+    "@types/fs-extra": "7.0.0",
     "@types/handlebars-helpers": "0.5.2",
     "@types/jasmine": "3.3.13",
     "@types/node": "12.0.8",

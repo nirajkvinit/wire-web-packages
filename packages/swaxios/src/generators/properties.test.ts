@@ -20,15 +20,16 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 
-import {StringType, generateString} from './properties';
+import {ParameterTypeObject, generateSimpleType} from './properties';
 
 const snippetsDir = path.resolve(__dirname, '../../snippets');
+const propertiesDir = path.join(snippetsDir, 'definitions/properties');
 
-describe('generateString', () => {
+describe('generateSimpleType', () => {
   it('generates a string', async () => {
-    const exampleObject: StringType = await fs.readJSON(path.join(snippetsDir, 'string.json'));
-    const expected = ': string';
-    const actual = generateString(exampleObject);
+    const exampleObject: ParameterTypeObject = await fs.readJSON(path.join(propertiesDir, 'string.json'));
+    const expected = 'string';
+    const actual = generateSimpleType(exampleObject);
     expect(actual).toBe(expected);
   });
 });
