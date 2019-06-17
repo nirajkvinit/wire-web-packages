@@ -19,17 +19,32 @@
 
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import {ParameterType} from 'swagger-schema-official';
 
-import {ParameterTypeObject, generateSimpleType} from './properties';
+import {generateSimpleType} from './properties';
 
 const snippetsDir = path.resolve(__dirname, '../../snippets');
 const propertiesDir = path.join(snippetsDir, 'definitions/properties');
 
 describe('generateSimpleType', () => {
   it('generates a string', async () => {
-    const exampleObject: ParameterTypeObject = await fs.readJSON(path.join(propertiesDir, 'string.json'));
+    const {type}: {type: ParameterType} = await fs.readJSON(path.join(propertiesDir, 'string.json'));
     const expected = 'string';
-    const actual = generateSimpleType(exampleObject);
+    const actual = generateSimpleType(type);
+    expect(actual).toBe(expected);
+  });
+
+  it('generates a boolean', async () => {
+    const {type}: {type: ParameterType} = await fs.readJSON(path.join(propertiesDir, 'boolean.json'));
+    const expected = 'boolean';
+    const actual = generateSimpleType(type);
+    expect(actual).toBe(expected);
+  });
+
+  it('generates a number from integer', async () => {
+    const {type}: {type: ParameterType} = await fs.readJSON(path.join(propertiesDir, 'integer.json'));
+    const expected = 'number';
+    const actual = generateSimpleType(type);
     expect(actual).toBe(expected);
   });
 });

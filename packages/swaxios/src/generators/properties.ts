@@ -17,7 +17,13 @@
  *
  */
 
-import {Parameter, ParameterType} from 'swagger-schema-official';
+import {
+  FormDataParameter,
+  HeaderParameter,
+  ParameterType,
+  PathParameter,
+  QueryParameter,
+} from 'swagger-schema-official';
 
 export enum TypeScriptType {
   ANY = 'any',
@@ -39,12 +45,10 @@ export enum SwaggerType {
   STRING = 'string',
 }
 
-export interface ParameterTypeObject {
-  type: ParameterType;
-}
+export type NoBodyParameter = FormDataParameter | QueryParameter | PathParameter | HeaderParameter;
 
-export function generateSimpleType(data: ParameterTypeObject): TypeScriptType {
-  switch (data.type.toLowerCase()) {
+export function generateSimpleType(type: ParameterType): TypeScriptType {
+  switch (type.toLowerCase()) {
     case SwaggerType.INTEGER:
     case SwaggerType.NUMBER: {
       return TypeScriptType.NUMBER;
@@ -61,9 +65,9 @@ export function generateSimpleType(data: ParameterTypeObject): TypeScriptType {
   }
 }
 
-export function generateParameter(data: Parameter): string {
+export function generateParameter(data: NoBodyParameter): string {
   const description = data.description ? `/** ${data.description} */\n` : '';
   const required = data.required ? '' : '?';
-  const type: string = 'type' in data ? data.type : TypeScriptType.ANY;
+  const type = generateSimpleType(data.type);
   return `${description}${data.name}${required}: ${type}`;
 }
