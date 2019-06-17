@@ -65,30 +65,36 @@ export function generateSimpleType(type: ParameterType): TypeScriptType {
   }
 }
 
+export function addStarsToNewline(text: string, spaces = 2): string {
+  return text ? text.replace(/([\r\n])/g, `$1${' '.repeat(spaces)}* `).replace(/ ([\r\n])/g, '$1') : '';
+}
+
+export function generateDescription({description, format}: {description?: string; format?: string}): string {
+  if (!description && !format) {
+    return '';
+  }
+
+  const formatString = format ? `format: ${addStarsToNewline(format, 1)}` : '';
+
+  let result = `/**`;
+
+  if (description) {
+    result += /[\r\n]/g.test(description) ? '\n * ' : ' ';
+    result += addStarsToNewline(description, 1);
+
+    if (format) {
+      result += ` (${formatString})`;
+    }
+  } else if (format) {
+    result += ` ${formatString}`;
+  }
+
+  result += /[\r\n]/g.test(result) ? '\n ' : ' ';
+
+  return (result += '*/\n');
+}
+
 export function generateProperty(data: NoBodyParameter): string {
   const {description, format, name, required, type} = data;
-
-  const buildDescription = () => {
-    if (!description && !format) {
-      return '';
-    }
-
-    const formatString = `format: ${format}`;
-
-    let result = `/** `;
-
-    if (description) {
-      result += description;
-
-      if (format) {
-        result += ` (${formatString})`;
-      }
-    } else if (format) {
-      result += formatString;
-    }
-
-    return (result += ' */\n');
-  };
-
-  return `${buildDescription()}${name}${required ? '' : '?'}: ${generateSimpleType(type)}`;
+  return `${generateDescription({description, format})}${name}${required ? '' : '?'}: ${generateSimpleType(type)}`;
 }
