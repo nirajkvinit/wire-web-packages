@@ -21,7 +21,7 @@
 
 import program from 'commander';
 
-import {generateFiles, readSpec, writeClient} from './Swaxios';
+import {Swaxios} from './Swaxios';
 
 const {bin, description, name, version} = require('../package.json');
 const binName = Object.keys(bin)[0] || name;
@@ -33,6 +33,7 @@ program
   .option('-i, --input <file>', 'File path (or URL) to OpenAPI Specification, i.e. swagger.json (required)')
   .option('-o, --output <directory>', 'Path to output directory for generated TypeScript code (required)')
   .option('-f, --force', 'Force deleting the output directory before generating')
+  .option('-s, --single-files', 'Save all interfaces in a single file')
   .parse(process.argv);
 
 if (!program.input || !program.output) {
@@ -40,9 +41,14 @@ if (!program.input || !program.output) {
   process.exit(1);
 }
 
-readSpec(program.input)
-  .then(spec => generateFiles(spec))
-  .then(client => writeClient(client, program.output, program.force))
+const swaxios = new Swaxios();
+
+swaxios
+  .readSpec(program.input)
+  .then(spec => swaxios.generateFiles(spec, program.singleFiles))
+  .then(client =>
+    swaxios.writeClient(client, program.output, {forceDeletion: program.force, singleFiles: program.singleFiles})
+  )
   .then(outputDir => console.log(`Created API client in "${outputDir}".`))
   .catch(error => {
     console.error(error);

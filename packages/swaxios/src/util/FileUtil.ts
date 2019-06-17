@@ -91,12 +91,17 @@ export async function checkOutputDirectory(outputDirectory: string, forceDeletio
   return resolvedDir;
 }
 
+interface WriteOptions {
+  forceDeletion?: boolean;
+  singleFiles?: boolean;
+}
+
 export async function writeClient(
   client: GeneratedClient,
   outputDirectory: string,
-  forceDeletion?: boolean
+  options: WriteOptions = {}
 ): Promise<string> {
-  const resolvedOutput = await checkOutputDirectory(outputDirectory, forceDeletion);
+  const resolvedOutput = await checkOutputDirectory(outputDirectory, options.forceDeletion);
   const {interfaces} = client;
   // const {classes, interfaces, indices: indexFiles} = client;
 
@@ -106,9 +111,16 @@ export async function writeClient(
   //   await fs.outputFile(fullPath, content, 'utf-8');
   // }
 
-  for (const [filePath, content] of Object.entries(interfaces)) {
-    const fullPath = path.join(resolvedOutput, `${filePath}.ts`);
+  if (!options.singleFiles) {
+    for (const [filePath, content] of Object.entries(interfaces)) {
+      const fullPath = path.join(resolvedOutput, `${filePath}.ts`);
+      await fs.ensureDir(path.dirname(fullPath));
+      await fs.outputFile(fullPath, content, 'utf-8');
+    }
+  } else {
+    const fullPath = path.join(resolvedOutput, 'interfaces.ts');
     await fs.ensureDir(path.dirname(fullPath));
+    const content = Object.values(interfaces).join('\n');
     await fs.outputFile(fullPath, content, 'utf-8');
   }
 

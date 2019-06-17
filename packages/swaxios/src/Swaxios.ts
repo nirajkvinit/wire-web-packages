@@ -42,107 +42,112 @@ export interface GeneratedClient {
   main: string;
 }
 
-/**
- * @param inputFile File path (or URL) to OpenAPI Specification, i.e. `swagger.json`
- */
-export async function readSpec(inputFile: string): Promise<Spec> {
-  const isUrl = /^(https?|file|ftp):\/\/.+/.test(inputFile);
-  const specification = isUrl ? await FileUtil.readInputURL(inputFile) : await FileUtil.readInputFile(inputFile);
-  await OpenAPIUtil.validateConfig(specification);
-  return specification;
-}
+export class Swaxios {
+  public writeClient = FileUtil.writeClient;
 
-export async function generateClient(specification: Spec): Promise<Client> {
-  const interfaces = new InterfacesGenerator(specification);
-  const classes = new ClassesGenerator(specification, interfaces);
-  const main = new MainGenerator(specification, interfaces, classes);
-  const indices = new IndexGenerator(interfaces, classes, main);
+  constructor() {}
 
-  return {
-    classes,
-    indices,
-    interfaces,
-    main,
-  };
-}
+  /**
+   * @param inputFile File path (or URL) to OpenAPI Specification, i.e. `swagger.json`
+   */
+  async readSpec(inputFile: string): Promise<Spec> {
+    const isUrl = /^(https?|file|ftp):\/\/.+/.test(inputFile);
+    const specification = isUrl ? await FileUtil.readInputURL(inputFile) : await FileUtil.readInputFile(inputFile);
+    await OpenAPIUtil.validateConfig(specification);
+    return specification;
+  }
 
-function convert(obj: any, type: TypeScriptType): string {
-  const inspectOptions = {
-    breakLength: Infinity,
-    depth: Infinity,
-  };
+  async generateClient(specification: Spec): Promise<Client> {
+    const interfaces = new InterfacesGenerator(specification);
+    const classes = new ClassesGenerator(specification, interfaces);
+    const main = new MainGenerator(specification, interfaces, classes);
+    const indices = new IndexGenerator(interfaces, classes, main);
 
-  switch (type) {
-    case TypeScriptType.ARRAY: {
-      return inspect(obj).replace(/[\[\]]/g, '');
-    }
-    case TypeScriptType.INTERFACE: {
-      return Object.entries(obj as Record<string, ClientValue>).reduce((result, [key, val]) => {
-        return `${result}  ${key}${val.required ? '' : '?'}: ${val.type};\n`;
-      }, '');
-    }
-    case TypeScriptType.STRING: {
-      return inspect(obj, inspectOptions);
-    }
-    case TypeScriptType.TYPE: {
-      return inspect(obj, inspectOptions).replace(/["']/g, '');
-    }
-    default: {
-      return inspect(obj, inspectOptions);
+    return {
+      classes,
+      indices,
+      interfaces,
+      main,
+    };
+  }
+
+  private convert(obj: any, type: TypeScriptType): string {
+    const inspectOptions = {
+      breakLength: Infinity,
+      depth: Infinity,
+    };
+
+    switch (type) {
+      case TypeScriptType.ARRAY: {
+        return inspect(obj).replace(/[\[\]]/g, '');
+      }
+      case TypeScriptType.INTERFACE: {
+        return Object.entries(obj as Record<string, ClientValue>).reduce((result, [key, val]) => {
+          return `${result}  ${key}${val.required ? '' : '?'}: ${val.type};\n`;
+        }, '');
+      }
+      case TypeScriptType.STRING: {
+        return inspect(obj, inspectOptions);
+      }
+      case TypeScriptType.TYPE: {
+        return inspect(obj, inspectOptions).replace(/["']/g, '');
+      }
+      default: {
+        return inspect(obj, inspectOptions);
+      }
     }
   }
-}
 
-function format(code: string): string {
-  return prettier.format(code, {
-    bracketSpacing: false,
-    parser: 'typescript',
-    singleQuote: true,
-    trailingComma: 'es5',
-  });
-}
+  private format(code: string): string {
+    return prettier.format(code, {
+      bracketSpacing: false,
+      parser: 'typescript',
+      singleQuote: true,
+      trailingComma: 'es5',
+    });
+  }
 
-export async function generateFiles(specification: Spec): Promise<GeneratedClient> {
-  const {classes, indices, interfaces, main} = await generateClient(specification);
+  async generateFiles(specification: Spec, singleFiles?: boolean): Promise<GeneratedClient> {
+    const {classes, indices, interfaces, main} = await this.generateClient(specification);
 
-  const generatedClasses = classes.getValues().reduce((result: Record<string, string>, clientClass) => {
-    result[clientClass.name] = format(clientClass.toString());
-    return result;
-  }, {});
-
-  const generatedInterfaces = interfaces.getValues().reduce((result: Record<string, string>, clientInterface) => {
-    const equalSign = clientInterface.type === 'interface' ? ' {\n  ' : ' =';
-    const postFix = clientInterface.type === 'interface' ? '\n}' : ';';
-    const values = convert(clientInterface.values, clientInterface.type);
-    let connections = '';
-
-    if ('connections' in clientInterface) {
-      connections = clientInterface.connections
-        .map(connection => `import {${connection}} from './${connection}';`)
-        .join('\n');
-      connections += '\n\n';
-    }
-
-    const content = `${connections}export ${clientInterface.type} ${clientInterface.name}${equalSign}${values}${postFix}`;
-    result[`interfaces/${clientInterface.name}`] = format(content);
-    return result;
-  }, {});
-
-  const generatedIndices = Object.entries(indices.indexFiles).reduce(
-    (result: Record<string, string>, [indexPath, index]) => {
-      const content = index.map(indexFile => `export * from '${indexFile}';`).join('\n');
-      result[indexPath] = format(content);
+    const generatedClasses = classes.getValues().reduce((result: Record<string, string>, clientClass) => {
+      result[clientClass.name] = this.format(clientClass.toString());
       return result;
-    },
-    {}
-  );
+    }, {});
 
-  return {
-    classes: generatedClasses,
-    indices: generatedIndices,
-    interfaces: generatedInterfaces,
-    main: main.toString(),
-  };
+    const generatedInterfaces = interfaces.getValues().reduce((result: Record<string, string>, clientInterface) => {
+      const equalSign = clientInterface.type === 'interface' ? ' {\n  ' : ' =';
+      const postFix = clientInterface.type === 'interface' ? '\n}' : ';';
+      const values = this.convert(clientInterface.values, clientInterface.type);
+
+      let connections = '';
+
+      if (!singleFiles && 'connections' in clientInterface) {
+        connections = clientInterface.connections
+          .map(connection => `import {${connection}} from './${connection}';`)
+          .join('\n');
+        connections += '\n\n';
+      }
+
+      const content = `${connections}export ${clientInterface.type} ${clientInterface.name}${equalSign}${values}${postFix}`;
+      result[`interfaces/${clientInterface.name}`] = this.format(content);
+      return result;
+    }, {});
+
+    const generatedIndices = Object.entries(indices.indexFiles).reduce(
+      (result: Record<string, string>, [indexPath, index]) => {
+        const content = index.map(indexFile => `export * from '${indexFile}';`).join('\n');
+        result[indexPath] = this.format(content);
+        return result;
+      },
+      {}
+    );
+
+    return {
+      classes: generatedClasses,
+      indices: generatedIndices,
+      interfaces: generatedInterfaces,
+      main: main.toString(),
+    };
+  }
 }
-
-export {writeClient} from './util/FileUtil';
