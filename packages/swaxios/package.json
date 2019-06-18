@@ -42,6 +42,7 @@
     "build:node": "tsc",
     "clear": "rimraf dist",
     "dist": "yarn clear && yarn build",
+    "start": "ts-node src/cli.ts -i examples/wire-ets.json -o src/temp -f",
     "test": "yarn test:node",
     "test:project": "yarn dist && yarn test",
     "test:browser": "karma start",
