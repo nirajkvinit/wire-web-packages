@@ -21,7 +21,7 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import {ParameterType} from 'swagger-schema-official';
 
-import {NoBodyParameter, generateDescription, generateProperty, generateSimpleType} from './properties';
+import {NoBodyParameter, generateProperty, generateSimpleType} from './properties';
 
 const snippetsDir = path.resolve(__dirname, '../../snippets');
 const propertiesDir = path.join(snippetsDir, 'definitions/properties');
@@ -75,36 +75,6 @@ describe('generateParameter', () => {
     const data: NoBodyParameter = await fs.readJSON(path.join(propertiesDir, 'string-format-url.json'));
     const expected = `/** Your website (format: url) */\nwebsite?: string`;
     const actual = generateProperty(data);
-    expect(actual).toBe(expected);
-  });
-});
-
-describe('generateDescription', () => {
-  it('generates a description without format', async () => {
-    const data = {description: 'Your website'};
-    const expected = `/** Your website */\n`;
-    const actual = generateDescription(data);
-    expect(actual).toBe(expected);
-  });
-
-  it('generates a description with format', async () => {
-    const data = {description: 'Your website', format: 'url'};
-    const expected = `/** Your website (format: url) */\n`;
-    const actual = generateDescription(data);
-    expect(actual).toBe(expected);
-  });
-
-  it('generates a multi-line description without format', async () => {
-    const data = {description: 'Your website\n\nOr any other website'};
-    const expected = `/**\n * Your website\n *\n * Or any other website\n */\n`;
-    const actual = generateDescription(data);
-    expect(actual).toBe(expected);
-  });
-
-  it('generates a multi-line description with format', async () => {
-    const data = {description: 'Your website\n\nOr any other website', format: 'url'};
-    const expected = `/**\n * Your website\n *\n * Or any other website (format: url)\n */\n`;
-    const actual = generateDescription(data);
     expect(actual).toBe(expected);
   });
 });
