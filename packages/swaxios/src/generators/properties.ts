@@ -24,6 +24,8 @@ import {
   PathParameter,
   QueryParameter,
 } from 'swagger-schema-official';
+import * as ts from 'typescript';
+
 import {generateDescription} from './description';
 
 export enum TypeScriptType {
@@ -48,20 +50,20 @@ export enum SwaggerType {
 
 export type NoBodyParameter = FormDataParameter | QueryParameter | PathParameter | HeaderParameter;
 
-export function generateSimpleType(type: ParameterType): TypeScriptType {
+export function generateSimpleType(type: ParameterType): ts.SyntaxKind {
   switch (type.toLowerCase()) {
     case SwaggerType.INTEGER:
     case SwaggerType.NUMBER: {
-      return TypeScriptType.NUMBER;
+      return ts.SyntaxKind.NumberKeyword;
     }
     case SwaggerType.STRING: {
-      return TypeScriptType.STRING;
+      return ts.SyntaxKind.StringKeyword;
     }
     case SwaggerType.BOOLEAN: {
-      return TypeScriptType.BOOLEAN;
+      return ts.SyntaxKind.BooleanKeyword;
     }
     default: {
-      return TypeScriptType.ANY;
+      return ts.SyntaxKind.AnyKeyword;
     }
   }
 }
@@ -71,4 +73,23 @@ export function generateProperty(data: NoBodyParameter): string {
   return `${generateDescription({description, format})}${name}${required ? '' : '?'}: ${generateSimpleType(type)}`;
 }
 
-export function generateInterface(data: {name: string; data: string}): any {}
+export function generateInterface(data: {name: string; required?: boolean}): string {
+  return ts
+    .createInterfaceDeclaration(
+      undefined,
+      [ts.createModifier(ts.SyntaxKind.ExportKeyword)],
+      ts.createIdentifier('MyInterface'),
+      undefined,
+      undefined,
+      [
+        ts.createPropertySignature(
+          undefined,
+          ts.createIdentifier(data.name),
+          data.required ? ts.createToken(ts.SyntaxKind.QuestionToken) : undefined,
+          ts.createKeywordTypeNode(ts.SyntaxKind.BooleanKeyword),
+          undefined
+        ),
+      ]
+    )
+    .getFullText();
+}

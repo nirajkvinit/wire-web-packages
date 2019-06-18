@@ -8,6 +8,7 @@
     "handlebars": "4.1.2",
     "handlebars-helpers": "0.10.0",
     "swagger-parser": "6.0.5",
+    "ts-morph": "2.3.0",
     "yamljs": "0.3.0"
   },
   "description": "Base64 encoding and decoding with ASCII string representation.",
