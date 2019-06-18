@@ -32,6 +32,7 @@ program
   .option('-i, --input <file>', 'File path (or URL) to OpenAPI Specification, i.e. swagger.json (required)')
   .option('-o, --output <directory>', 'Path to output directory for generated TypeScript code (required)')
   .option('-f, --force', 'Force deleting the output directory before generating')
+  .option('-s, --separate-files', 'Create separate files for every class and interface')
   .parse(process.argv);
 
 if (!program.input || !program.output) {
@@ -39,7 +40,12 @@ if (!program.input || !program.output) {
   process.exit(1);
 }
 
-new Swaxios(program.input, program.output, program.force)
+new Swaxios({
+  forceDeletion: program.force,
+  inputFile: program.input,
+  outputDir: program.output,
+  separateFiles: program.separateFiles,
+})
   .writeClient()
   .then(outputDir => {
     if (outputDir) {

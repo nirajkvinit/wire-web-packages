@@ -73,16 +73,18 @@ export function generateSimpleType(type: string): TypeScriptType {
 }
 
 export class Builder {
-  public classes?: SourceFile;
-  public interfaces?: SourceFile;
+  public classes?: SourceFile[];
+  public interfaces?: SourceFile[];
   public mainClass: SourceFile;
   private readonly spec: Spec;
   private readonly project: Project;
   private readonly outputDir: string;
+  private readonly separateFiles?: boolean;
 
-  constructor(spec: Spec, outputDir: string) {
+  constructor(spec: Spec, outputDir: string, separateFiles?: boolean) {
     this.spec = spec;
     this.outputDir = outputDir;
+    this.separateFiles = separateFiles;
 
     this.project = new Project({
       manipulationSettings: {
@@ -95,20 +97,28 @@ export class Builder {
     this.mainClass = this.buildMainClass();
   }
 
-  private buildInterfaces(): SourceFile {
+  private buildInterfaces(): SourceFile[] {
     const {definitions} = this.spec;
-    const interfaces = this.project.createSourceFile(`${this.outputDir}/interfaces.ts`);
+    let sourceFile: SourceFile;
 
     if (!definitions) {
-      return interfaces;
+      return [];
+    }
+
+    if (!this.separateFiles) {
+      sourceFile = this.project.createSourceFile(`${this.outputDir}/interfaces.ts`);
     }
 
     for (const [definitionName, definition] of Object.entries(definitions)) {
+      if (this.separateFiles) {
+        sourceFile = this.project.createSourceFile(`${this.outputDir}/interfaces/${definitionName}.ts`);
+      }
+
       const required = definition.required || [];
       const hasEnum = definition.enum;
 
       if (hasEnum) {
-        interfaces.addTypeAlias({
+        sourceFile!.addTypeAlias({
           docs: definition.description ? [definition.description] : undefined,
           isExported: true,
           name: definitionName,
@@ -129,33 +139,40 @@ export class Builder {
         }
       );
 
-      interfaces.addInterface({
+      sourceFile!.addInterface({
         isExported: true,
         name: definitionName,
         properties,
       });
     }
 
-    return interfaces;
+    return [sourceFile!];
   }
 
-  private buildClasses(): SourceFile {
-    const sourceFile = this.project.createSourceFile(`${this.outputDir}/classes.ts`);
+  private buildClasses(): SourceFile[] {
+    let sourceFile: SourceFile;
 
-    sourceFile.addImportDeclarations([
-      {
-        moduleSpecifier: 'axios',
-        namedImports: [
-          {
-            name: 'AxiosInstance',
-          },
-        ],
-      },
-      {
-        moduleSpecifier: './interfaces',
-        namespaceImport: 'interfaces',
-      },
-    ]);
+    function addDefaultImports(source: SourceFile): void {
+      source.addImportDeclarations([
+        {
+          moduleSpecifier: 'axios',
+          namedImports: [
+            {
+              name: 'AxiosInstance',
+            },
+          ],
+        },
+        {
+          moduleSpecifier: './interfaces',
+          namespaceImport: 'interfaces',
+        },
+      ]);
+    }
+
+    if (!this.separateFiles) {
+      sourceFile = this.project.createSourceFile(`${this.outputDir}/services.ts`);
+      addDefaultImports(sourceFile);
+    }
 
     const serviceNames = [];
 
@@ -164,6 +181,11 @@ export class Builder {
       const serviceName = StringUtil.generateServiceName(normalizedUrl);
       const uniqueName = StringUtil.uniqueServiceName(serviceName, serviceNames);
       serviceNames.push(uniqueName);
+
+      if (this.separateFiles) {
+        sourceFile = this.project.createSourceFile(`${this.outputDir}/services/${uniqueName}.ts`);
+        addDefaultImports(sourceFile);
+      }
 
       const ctor: OptionalKind<ConstructorDeclarationStructure> = {
         parameters: [
@@ -175,7 +197,7 @@ export class Builder {
         statements: ['this.apiClient = apiClient;'],
       };
 
-      sourceFile.addClass({
+      sourceFile!.addClass({
         ctors: [ctor],
         isExported: true,
         name: uniqueName,
@@ -190,7 +212,7 @@ export class Builder {
       });
     }
 
-    return sourceFile;
+    return [sourceFile!];
   }
 
   private buildMainClass(): SourceFile {

@@ -24,15 +24,24 @@ import {Spec} from 'swagger-schema-official';
 import {Builder} from './parser/Builder';
 import {FileUtil, UrlUtil} from './util/';
 
+export interface Options {
+  forceDeletion?: boolean;
+  inputFile: string;
+  outputDir: string;
+  separateFiles?: boolean;
+}
+
 export class Swaxios {
   private readonly forceDeletion?: boolean;
   private readonly inputFile: string;
   private readonly outputDir: string;
+  private readonly separateFiles?: boolean;
 
-  constructor(inputFile: string, outputDir: string, forceDeletion?: boolean) {
-    this.forceDeletion = forceDeletion;
-    this.inputFile = path.resolve(inputFile);
-    this.outputDir = path.resolve(outputDir);
+  constructor(options: Options) {
+    this.forceDeletion = options.forceDeletion;
+    this.inputFile = path.resolve(options.inputFile);
+    this.outputDir = path.resolve(options.outputDir);
+    this.separateFiles = options.separateFiles;
   }
 
   private async validateConfig(swaggerJson: Spec): Promise<void> {
@@ -51,7 +60,7 @@ export class Swaxios {
       : await FileUtil.readInputFile(this.inputFile);
     await this.validateConfig(specification);
 
-    await new Builder(specification, this.outputDir).save();
+    await new Builder(specification, this.outputDir, this.separateFiles).save();
 
     return this.outputDir;
   }
