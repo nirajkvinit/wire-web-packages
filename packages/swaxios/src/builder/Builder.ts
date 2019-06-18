@@ -21,7 +21,7 @@ import {Spec} from 'swagger-schema-official';
 import {IndentationText, Project, QuoteKind, SourceFile} from 'ts-morph';
 
 import {ClassesBuilder} from './ClassesBuilder';
-import {InterfaceBuilder} from './InterfaceBuilder';
+import {InterfaceBuilder} from './InterfacesBuilder';
 import {MainClassBuilder} from './MainClassBuilder';
 
 export class Builder {

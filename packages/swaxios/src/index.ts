@@ -17,10 +17,8 @@
  *
  */
 
-import * as FileUtil from './FileUtil';
-import * as ParseUtil from './ParseUtil';
-import * as SortUtil from './SortUtil';
-import * as StringUtil from './StringUtil';
-import * as UrlUtil from './UrlUtil';
+export * from './Swaxios';
+import * as builder from './builder';
+import * as util from './util';
 
-export {FileUtil, ParseUtil, SortUtil, StringUtil, UrlUtil};
+export {builder, util};

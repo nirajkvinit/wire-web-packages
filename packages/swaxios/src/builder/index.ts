@@ -18,5 +18,8 @@
  */
 
 export * from './Builder';
+export * from './ClassesBuilder';
+export * from './InterfacesBuilder';
+export * from './MainClassBuilder';
 export * from './SwaggerType';
 export * from './TypeScriptType';
