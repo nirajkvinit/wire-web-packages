@@ -24,29 +24,7 @@ import * as SortUtil from '../util/SortUtil';
 import {SwaggerType} from './SwaggerType';
 import {TypeScriptType} from './TypeScriptType';
 
-function generateSimpleType(type: string): TypeScriptType {
-  if (!type) {
-    return TypeScriptType.ANY;
-  }
-
-  switch (type.toLowerCase()) {
-    case SwaggerType.INTEGER:
-    case SwaggerType.NUMBER: {
-      return TypeScriptType.NUMBER;
-    }
-    case SwaggerType.STRING: {
-      return TypeScriptType.STRING;
-    }
-    case SwaggerType.BOOLEAN: {
-      return TypeScriptType.BOOLEAN;
-    }
-    default: {
-      return TypeScriptType.ANY;
-    }
-  }
-}
-
-export class InterfaceBuilder {
+export class InterfacesBuilder {
   private readonly spec: Spec;
   private readonly project: Project;
   private readonly outputDir: string;
@@ -57,6 +35,28 @@ export class InterfaceBuilder {
     this.project = project;
     this.outputDir = outputDir;
     this.separateFiles = separateFiles;
+  }
+
+  private static generateSimpleType(type: string): TypeScriptType {
+    if (!type) {
+      return TypeScriptType.ANY;
+    }
+
+    switch (type.toLowerCase()) {
+      case SwaggerType.INTEGER:
+      case SwaggerType.NUMBER: {
+        return TypeScriptType.NUMBER;
+      }
+      case SwaggerType.STRING: {
+        return TypeScriptType.STRING;
+      }
+      case SwaggerType.BOOLEAN: {
+        return TypeScriptType.BOOLEAN;
+      }
+      default: {
+        return TypeScriptType.ANY;
+      }
+    }
   }
 
   buildInterfaces(): SourceFile[] {
@@ -97,7 +97,7 @@ export class InterfaceBuilder {
             hasQuestionToken: !(required.includes(propertyName) || property.required),
             isReadonly: !!property.readOnly,
             name: propertyName,
-            type: generateSimpleType(property.type || ''),
+            type: InterfacesBuilder.generateSimpleType(property.type || ''),
           };
         });
 

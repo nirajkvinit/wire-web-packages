@@ -21,7 +21,7 @@ import {Spec} from 'swagger-schema-official';
 import {IndentationText, Project, QuoteKind, SourceFile} from 'ts-morph';
 
 import {ClassesBuilder} from './ClassesBuilder';
-import {InterfaceBuilder} from './InterfacesBuilder';
+import {InterfacesBuilder} from './InterfacesBuilder';
 import {MainClassBuilder} from './MainClassBuilder';
 
 export class Builder {
@@ -45,7 +45,7 @@ export class Builder {
       },
     });
 
-    this.interfaces = new InterfaceBuilder(
+    this.interfaces = new InterfacesBuilder(
       this.spec,
       this.project,
       this.outputDir,
