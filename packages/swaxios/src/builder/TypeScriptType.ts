@@ -17,10 +17,13 @@
  *
  */
 
-import * as FileUtil from './FileUtil';
-import * as ParseUtil from './ParseUtil';
-import * as SortUtil from './SortUtil';
-import * as StringUtil from './StringUtil';
-import * as UrlUtil from './UrlUtil';
-
-export {FileUtil, ParseUtil, StringUtil, SortUtil, UrlUtil};
+export enum TypeScriptType {
+  ANY = 'any',
+  ARRAY = 'Array',
+  BOOLEAN = 'boolean',
+  EMPTY_OBJECT = '{}',
+  INTERFACE = 'interface',
+  NUMBER = 'number',
+  STRING = 'string',
+  TYPE = 'type',
+}

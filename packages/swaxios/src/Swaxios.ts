@@ -21,7 +21,7 @@ import * as path from 'path';
 import * as SwaggerParser from 'swagger-parser';
 import {Spec} from 'swagger-schema-official';
 
-import {Builder} from './parser/Builder';
+import {Builder} from './builder/Builder';
 import {FileUtil, UrlUtil} from './util/';
 
 export interface Options {

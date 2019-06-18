@@ -17,10 +17,14 @@
  *
  */
 
-import * as FileUtil from './FileUtil';
-import * as ParseUtil from './ParseUtil';
-import * as SortUtil from './SortUtil';
-import * as StringUtil from './StringUtil';
-import * as UrlUtil from './UrlUtil';
+import {Schema} from 'swagger-schema-official';
 
-export {FileUtil, ParseUtil, StringUtil, SortUtil, UrlUtil};
+export function sortEntries(a: [string, Schema], b: [string, Schema]): number {
+  if (a[0] < b[0]) {
+    return -1;
+  }
+  if (a[0] > b[0]) {
+    return 1;
+  }
+  return 0;
+}
