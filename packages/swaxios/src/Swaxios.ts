@@ -17,4 +17,42 @@
  *
  */
 
-export async function writeClient(inputFile: string, outputDirectory: string, forceDeletion?: boolean): Promise<void> {}
+import * as path from 'path';
+import * as SwaggerParser from 'swagger-parser';
+import {Spec} from 'swagger-schema-official';
+
+import {Builder} from './parser/Builder';
+import {FileUtil, UrlUtil} from './util/';
+
+export class Swaxios {
+  private readonly forceDeletion?: boolean;
+  private readonly inputFile: string;
+  private readonly outputDir: string;
+
+  constructor(inputFile: string, outputDir: string, forceDeletion?: boolean) {
+    this.forceDeletion = forceDeletion;
+    this.inputFile = path.resolve(inputFile);
+    this.outputDir = path.resolve(outputDir);
+  }
+
+  private async validateConfig(swaggerJson: Spec): Promise<void> {
+    await SwaggerParser.validate(swaggerJson);
+  }
+
+  async writeClient(): Promise<string | null> {
+    const outputClean = await FileUtil.checkOutputDirectory(this.outputDir, this.forceDeletion);
+    if (!outputClean) {
+      return null;
+    }
+
+    const isUrl = /^(https?|ftps?):\/\//.test(this.inputFile);
+    const specification = isUrl
+      ? await UrlUtil.readInputUrl(this.inputFile)
+      : await FileUtil.readInputFile(this.inputFile);
+    await this.validateConfig(specification);
+
+    await new Builder(specification, this.outputDir).save();
+
+    return this.outputDir;
+  }
+}

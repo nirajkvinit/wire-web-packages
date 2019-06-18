@@ -162,7 +162,7 @@ export class Builder {
     for (const [pathName] of Object.entries(this.spec.paths)) {
       const normalizedUrl = StringUtil.normalizeUrl(pathName);
       const serviceName = StringUtil.generateServiceName(normalizedUrl);
-      const uniqueName = StringUtil.getUniqueName(serviceName, serviceNames);
+      const uniqueName = StringUtil.uniqueServiceName(serviceName, serviceNames);
       serviceNames.push(uniqueName);
 
       const ctor: OptionalKind<ConstructorDeclarationStructure> = {

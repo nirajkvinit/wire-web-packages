@@ -51,21 +51,17 @@ export function normalizeUrl(url: string): string {
   return url.replace(/\/\{.*\}/g, '');
 }
 
-export function addStarsToNewline(text?: string): string {
-  return text ? text.replace(/([\r\n])/g, '$1   * ') : '';
-}
-
-export function getUniqueName(fileName: string, fileNames: string[]): string {
-  if (!fileNames.includes(fileName)) {
-    return fileName;
+export function uniqueServiceName(serviceName: string, serviceNames: string[]): string {
+  if (!serviceNames.includes(serviceName)) {
+    return serviceName;
   }
 
-  let alternativeFilename = fileName;
+  let alternativeFilename = serviceName;
 
-  while (fileNames.includes(alternativeFilename)) {
+  while (serviceNames.includes(alternativeFilename)) {
     const indexNumberMatch = alternativeFilename.match(/(\d+)$/);
     const indexNumber = indexNumberMatch ? parseInt(indexNumberMatch[0], 10) + 1 : 1;
-    alternativeFilename = `${fileName}${indexNumber}`;
+    alternativeFilename = `${serviceName}${indexNumber}`;
   }
 
   return alternativeFilename;

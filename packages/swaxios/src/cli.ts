@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 /*
  * Wire
  * Copyright (C) 2019 Wire Swiss GmbH
@@ -17,20 +19,32 @@
  *
  */
 
-import * as fs from 'fs-extra';
-import * as path from 'path';
-import {Spec} from 'swagger-schema-official';
+import * as program from 'commander';
+import {Swaxios} from './Swaxios';
 
-import {Builder} from './parser/Builder';
-const inputFile = path.join(__dirname, '../wire-ets.json');
-const outputDir = path.join(__dirname, 'temp');
+const {bin = {}, description, name, version} = require('../package.json');
+const binName = Object.keys(bin)[0] || name;
 
-const spec = fs.readJSONSync(inputFile) as Spec;
+program
+  .name(binName)
+  .description(description)
+  .version(version, '-v, --version')
+  .option('-i, --input <file>', 'File path (or URL) to OpenAPI Specification, i.e. swagger.json (required)')
+  .option('-o, --output <directory>', 'Path to output directory for generated TypeScript code (required)')
+  .option('-f, --force', 'Force deleting the output directory before generating')
+  .parse(process.argv);
 
-new Builder(spec, outputDir)
-  .save()
-  .then(() => {
-    console.log(`Saved API client to ${outputDir}.`);
+if (!program.input || !program.output) {
+  program.outputHelp();
+  process.exit(1);
+}
+
+new Swaxios(program.input, program.output, program.force)
+  .writeClient()
+  .then(outputDir => {
+    if (outputDir) {
+      console.log(`Created API client in "${outputDir}".`);
+    }
   })
   .catch(error => {
     console.error(error);
