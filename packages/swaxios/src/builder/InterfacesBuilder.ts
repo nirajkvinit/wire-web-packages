@@ -17,9 +17,17 @@
  *
  */
 
-import {OptionalKind, Project, PropertySignatureStructure, SourceFile} from 'ts-morph';
+import {
+  InterfaceDeclarationStructure,
+  OptionalKind,
+  Project,
+  PropertySignatureStructure,
+  SourceFile,
+  TypeAliasDeclarationStructure,
+} from 'ts-morph';
 
-import {Spec} from 'swagger-schema-official';
+import {Schema, Spec} from 'swagger-schema-official';
+import {inspect} from 'util';
 import * as SortUtil from '../util/SortUtil';
 import {SwaggerType} from './SwaggerType';
 import {TypeScriptType} from './TypeScriptType';
@@ -37,25 +45,134 @@ export class InterfacesBuilder {
     this.separateFiles = separateFiles;
   }
 
-  private static generateSimpleType(type: string): TypeScriptType {
-    if (!type) {
-      return TypeScriptType.ANY;
+  private buildLowLevelType(schema: Schema, schemaName: string): string {
+    const {allOf: multipleSchemas, enum: enumType, required: requiredProperties, properties} = schema;
+    let schemaType = schema.type;
+
+    if (multipleSchemas) {
+      return multipleSchemas.map(includedSchema => this.buildLowLevelType(includedSchema, schemaName)).join(' | ');
     }
 
-    switch (type.toLowerCase()) {
-      case SwaggerType.INTEGER:
-      case SwaggerType.NUMBER: {
-        return TypeScriptType.NUMBER;
+    if (enumType) {
+      return `"${enumType.join('" | "')}"`;
+    }
+
+    if (schema.$ref) {
+      if (!schema.$ref.startsWith('#/definitions')) {
+        console.warn(`Invalid reference "${schema.$ref}".`);
+        return TypeScriptType.EMPTY_OBJECT;
       }
+      if (!this.spec.definitions) {
+        console.warn(`No reference found for "${schema.$ref}".`);
+        return TypeScriptType.EMPTY_OBJECT;
+      }
+      return schema.$ref.replace('#/definitions/', '');
+    }
+
+    schemaType = schemaType || SwaggerType.OBJECT;
+
+    switch (schemaType.toLowerCase()) {
       case SwaggerType.STRING: {
         return TypeScriptType.STRING;
       }
-      case SwaggerType.BOOLEAN: {
-        return TypeScriptType.BOOLEAN;
+      case SwaggerType.NUMBER:
+      case SwaggerType.INTEGER: {
+        return TypeScriptType.NUMBER;
+      }
+      case SwaggerType.OBJECT: {
+        if (!properties) {
+          console.warn(`Schema type for "${schemaName}" is "object" but has no properties.`);
+          return TypeScriptType.EMPTY_OBJECT;
+        }
+
+        const schema: Record<string, string> = {};
+
+        for (const property of Object.keys(properties)) {
+          const propertyName = requiredProperties && !requiredProperties.includes(property) ? `${property}?` : property;
+          schema[propertyName] = this.buildLowLevelType(properties[property], `${schemaName}/${property}`);
+        }
+
+        return inspect(schema, {breakLength: Infinity, depth: Infinity})
+          .replace(/'/gm, '')
+          .replace(',', ';')
+          .replace(new RegExp('\\n', 'g'), '');
+      }
+      case SwaggerType.ARRAY: {
+        if (!schema.items) {
+          console.warn(`Schema type for "${schemaName}" is "array" but has no items.`);
+          return `${TypeScriptType.ARRAY}<${TypeScriptType.ANY}>`;
+        }
+
+        if (!(schema.items instanceof Array)) {
+          const itemType = this.buildLowLevelType(schema.items, schemaName);
+          return `${TypeScriptType.ARRAY}<${itemType}>`;
+        }
+
+        const schemes = schema.items
+          .map((itemSchema, index) => this.buildLowLevelType(itemSchema, `${schemaName}[${index}]`))
+          .join('|');
+        return `${TypeScriptType.ARRAY}<${schemes}>`;
       }
       default: {
-        return TypeScriptType.ANY;
+        return TypeScriptType.EMPTY_OBJECT;
       }
+    }
+  }
+
+  private buildInterfaceDeclaration(schema: Schema, schemaName: string): OptionalKind<InterfaceDeclarationStructure> {
+    const required = schema.required || [];
+
+    const properties = Object.entries(schema.properties!)
+      .sort(SortUtil.sortEntries)
+      .map(([propertyName, property]) => {
+        const type = this.buildLowLevelType(property, propertyName);
+        const structure: OptionalKind<PropertySignatureStructure> = {
+          docs: property.description ? [property.description] : undefined,
+          hasQuestionToken: !(required.includes(propertyName) || property.required),
+          isReadonly: !!property.readOnly,
+          name: propertyName,
+          type,
+        };
+        return structure;
+      });
+
+    return {
+      isExported: true,
+      name: schemaName,
+      properties,
+    };
+  }
+
+  private buildTypeDeclaration(schema: Schema, schemaName: string): OptionalKind<TypeAliasDeclarationStructure> {
+    return {
+      docs: schema.description ? [schema.description] : undefined,
+      isExported: true,
+      name: schemaName,
+      type: this.buildLowLevelType(schema, schemaName),
+    };
+  }
+
+  private buildTypeDeclarations(schemas: Schema[], schemaName: string): OptionalKind<TypeAliasDeclarationStructure> {
+    return {
+      isExported: true,
+      name: schemaName,
+      type: schemas.map(schema => this.buildLowLevelType(schema, schemaName)).join(' & '),
+    };
+  }
+
+  private buildInterface(schema: Schema, schemaName: string, sourceFile: SourceFile): void {
+    if (schema.properties) {
+      sourceFile!.addInterface(this.buildInterfaceDeclaration(schema, schemaName));
+      return;
+    }
+
+    if (schema.enum) {
+      sourceFile!.addTypeAlias(this.buildTypeDeclaration(schema, schemaName));
+      return;
+    }
+
+    if (schema.allOf) {
+      sourceFile!.addTypeAlias(this.buildTypeDeclarations(schema.allOf, schemaName));
     }
   }
 
@@ -71,42 +188,13 @@ export class InterfacesBuilder {
       sourceFile = this.project.createSourceFile(`${this.outputDir}/interfaces.ts`);
     }
 
-    for (const [definitionName, definition] of Object.entries(definitions)) {
+    Object.entries(definitions).forEach(([schemaName, schema]) => {
       if (this.separateFiles) {
-        sourceFile = this.project.createSourceFile(`${this.outputDir}/interfaces/${definitionName}.ts`);
+        sourceFile = this.project.createSourceFile(`${this.outputDir}/interfaces/${schemaName}.ts`);
       }
 
-      const required = definition.required || [];
-      const hasEnum = definition.enum;
-
-      if (hasEnum) {
-        sourceFile!.addTypeAlias({
-          docs: definition.description ? [definition.description] : undefined,
-          isExported: true,
-          name: definitionName,
-          type: `"${hasEnum.join('" | "')}"`,
-        });
-        continue;
-      }
-
-      const properties: OptionalKind<PropertySignatureStructure>[] = Object.entries(definition.properties || {})
-        .sort(SortUtil.sortEntries)
-        .map(([propertyName, property]) => {
-          return {
-            docs: property.description ? [property.description] : undefined,
-            hasQuestionToken: !(required.includes(propertyName) || property.required),
-            isReadonly: !!property.readOnly,
-            name: propertyName,
-            type: InterfacesBuilder.generateSimpleType(property.type || ''),
-          };
-        });
-
-      sourceFile!.addInterface({
-        isExported: true,
-        name: definitionName,
-        properties,
-      });
-    }
+      this.buildInterface(schema, schemaName, sourceFile);
+    });
 
     return [sourceFile!];
   }
