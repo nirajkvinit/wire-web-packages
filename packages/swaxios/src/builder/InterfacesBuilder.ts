@@ -60,19 +60,25 @@ export class InterfacesBuilder {
   }
 
   private buildLowLevelType(schema: Schema, schemaName: string): string {
-    const {$ref, allOf: multipleSchemas, enum: enumType, required: requiredProperties, properties} = schema;
-    let schemaType = schema.type;
+    const {
+      $ref: reference,
+      allOf: multipleSchemas,
+      enum: enumType,
+      required: requiredProperties,
+      properties,
+      type: schemaType = '',
+    } = schema;
 
-    if ($ref) {
-      if (!$ref.startsWith('#/definitions')) {
-        console.warn(`Invalid reference "${$ref}".`);
+    if (reference) {
+      if (!reference.startsWith('#/definitions')) {
+        console.warn(`Invalid reference "${reference}".`);
         return TypeScriptType.EMPTY_OBJECT;
       }
       if (!this.spec.definitions) {
-        console.warn(`No reference found for "${$ref}".`);
+        console.warn(`No reference found for "${reference}".`);
         return TypeScriptType.EMPTY_OBJECT;
       }
-      return $ref.replace('#/definitions/', '');
+      return reference.replace('#/definitions/', '');
     }
 
     if (multipleSchemas) {
@@ -82,8 +88,6 @@ export class InterfacesBuilder {
     if (enumType) {
       return `"${enumType.join('" | "')}"`;
     }
-
-    schemaType = schemaType || SwaggerType.OBJECT;
 
     switch (schemaType.toLowerCase()) {
       case SwaggerType.STRING: {
@@ -131,7 +135,7 @@ export class InterfacesBuilder {
         return `${TypeScriptType.ARRAY}<${schemas}>`;
       }
       default: {
-        return TypeScriptType.EMPTY_OBJECT;
+        return TypeScriptType.ANY;
       }
     }
   }
