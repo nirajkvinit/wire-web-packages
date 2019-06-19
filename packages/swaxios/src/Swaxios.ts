@@ -45,7 +45,8 @@ export class Swaxios {
   }
 
   private async validateConfig(swaggerJson: Spec): Promise<void> {
-    await SwaggerParser.validate(swaggerJson);
+    const clone = JSON.parse(JSON.stringify(swaggerJson));
+    await SwaggerParser.validate(clone);
   }
 
   async writeClient(): Promise<string | null> {

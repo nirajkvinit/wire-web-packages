@@ -51,17 +51,17 @@ export function normalizeUrl(url: string): string {
   return url.replace(/\/\{.*\}/g, '');
 }
 
-export function uniqueServiceName(serviceName: string, serviceNames: string[]): string {
-  if (!serviceNames.includes(serviceName)) {
-    return serviceName;
+export function uniqueName(name: string, names: string[]): string {
+  if (!names.includes(name)) {
+    return name;
   }
 
-  let alternativeFilename = serviceName;
+  let alternativeFilename = name;
 
-  while (serviceNames.includes(alternativeFilename)) {
+  while (names.includes(alternativeFilename)) {
     const indexNumberMatch = alternativeFilename.match(/(\d+)$/);
     const indexNumber = indexNumberMatch ? parseInt(indexNumberMatch[0], 10) + 1 : 1;
-    alternativeFilename = `${serviceName}${indexNumber}`;
+    alternativeFilename = `${name}${indexNumber}`;
   }
 
   return alternativeFilename;

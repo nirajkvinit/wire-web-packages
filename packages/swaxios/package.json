@@ -3,12 +3,13 @@
     "swaxios": "dist/cli.js"
   },
   "dependencies": {
+    "@types/swagger-schema-official": "2.0.17",
     "axios": "0.19.0",
     "ci-info": "2.0.0",
     "cli-interact": "0.1.9",
     "commander": "2.20.0",
     "fs-extra": "8.0.1",
-    "swagger-parser": "6.0.5",
+    "swagger-parser": "7.0.0",
     "ts-morph": "2.3.0",
     "yamljs": "0.3.0"
   },
@@ -19,7 +20,6 @@
     "@types/fs-extra": "7.0.0",
     "@types/jasmine": "3.3.13",
     "@types/node": "~10",
-    "@types/swagger-parser": "4.0.3",
     "@types/yamljs": "0.2.30",
     "jasmine": "3.4.0",
     "nyc": "14.1.1",

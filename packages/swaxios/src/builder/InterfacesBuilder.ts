@@ -28,6 +28,7 @@ import {
 
 import {Schema, Spec} from 'swagger-schema-official';
 import {inspect} from 'util';
+import {StringUtil} from '../util';
 import * as SortUtil from '../util/SortUtil';
 import {header} from './header';
 import {SwaggerType} from './SwaggerType';
@@ -46,28 +47,40 @@ export class InterfacesBuilder {
     this.spec = spec;
   }
 
+  private buildLowLevelTypes(multipleSchemas: Schema[], schemaName: string, joinToken: string): string {
+    const schemaNames: string[] = [];
+
+    return multipleSchemas
+      .map(schema => {
+        const uniqueName = StringUtil.uniqueName(schemaName, schemaNames);
+        schemaNames.push(uniqueName);
+        return this.buildLowLevelType(schema, uniqueName);
+      })
+      .join(` ${joinToken} `);
+  }
+
   private buildLowLevelType(schema: Schema, schemaName: string): string {
-    const {allOf: multipleSchemas, enum: enumType, required: requiredProperties, properties} = schema;
+    const {$ref, allOf: multipleSchemas, enum: enumType, required: requiredProperties, properties} = schema;
     let schemaType = schema.type;
 
+    if ($ref) {
+      if (!$ref.startsWith('#/definitions')) {
+        console.warn(`Invalid reference "${$ref}".`);
+        return TypeScriptType.EMPTY_OBJECT;
+      }
+      if (!this.spec.definitions) {
+        console.warn(`No reference found for "${$ref}".`);
+        return TypeScriptType.EMPTY_OBJECT;
+      }
+      return $ref.replace('#/definitions/', '');
+    }
+
     if (multipleSchemas) {
-      return multipleSchemas.map(includedSchema => this.buildLowLevelType(includedSchema, schemaName)).join(' | ');
+      return this.buildLowLevelTypes(multipleSchemas, schemaName, '&');
     }
 
     if (enumType) {
       return `"${enumType.join('" | "')}"`;
-    }
-
-    if (schema.$ref) {
-      if (!schema.$ref.startsWith('#/definitions')) {
-        console.warn(`Invalid reference "${schema.$ref}".`);
-        return TypeScriptType.EMPTY_OBJECT;
-      }
-      if (!this.spec.definitions) {
-        console.warn(`No reference found for "${schema.$ref}".`);
-        return TypeScriptType.EMPTY_OBJECT;
-      }
-      return schema.$ref.replace('#/definitions/', '');
     }
 
     schemaType = schemaType || SwaggerType.OBJECT;
@@ -88,9 +101,10 @@ export class InterfacesBuilder {
 
         const schema: Record<string, string> = {};
 
-        for (const property of Object.keys(properties)) {
-          const propertyName = requiredProperties && !requiredProperties.includes(property) ? `${property}?` : property;
-          schema[propertyName] = this.buildLowLevelType(properties[property], `${schemaName}/${property}`);
+        for (const [propertyName, property] of Object.entries(properties)) {
+          const fullName =
+            requiredProperties && !requiredProperties.includes(propertyName) ? `${propertyName}?` : propertyName;
+          schema[fullName] = this.buildLowLevelType(property, `${schemaName}/${propertyName}`);
         }
 
         return inspect(schema, {breakLength: Infinity, depth: Infinity})
@@ -109,10 +123,9 @@ export class InterfacesBuilder {
           return `${TypeScriptType.ARRAY}<${itemType}>`;
         }
 
-        const schemes = schema.items
-          .map((itemSchema, index) => this.buildLowLevelType(itemSchema, `${schemaName}[${index}]`))
-          .join('|');
-        return `${TypeScriptType.ARRAY}<${schemes}>`;
+        const schemas = this.buildLowLevelTypes(schema.items, schemaName, '|');
+
+        return `${TypeScriptType.ARRAY}<${schemas}>`;
       }
       default: {
         return TypeScriptType.EMPTY_OBJECT;
@@ -157,7 +170,7 @@ export class InterfacesBuilder {
     return {
       isExported: true,
       name: schemaName,
-      type: schemas.map(schema => this.buildLowLevelType(schema, schemaName)).join(' & '),
+      type: this.buildLowLevelTypes(schemas, schemaName, '&'),
     };
   }
 

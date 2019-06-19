@@ -72,7 +72,7 @@ export class ClassesBuilder {
       .map(([pathName, path]) => {
         const normalizedUrl = StringUtil.normalizeUrl(pathName);
         const serviceName = StringUtil.generateServiceName(normalizedUrl);
-        const uniqueName = StringUtil.uniqueServiceName(serviceName, serviceNames);
+        const uniqueName = StringUtil.uniqueName(serviceName, serviceNames);
         serviceNames.push(uniqueName);
         return [uniqueName, path];
       });
