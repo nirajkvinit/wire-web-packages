@@ -20,6 +20,7 @@
 import {Spec} from 'swagger-schema-official';
 import {ConstructorDeclarationStructure, OptionalKind, Project, SourceFile} from 'ts-morph';
 
+import {header} from './header';
 import {TypeScriptType} from './TypeScriptType';
 
 export class MainClassBuilder {
@@ -85,7 +86,7 @@ export class MainClassBuilder {
 
     sourceFile.addClass({
       ctors: [ctor],
-      docs: [`API Client for ${info.title}\n${info.description || ''}`],
+      docs: [info.description || ''],
       isExported: true,
       methods: [
         {
@@ -104,6 +105,8 @@ export class MainClassBuilder {
         },
       ],
     });
+
+    sourceFile.insertStatements(0, header);
 
     return sourceFile;
   }

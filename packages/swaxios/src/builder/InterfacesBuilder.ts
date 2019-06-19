@@ -29,6 +29,7 @@ import {
 import {Schema, Spec} from 'swagger-schema-official';
 import {inspect} from 'util';
 import * as SortUtil from '../util/SortUtil';
+import {header} from './header';
 import {SwaggerType} from './SwaggerType';
 import {TypeScriptType} from './TypeScriptType';
 
@@ -194,7 +195,15 @@ export class InterfacesBuilder {
       }
 
       this.buildInterface(schema, schemaName, sourceFile);
+
+      if (this.separateFiles) {
+        sourceFile.insertStatements(0, header);
+      }
     });
+
+    if (!this.separateFiles) {
+      sourceFile!.insertStatements(0, header);
+    }
 
     return [sourceFile!];
   }

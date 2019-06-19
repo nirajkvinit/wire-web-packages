@@ -21,6 +21,7 @@ import {Path, Spec} from 'swagger-schema-official';
 import {ConstructorDeclarationStructure, OptionalKind, Project, SourceFile} from 'ts-morph';
 
 import {SortUtil, StringUtil} from '../util';
+import {header} from './header';
 
 export class ClassesBuilder {
   private readonly spec: Spec;
@@ -101,6 +102,14 @@ export class ClassesBuilder {
           },
         ],
       });
+
+      if (this.separateFiles) {
+        sourceFile!.insertStatements(0, header);
+      }
+    }
+
+    if (!this.separateFiles) {
+      sourceFile!.insertStatements(0, header);
     }
 
     return [sourceFile!];
