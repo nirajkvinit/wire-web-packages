@@ -41,9 +41,9 @@
     "dist": "yarn clear && yarn build",
     "start": "ts-node src/cli.ts -i examples/wire-ets.json -o src/temp -f",
     "test": "yarn test:node",
-    "test:project": "yarn dist && yarn test",
     "test:browser": "karma start",
-    "test:node": "nyc jasmine --config=jasmine.json"
+    "test:node": "nyc jasmine --config=jasmine.json",
+    "test:project": "yarn dist && yarn test"
   },
   "version": "0.0.12"
 }
