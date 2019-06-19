@@ -18,10 +18,25 @@
  */
 
 import {Path, Spec} from 'swagger-schema-official';
-import {ConstructorDeclarationStructure, OptionalKind, Project, Scope, SourceFile} from 'ts-morph';
+import {
+  ClassDeclarationStructure,
+  ConstructorDeclarationStructure,
+  OptionalKind,
+  Project,
+  Scope,
+  SourceFile,
+} from 'ts-morph';
 
-import {SortUtil, StringUtil} from '../util';
+import {StringUtil} from '../util';
 import {header} from './header';
+
+export interface API {
+  name: string;
+}
+
+export interface APIStructure {
+  api: Record<string, APIStructure | API>;
+}
 
 export class ClassesBuilder {
   private readonly outputDir: string;
@@ -34,6 +49,30 @@ export class ClassesBuilder {
     this.project = project;
     this.separateFiles = separateFiles;
     this.spec = spec;
+  }
+
+  private generatePaths(paths: Record<string, Path>): {fullPath: string[]; name: string}[] {
+    const serviceNames: string[] = [];
+
+    return Object.keys(paths)
+      .sort()
+      .map(pathName => {
+        const normalizedUrl = StringUtil.normalizeUrl(pathName);
+        const serviceName = StringUtil.generateServiceName(normalizedUrl);
+        const uniqueName = StringUtil.uniqueName(serviceName, serviceNames);
+        serviceNames.push(uniqueName);
+
+        let directories = normalizedUrl
+          .substr(0, normalizedUrl.lastIndexOf('/'))
+          .split('/')
+          .filter(Boolean);
+
+        if (!directories.length) {
+          directories = ['Root'];
+        }
+
+        return {fullPath: directories, name: uniqueName};
+      });
   }
 
   buildClasses(): SourceFile[] {
@@ -57,7 +96,7 @@ export class ClassesBuilder {
     }
 
     function addHeader(source: SourceFile): void {
-      sourceFile.insertStatements(0, header);
+      source.insertStatements(0, header);
     }
 
     if (!this.separateFiles) {
@@ -65,21 +104,11 @@ export class ClassesBuilder {
       addDefaultImports(sourceFile);
     }
 
-    const serviceNames: string[] = [];
+    const paths = this.generatePaths(this.spec.paths);
 
-    const paths: [string, Path][] = Object.entries(this.spec.paths)
-      .sort(SortUtil.sortEntries)
-      .map(([pathName, path]) => {
-        const normalizedUrl = StringUtil.normalizeUrl(pathName);
-        const serviceName = StringUtil.generateServiceName(normalizedUrl);
-        const uniqueName = StringUtil.uniqueName(serviceName, serviceNames);
-        serviceNames.push(uniqueName);
-        return [uniqueName, path];
-      });
-
-    for (const [pathName] of paths) {
+    for (const pathObj of paths) {
       if (this.separateFiles) {
-        sourceFile = this.project.createSourceFile(`${this.outputDir}/services/${pathName}.ts`);
+        sourceFile = this.project.createSourceFile(`${this.outputDir}/services/${pathObj.fullPath}/${pathObj.name}.ts`);
         addDefaultImports(sourceFile);
       }
 
@@ -93,10 +122,10 @@ export class ClassesBuilder {
         statements: ['this.apiClient = apiClient;'],
       };
 
-      sourceFile!.addClass({
+      const classDeclaration: OptionalKind<ClassDeclarationStructure> = {
         ctors: [ctor],
         isExported: true,
-        name: pathName,
+        name: pathObj.name,
         properties: [
           {
             isReadonly: true,
@@ -105,10 +134,25 @@ export class ClassesBuilder {
             type: 'AxiosInstance',
           },
         ],
-      });
+      };
 
       if (this.separateFiles) {
         addHeader(sourceFile!);
+        sourceFile!.addClass(classDeclaration);
+      } else {
+        let namespace = sourceFile!.addNamespace({
+          isExported: true,
+          name: pathObj.fullPath.pop()!,
+        });
+
+        while (pathObj.fullPath.length) {
+          namespace = namespace.addNamespace({
+            isExported: true,
+            name: pathObj.fullPath.pop()!,
+          });
+        }
+
+        namespace!.addClass(classDeclaration);
       }
     }
 
