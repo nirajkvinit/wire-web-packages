@@ -18,20 +18,20 @@
  */
 
 import {Spec} from 'swagger-schema-official';
-import {ConstructorDeclarationStructure, OptionalKind, Project, SourceFile} from 'ts-morph';
+import {ConstructorDeclarationStructure, OptionalKind, Project, Scope, SourceFile} from 'ts-morph';
 
 import {header} from './header';
 import {TypeScriptType} from './TypeScriptType';
 
 export class MainClassBuilder {
-  private readonly spec: Spec;
-  private readonly project: Project;
   private readonly outputDir: string;
+  private readonly project: Project;
+  private readonly spec: Spec;
 
   constructor(spec: Spec, project: Project, outputDir: string) {
-    this.spec = spec;
-    this.project = project;
     this.outputDir = outputDir;
+    this.project = project;
+    this.spec = spec;
   }
 
   buildMainClass(): SourceFile {
@@ -90,7 +90,11 @@ export class MainClassBuilder {
       isExported: true,
       methods: [
         {
-          leadingTrivia: 'get ',
+          decorators: [
+            {
+              name: 'get',
+            },
+          ],
           name: 'rest',
           statements: ['return ""'],
         },
@@ -99,8 +103,8 @@ export class MainClassBuilder {
       properties: [
         {
           isReadonly: true,
-          leadingTrivia: 'private ',
           name: 'httpClient',
+          scope: Scope.Private,
           type: 'AxiosInstance',
         },
       ],

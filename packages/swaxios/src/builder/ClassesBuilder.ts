@@ -18,22 +18,22 @@
  */
 
 import {Path, Spec} from 'swagger-schema-official';
-import {ConstructorDeclarationStructure, OptionalKind, Project, SourceFile} from 'ts-morph';
+import {ConstructorDeclarationStructure, OptionalKind, Project, Scope, SourceFile} from 'ts-morph';
 
 import {SortUtil, StringUtil} from '../util';
 import {header} from './header';
 
 export class ClassesBuilder {
-  private readonly spec: Spec;
-  private readonly project: Project;
   private readonly outputDir: string;
+  private readonly project: Project;
   private readonly separateFiles?: boolean;
+  private readonly spec: Spec;
 
   constructor(spec: Spec, project: Project, outputDir: string, separateFiles?: boolean) {
-    this.spec = spec;
-    this.project = project;
     this.outputDir = outputDir;
+    this.project = project;
     this.separateFiles = separateFiles;
+    this.spec = spec;
   }
 
   buildClasses(): SourceFile[] {
@@ -54,6 +54,10 @@ export class ClassesBuilder {
           namespaceImport: 'interfaces',
         },
       ]);
+    }
+
+    function addHeader(source: SourceFile): void {
+      sourceFile.insertStatements(0, header);
     }
 
     if (!this.separateFiles) {
@@ -96,20 +100,20 @@ export class ClassesBuilder {
         properties: [
           {
             isReadonly: true,
-            leadingTrivia: 'private ',
             name: 'apiClient',
+            scope: Scope.Private,
             type: 'AxiosInstance',
           },
         ],
       });
 
       if (this.separateFiles) {
-        sourceFile!.insertStatements(0, header);
+        addHeader(sourceFile!);
       }
     }
 
     if (!this.separateFiles) {
-      sourceFile!.insertStatements(0, header);
+      addHeader(sourceFile!);
     }
 
     return [sourceFile!];

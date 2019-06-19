@@ -34,16 +34,16 @@ import {SwaggerType} from './SwaggerType';
 import {TypeScriptType} from './TypeScriptType';
 
 export class InterfacesBuilder {
-  private readonly spec: Spec;
-  private readonly project: Project;
   private readonly outputDir: string;
+  private readonly project: Project;
   private readonly separateFiles?: boolean;
+  private readonly spec: Spec;
 
   constructor(spec: Spec, project: Project, outputDir: string, separateFiles?: boolean) {
-    this.spec = spec;
-    this.project = project;
     this.outputDir = outputDir;
+    this.project = project;
     this.separateFiles = separateFiles;
+    this.spec = spec;
   }
 
   private buildLowLevelType(schema: Schema, schemaName: string): string {
