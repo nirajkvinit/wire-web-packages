@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.76](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@4.0.75...@wireapp/bot-api@4.0.76) (2019-06-19)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [4.0.75](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@4.0.74...@wireapp/bot-api@4.0.75) (2019-06-19)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [4.0.74](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@4.0.73...@wireapp/bot-api@4.0.74) (2019-06-19)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [4.0.73](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@4.0.72...@wireapp/bot-api@4.0.73) (2019-06-19)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [4.0.72](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@4.0.71...@wireapp/bot-api@4.0.72) (2019-06-18)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [4.0.71](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@4.0.70...@wireapp/bot-api@4.0.71) (2019-06-17)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
+## [4.0.70](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@4.0.69...@wireapp/bot-api@4.0.70) (2019-06-14)
+
+**Note:** Version bump only for package @wireapp/bot-api
+
+
+
+
+
 ## [4.0.69](https://github.com/wireapp/wire-web-packages/tree/master/packages/bot-api/compare/@wireapp/bot-api@4.0.68...@wireapp/bot-api@4.0.69) (2019-06-13)
 
 **Note:** Version bump only for package @wireapp/bot-api

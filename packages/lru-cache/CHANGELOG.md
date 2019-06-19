@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.23](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@3.1.22...@wireapp/lru-cache@3.1.23) (2019-06-18)
+
+**Note:** Version bump only for package @wireapp/lru-cache
+
+
+
+
+
+## [3.1.22](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@3.1.21...@wireapp/lru-cache@3.1.22) (2019-06-17)
+
+**Note:** Version bump only for package @wireapp/lru-cache
+
+
+
+
+
+## [3.1.21](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@3.1.20...@wireapp/lru-cache@3.1.21) (2019-06-14)
+
+**Note:** Version bump only for package @wireapp/lru-cache
+
+
+
+
+
 ## [3.1.20](https://github.com/wireapp/wire-web-packages/tree/master/packages/lru-cache/compare/@wireapp/lru-cache@3.1.19...@wireapp/lru-cache@3.1.20) (2019-06-12)
 
 **Note:** Version bump only for package @wireapp/lru-cache

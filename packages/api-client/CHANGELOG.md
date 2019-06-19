@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.6.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.6.0...@wireapp/api-client@5.6.1) (2019-06-19)
+
+
+### Bug Fixes
+
+* **api-client:** Remove fingerprint, add public_key from/to LegalHoldSettings ([#1960](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1960)) ([dbb49b1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/dbb49b1))
+
+
+
+
+
+# [5.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.5.3...@wireapp/api-client@5.6.0) (2019-06-19)
+
+
+### Features
+
+* **api-client:** Extract LegalHoldSettings from LegalHoldData ([#1958](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1958)) ([abc9a79](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/abc9a79))
+
+
+
+
+
+## [5.5.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.5.2...@wireapp/api-client@5.5.3) (2019-06-19)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [5.5.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.5.1...@wireapp/api-client@5.5.2) (2019-06-19)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
+## [5.5.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.5.0...@wireapp/api-client@5.5.1) (2019-06-18)
+
+
+### Bug Fixes
+
+* **api-client:** Require password for member legal hold deletion ([#1954](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1954)) ([5a8da3d](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/5a8da3d))
+
+
+
+
+
+# [5.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.4.3...@wireapp/api-client@5.5.0) (2019-06-17)
+
+
+### Features
+
+* **api-client,core,commons:** Chunked /users requests & typed ArrayUtils ([#1950](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/issues/1950)) ([b8642f0](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/commit/b8642f0))
+
+
+
+
+
+## [5.4.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.4.2...@wireapp/api-client@5.4.3) (2019-06-14)
+
+**Note:** Version bump only for package @wireapp/api-client
+
+
+
+
+
 ## [5.4.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/api-client/compare/@wireapp/api-client@5.4.1...@wireapp/api-client@5.4.2) (2019-06-13)
 
 **Note:** Version bump only for package @wireapp/api-client

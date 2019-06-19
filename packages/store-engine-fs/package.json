@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@types/fs-extra": "7.0.0",
-    "@wireapp/store-engine": "3.0.10",
+    "@wireapp/store-engine": "3.0.13",
     "fs-extra": "8.0.1"
   },
   "devDependencies": {
@@ -10,8 +10,8 @@
     "jasmine": "3.4.0",
     "nyc": "14.1.1",
     "rimraf": "2.6.3",
-    "ts-node": "8.2.0",
-    "typescript": "3.5.1"
+    "ts-node": "8.3.0",
+    "typescript": "3.5.2"
   },
   "description": "",
   "files": [
@@ -29,5 +29,5 @@
     "test": "nyc jasmine --config=jasmine.json",
     "test:project": "yarn dist && yarn test"
   },
-  "version": "1.0.7"
+  "version": "1.0.10"
 }
