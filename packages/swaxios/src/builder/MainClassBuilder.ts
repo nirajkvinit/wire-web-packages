@@ -90,11 +90,7 @@ export class MainClassBuilder {
       isExported: true,
       methods: [
         {
-          decorators: [
-            {
-              name: 'get',
-            },
-          ],
+          leadingTrivia: 'get ',
           name: 'rest',
           statements: ['return ""'],
         },
