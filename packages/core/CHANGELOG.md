@@ -3,6 +3,87 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [12.7.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.7.1...@wireapp/core@12.7.2) (2019-06-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.7.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.7.0...@wireapp/core@12.7.1) (2019-06-26)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [12.7.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.6.1...@wireapp/core@12.7.0) (2019-06-25)
+
+
+### Features
+
+* **store-engine,store-engine-dexie:** Distribute IndexedDBEngine in separate package ([#1980](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1980)) ([90daae9](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/90daae9))
+
+
+
+
+
+## [12.6.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.6.0...@wireapp/core@12.6.1) (2019-06-25)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [12.6.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.5.1...@wireapp/core@12.6.0) (2019-06-24)
+
+
+### Features
+
+* **eslint-config:** Sort imports and keys automatically ([#1971](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1971)) ([c7954c8](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/c7954c8))
+
+
+
+
+
+## [12.5.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.5.0...@wireapp/core@12.5.1) (2019-06-24)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+# [12.5.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.4.7...@wireapp/core@12.5.0) (2019-06-21)
+
+
+### Features
+
+* **prettier-config:** trailingComma to all and added missing options ([#1897](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/issues/1897)) ([55b1c76](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/commit/55b1c76))
+
+
+
+
+
+## [12.4.7](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.4.6...@wireapp/core@12.4.7) (2019-06-20)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
+## [12.4.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.4.5...@wireapp/core@12.4.6) (2019-06-20)
+
+**Note:** Version bump only for package @wireapp/core
+
+
+
+
+
 ## [12.4.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/core/compare/@wireapp/core@12.4.4...@wireapp/core@12.4.5) (2019-06-19)
 
 **Note:** Version bump only for package @wireapp/core

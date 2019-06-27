@@ -13,7 +13,7 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
-  "plugins": ["import", "jsdoc", "no-unsanitized", "prettier", "react"],
+  "plugins": ["import", "jsdoc", "no-unsanitized", "prettier", "react", "simple-import-sort", "sort-keys-fix"],
   "rules": {
     "curly": "error",
     "dot-notation": "error",
@@ -38,6 +38,7 @@
       }
     ],
     "no-shadow": "error",
+    "no-trailing-spaces": "error",
     "no-undef": "error",
     "no-unneeded-ternary": "error",
     "no-unused-expressions": "error",
@@ -59,15 +60,8 @@
     "react/jsx-uses-vars": "error",
     "react/prefer-stateless-function": "error",
     "react/prop-types": "off",
-    "sort-imports": "error",
-    "sort-keys": [
-      "error",
-      "asc",
-      {
-        "caseSensitive": true,
-        "natural": true
-      }
-    ],
+    "simple-import-sort/sort": "error",
+    "sort-keys-fix/sort-keys-fix": "error",
     "sort-vars": "error",
     "strict": ["error", "global"],
     "valid-jsdoc": [

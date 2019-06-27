@@ -3,6 +3,55 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.3.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.2.0...@wireapp/store-engine@3.3.0) (2019-06-26)
+
+
+### Features
+
+* **store-engine,store-engine-bro-fs:** Distribute FileSystemEngine in separate package ([#1990](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/1990)) ([5c71587](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/5c71587))
+
+
+
+
+
+# [3.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.1.1...@wireapp/store-engine@3.2.0) (2019-06-25)
+
+
+### Features
+
+* **store-engine,store-engine-dexie:** Distribute IndexedDBEngine in separate package ([#1980](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/1980)) ([90daae9](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/90daae9))
+
+
+
+
+
+## [3.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.1.0...@wireapp/store-engine@3.1.1) (2019-06-24)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
+# [3.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.0.14...@wireapp/store-engine@3.1.0) (2019-06-21)
+
+
+### Features
+
+* **prettier-config:** trailingComma to all and added missing options ([#1897](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/issues/1897)) ([55b1c76](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/commit/55b1c76))
+
+
+
+
+
+## [3.0.14](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.0.13...@wireapp/store-engine@3.0.14) (2019-06-20)
+
+**Note:** Version bump only for package @wireapp/store-engine
+
+
+
+
+
 ## [3.0.13](https://github.com/wireapp/wire-web-packages/tree/master/packages/store-engine/compare/@wireapp/store-engine@3.0.12...@wireapp/store-engine@3.0.13) (2019-06-18)
 
 **Note:** Version bump only for package @wireapp/store-engine

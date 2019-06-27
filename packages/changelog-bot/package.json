@@ -6,9 +6,9 @@
     "@types/generate-changelog": "1.7.0",
     "@types/long": "4.0.0",
     "@types/node": "~10",
-    "@wireapp/core": "12.4.5",
+    "@wireapp/core": "12.7.2",
     "commander": "2.20.0",
-    "generate-changelog": "1.7.1"
+    "generate-changelog": "1.8.0"
   },
   "description": "A changelog notification bot.",
   "devDependencies": {
@@ -32,5 +32,5 @@
     "test:project": "yarn dist && yarn test"
   },
   "types": "dist/ChangelogBot.d.ts",
-  "version": "3.0.76"
+  "version": "3.1.6"
 }

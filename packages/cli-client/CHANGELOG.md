@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.1.5...@wireapp/cli-client@6.1.6) (2019-06-26)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [6.1.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.1.4...@wireapp/cli-client@6.1.5) (2019-06-26)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [6.1.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.1.3...@wireapp/cli-client@6.1.4) (2019-06-25)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [6.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.1.2...@wireapp/cli-client@6.1.3) (2019-06-25)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [6.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.1.1...@wireapp/cli-client@6.1.2) (2019-06-24)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [6.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.1.0...@wireapp/cli-client@6.1.1) (2019-06-24)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+# [6.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.0.37...@wireapp/cli-client@6.1.0) (2019-06-21)
+
+
+### Features
+
+* **prettier-config:** trailingComma to all and added missing options ([#1897](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/issues/1897)) ([55b1c76](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/commit/55b1c76))
+
+
+
+
+
+## [6.0.37](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.0.36...@wireapp/cli-client@6.0.37) (2019-06-20)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
+## [6.0.36](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.0.35...@wireapp/cli-client@6.0.36) (2019-06-20)
+
+**Note:** Version bump only for package @wireapp/cli-client
+
+
+
+
+
 ## [6.0.35](https://github.com/wireapp/wire-web-packages/tree/master/packages/cli-client/compare/@wireapp/cli-client@6.0.34...@wireapp/cli-client@6.0.35) (2019-06-19)
 
 **Note:** Version bump only for package @wireapp/cli-client

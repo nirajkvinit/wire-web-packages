@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [11.2.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@11.2.0...@wireapp/cryptobox@11.2.1) (2019-06-26)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+# [11.2.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@11.1.1...@wireapp/cryptobox@11.2.0) (2019-06-25)
+
+
+### Features
+
+* **store-engine,store-engine-dexie:** Distribute IndexedDBEngine in separate package ([#1980](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/issues/1980)) ([90daae9](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/90daae9))
+
+
+
+
+
+## [11.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@11.1.0...@wireapp/cryptobox@11.1.1) (2019-06-24)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
+# [11.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@11.0.17...@wireapp/cryptobox@11.1.0) (2019-06-21)
+
+
+### Features
+
+* **prettier-config:** trailingComma to all and added missing options ([#1897](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/issues/1897)) ([55b1c76](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/commit/55b1c76))
+
+
+
+
+
+## [11.0.17](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@11.0.16...@wireapp/cryptobox@11.0.17) (2019-06-20)
+
+**Note:** Version bump only for package @wireapp/cryptobox
+
+
+
+
+
 ## [11.0.16](https://github.com/wireapp/wire-web-packages/tree/master/packages/cryptobox/compare/@wireapp/cryptobox@11.0.15...@wireapp/cryptobox@11.0.16) (2019-06-18)
 
 **Note:** Version bump only for package @wireapp/cryptobox

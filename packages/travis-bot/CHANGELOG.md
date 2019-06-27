@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.6](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@4.1.5...@wireapp/travis-bot@4.1.6) (2019-06-26)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [4.1.5](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@4.1.4...@wireapp/travis-bot@4.1.5) (2019-06-26)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [4.1.4](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@4.1.3...@wireapp/travis-bot@4.1.4) (2019-06-25)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [4.1.3](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@4.1.2...@wireapp/travis-bot@4.1.3) (2019-06-25)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [4.1.2](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@4.1.1...@wireapp/travis-bot@4.1.2) (2019-06-24)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [4.1.1](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@4.1.0...@wireapp/travis-bot@4.1.1) (2019-06-24)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+# [4.1.0](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@4.0.78...@wireapp/travis-bot@4.1.0) (2019-06-21)
+
+
+### Features
+
+* **prettier-config:** trailingComma to all and added missing options ([#1897](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/issues/1897)) ([55b1c76](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/commit/55b1c76))
+
+
+
+
+
+## [4.0.78](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@4.0.77...@wireapp/travis-bot@4.0.78) (2019-06-20)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
+## [4.0.77](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@4.0.76...@wireapp/travis-bot@4.0.77) (2019-06-20)
+
+**Note:** Version bump only for package @wireapp/travis-bot
+
+
+
+
+
 ## [4.0.76](https://github.com/wireapp/wire-web-packages/tree/master/packages/travis-bot/compare/@wireapp/travis-bot@4.0.75...@wireapp/travis-bot@4.0.76) (2019-06-19)
 
 **Note:** Version bump only for package @wireapp/travis-bot

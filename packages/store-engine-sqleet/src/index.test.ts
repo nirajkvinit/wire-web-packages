@@ -17,7 +17,7 @@
  *
  */
 
-import {IndexedDBEngine} from '@wireapp/store-engine/dist/commonjs/engine/IndexedDBEngine';
+import {IndexedDBEngine} from '@wireapp/store-engine-dexie';
 import {createSpec} from '@wireapp/store-engine/dist/commonjs/test/createSpec';
 import {deleteAllSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteAllSpec';
 import {deleteSpec} from '@wireapp/store-engine/dist/commonjs/test/deleteSpec';
@@ -81,7 +81,7 @@ describe('SQLeetEngine', () => {
               name: SQLiteType.TEXT,
             },
           },
-          shouldCreateNewEngine
+          shouldCreateNewEngine,
         );
       it(description, async () => testFunction(await initEnginePurge(), initEnginePurge));
     });
@@ -152,7 +152,7 @@ describe('SQLeetEngine', () => {
         fail();
       } catch (error) {
         expect(error.message).toBe(
-          'Entity is empty for table "users". Are you sure you set the right scheme / column names?'
+          'Entity is empty for table "users". Are you sure you set the right scheme / column names?',
         );
       }
     });
