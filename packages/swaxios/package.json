@@ -9,7 +9,7 @@
     "cli-interact": "0.1.9",
     "commander": "2.20.0",
     "fs-extra": "8.0.1",
-    "swagger-parser": "7.0.0",
+    "swagger-parser": "8.0.0",
     "ts-morph": "2.3.0",
     "yamljs": "0.3.0"
   },
