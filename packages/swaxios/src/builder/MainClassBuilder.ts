@@ -18,7 +18,14 @@
  */
 
 import {Spec} from 'swagger-schema-official';
-import {ConstructorDeclarationStructure, OptionalKind, Project, Scope, SourceFile} from 'ts-morph';
+import {
+  ClassDeclarationStructure,
+  ConstructorDeclarationStructure,
+  OptionalKind,
+  Project,
+  Scope,
+  SourceFile,
+} from 'ts-morph';
 
 import {header} from './header';
 import {TypeScriptType} from './TypeScriptType';
@@ -26,9 +33,10 @@ import {TypeScriptType} from './TypeScriptType';
 export class MainClassBuilder {
   private readonly outputDir: string;
   private readonly project: Project;
+  private readonly separateFiles?: boolean;
   private readonly spec: Spec;
 
-  constructor(spec: Spec, project: Project, outputDir: string) {
+  constructor(spec: Spec, project: Project, outputDir: string, separateFiles?: boolean) {
     this.outputDir = outputDir;
     this.project = project;
     this.spec = spec;
@@ -84,17 +92,24 @@ export class MainClassBuilder {
       ],
     };
 
-    sourceFile.addClass({
+    const mainClass: OptionalKind<ClassDeclarationStructure> = {
       ctors: [ctor],
       docs: [info.description || ''],
-      isExported: true,
-      methods: [
+      getAccessors: [
         {
-          leadingTrivia: 'get ',
+          name: 'defaults',
+          statements: ['return this.httpClient.defaults;'],
+        },
+        {
+          name: 'interceptors',
+          statements: ['return this.httpClient.interceptors;'],
+        },
+        {
           name: 'rest',
           statements: ['return ""'],
         },
       ],
+      isExported: true,
       name: 'APIClient',
       properties: [
         {
@@ -104,10 +119,23 @@ export class MainClassBuilder {
           type: 'AxiosInstance',
         },
       ],
-    });
+    };
 
+    sourceFile.addClass(mainClass);
+
+    // this needs to be at the end or ts-morph will throw an error.
     sourceFile.insertStatements(0, header);
 
     return sourceFile;
+  }
+
+  buildAPI(): void {
+    const sourceFiles = this.separateFiles
+      ? this.project.getSourceFiles(`${this.outputDir}/services/*.ts`)
+      : [this.project.getSourceFile(`${this.outputDir}/services.ts`)];
+
+    for (const sourceFile of sourceFiles) {
+      console.log('sourceFile', sourceFile);
+    }
   }
 }
