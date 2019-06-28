@@ -30,14 +30,6 @@ import {
 import {StringUtil} from '../util';
 import {header} from './header';
 
-export interface API {
-  name: string;
-}
-
-export interface APIStructure {
-  api: Record<string, APIStructure | API>;
-}
-
 export class ServicesBuilder {
   private readonly outputDir: string;
   private readonly project: Project;

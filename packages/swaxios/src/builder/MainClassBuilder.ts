@@ -17,6 +17,7 @@
  *
  */
 
+import * as path from 'path';
 import {Spec} from 'swagger-schema-official';
 import {
   ClassDeclarationStructure,
@@ -26,10 +27,19 @@ import {
   Scope,
   SourceFile,
 } from 'ts-morph';
+import {inspect} from 'util';
 
 import {StringUtil} from '../util';
 import {header} from './header';
 import {TypeScriptType} from './TypeScriptType';
+
+export interface CircularRecord {
+  [name: string]: CircularRecord | string;
+}
+
+export interface APIStructure {
+  [name: string]: CircularRecord;
+}
 
 export class MainClassBuilder {
   private readonly outputDir: string;
@@ -40,6 +50,7 @@ export class MainClassBuilder {
   constructor(spec: Spec, project: Project, outputDir: string, separateFiles?: boolean) {
     this.outputDir = outputDir;
     this.project = project;
+    this.separateFiles = separateFiles;
     this.spec = spec;
   }
 
@@ -62,12 +73,12 @@ export class MainClassBuilder {
     });
 
     if (this.separateFiles) {
-      for (const importClassName of apiInfo.imports) {
+      for (const importInfo of apiInfo.imports) {
         sourceFile.addImportDeclaration({
-          moduleSpecifier: `./services/${importClassName}.ts`,
+          moduleSpecifier: importInfo.path,
           namedImports: [
             {
-              name: importClassName,
+              name: importInfo.name,
             },
           ],
         });
@@ -149,29 +160,57 @@ export class MainClassBuilder {
     return sourceFile;
   }
 
-  private buildAPIInfo(): {api: string[]; imports: string[]} {
-    const classes: {className: string; classType: string; namespace: string}[] = [];
-    const imports: string[] = [];
+  private mergeDeep(source: Record<string, any>, target?: Record<string, any>): Record<string, any> {
+    const destination: Record<string, any> = {};
 
-    const sourceFiles = this.separateFiles
-      ? this.project.getSourceFiles(`${this.outputDir}/services/*.ts`)
-      : [this.project.getSourceFile(`${this.outputDir}/services.ts`)];
+    if (target instanceof Object) {
+      for (const key in target) {
+        destination[key] = target[key];
+      }
+    }
 
-    for (const sourceFile of sourceFiles.filter(Boolean) as SourceFile[]) {
-      if (this.separateFiles) {
+    for (const key in source) {
+      if (!(source[key] instanceof Object) || !target || target[key]) {
+        destination[key] =
+          !(source[key] instanceof Object) || !target || target[key]
+            ? source[key]
+            : this.mergeDeep(source[key], target[key]);
+      }
+    }
+
+    return destination;
+  }
+
+  private buildObjFromPath(obj: APIStructure, importPath: string[]): CircularRecord {
+    const lastName = importPath.shift()!;
+    if (importPath.length === 1) {
+      return {[lastName]: importPath.shift()!};
+    }
+    return {[lastName]: this.buildObjFromPath(obj, importPath)};
+  }
+
+  private buildAPIInfo(): {api: string[]; imports: {name: string; path: string}[]} {
+    let apiStructure: APIStructure = {};
+    const imports: {name: string; path: string}[] = [];
+
+    if (this.separateFiles) {
+      const sourceFiles = this.project.getSourceFiles(`${this.outputDir}/services/**/*.ts`);
+
+      for (const sourceFile of sourceFiles.filter(Boolean) as SourceFile[]) {
         const sourceClasses = sourceFile.getClasses();
         for (const sourceClass of sourceClasses) {
           const className = sourceClass.getName();
           if (className) {
-            classes.push({
-              className,
-              classType: className,
-              namespace: sourceFile.getBaseNameWithoutExtension(),
-            });
-            imports.push(sourceClass.getName() || '');
+            const relativeImportPath = path.relative(this.outputDir, sourceFile.getFilePath().replace('.ts', ''));
+            const obj = this.buildObjFromPath({}, relativeImportPath.replace('services/', '').split('/'));
+            apiStructure = this.mergeDeep(obj, apiStructure);
+            imports.push({name: className, path: `./${relativeImportPath}`});
           }
         }
-      } else {
+      }
+    } else {
+      const sourceFile = this.project.getSourceFile(`${this.outputDir}/services.ts`);
+      if (sourceFile) {
         const namespaces = sourceFile.getNamespaces();
         for (const namesp of namespaces) {
           const sourceClasses = namesp.getClasses();
@@ -179,27 +218,23 @@ export class MainClassBuilder {
           for (const sourceClass of sourceClasses) {
             const className = sourceClass.getName();
             if (className) {
-              classes.push({
-                className,
-                classType: `Services.${namespaceName}.${className}`,
-                namespace: namesp.getName(),
-              });
-              imports.push(sourceClass.getName() || '');
+              const apiName = StringUtil.lowercaseFirstLetter(namespaceName);
+              apiStructure[apiName] = {
+                ...apiStructure[apiName],
+                [StringUtil.lowercaseFirstLetter(className)]: `Services.${namespaceName}.${className}`,
+              };
+              const relativeImportPath = path.relative(this.outputDir, sourceFile.getFilePath().replace('.ts', ''));
+              imports.push({name: className, path: `./${relativeImportPath}`});
             }
           }
         }
       }
     }
 
-    const classesStructure = classes.reduce((result, className) => {
-      if (!className) {
-        return result;
-      }
-      return `${result}  ${StringUtil.lowercaseFirstLetter(className.className)}: ${className.classType},\n`;
-    }, '');
+    const classesStructure = inspect(apiStructure, {depth: Infinity}).replace(/'/g, '');
 
-    const api = ['return {', classesStructure, '}'];
+    const api = [`return ${classesStructure}`];
 
-    return {api, imports: imports.filter(Boolean)};
+    return {api, imports};
   }
 }

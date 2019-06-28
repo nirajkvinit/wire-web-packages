@@ -53,7 +53,7 @@ export class Builder {
     const servicesBuilder = new ServicesBuilder(this.spec, this.project, this.outputDir, this.separateFiles);
     this.classes = servicesBuilder.build();
 
-    const mainClassBuilder = new MainClassBuilder(this.spec, this.project, this.outputDir);
+    const mainClassBuilder = new MainClassBuilder(this.spec, this.project, this.outputDir, this.separateFiles);
     this.mainClass = mainClassBuilder.build();
   }
 
