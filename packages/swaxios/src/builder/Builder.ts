@@ -18,7 +18,7 @@
  */
 
 import {Spec} from 'swagger-schema-official';
-import {IndentationText, Project, QuoteKind, SourceFile} from 'ts-morph';
+import {IndentationText, NewLineKind, Project, QuoteKind, SourceFile} from 'ts-morph';
 
 import {ClassesBuilder} from './ClassesBuilder';
 import {InterfacesBuilder} from './InterfacesBuilder';
@@ -41,6 +41,8 @@ export class Builder {
     this.project = new Project({
       manipulationSettings: {
         indentationText: IndentationText.TwoSpaces,
+        insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces: false,
+        newLineKind: NewLineKind.LineFeed,
         quoteKind: QuoteKind.Single,
       },
     });
@@ -49,13 +51,13 @@ export class Builder {
       this.spec,
       this.project,
       this.outputDir,
-      this.separateFiles
+      this.separateFiles,
     ).buildInterfaces();
     this.classes = new ClassesBuilder(this.spec, this.project, this.outputDir, this.separateFiles).buildClasses();
     this.mainClass = new MainClassBuilder(this.spec, this.project, this.outputDir).buildMainClass();
   }
 
-  public save(): Promise<void> {
-    return this.project.save();
+  public async save(): Promise<void> {
+    await this.project.save();
   }
 }
