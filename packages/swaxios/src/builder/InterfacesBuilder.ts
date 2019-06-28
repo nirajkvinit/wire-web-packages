@@ -197,7 +197,7 @@ export class InterfacesBuilder {
     }
   }
 
-  buildInterfaces(): SourceFile[] {
+  build(): SourceFile[] {
     const {definitions} = this.spec;
     let sourceFile: SourceFile;
 

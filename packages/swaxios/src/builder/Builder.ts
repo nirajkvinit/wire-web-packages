@@ -20,13 +20,13 @@
 import {Spec} from 'swagger-schema-official';
 import {IndentationText, NewLineKind, Project, QuoteKind, SourceFile} from 'ts-morph';
 
-import {ClassesBuilder} from './ClassesBuilder';
 import {InterfacesBuilder} from './InterfacesBuilder';
 import {MainClassBuilder} from './MainClassBuilder';
+import {ServicesBuilder} from './ServicesBuilder';
 
 export class Builder {
-  public classes?: SourceFile[];
-  public interfaces?: SourceFile[];
+  public classes: SourceFile[];
+  public interfaces: SourceFile[];
   public mainClass: SourceFile;
   private readonly spec: Spec;
   private readonly project: Project;
@@ -47,14 +47,14 @@ export class Builder {
       },
     });
 
-    this.interfaces = new InterfacesBuilder(
-      this.spec,
-      this.project,
-      this.outputDir,
-      this.separateFiles,
-    ).buildInterfaces();
-    this.classes = new ClassesBuilder(this.spec, this.project, this.outputDir, this.separateFiles).buildClasses();
-    this.mainClass = new MainClassBuilder(this.spec, this.project, this.outputDir).buildMainClass();
+    const interfacesBuilder = new InterfacesBuilder(this.spec, this.project, this.outputDir, this.separateFiles);
+    this.interfaces = interfacesBuilder.build();
+
+    const servicesBuilder = new ServicesBuilder(this.spec, this.project, this.outputDir, this.separateFiles);
+    this.classes = servicesBuilder.build();
+
+    const mainClassBuilder = new MainClassBuilder(this.spec, this.project, this.outputDir);
+    this.mainClass = mainClassBuilder.build();
   }
 
   public async save(): Promise<void> {

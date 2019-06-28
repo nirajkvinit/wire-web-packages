@@ -38,7 +38,7 @@ export interface APIStructure {
   api: Record<string, APIStructure | API>;
 }
 
-export class ClassesBuilder {
+export class ServicesBuilder {
   private readonly outputDir: string;
   private readonly project: Project;
   private readonly separateFiles?: boolean;
@@ -75,7 +75,7 @@ export class ClassesBuilder {
       });
   }
 
-  buildClasses(): SourceFile[] {
+  build(): SourceFile[] {
     let sourceFile: SourceFile;
 
     function addDefaultImports(source: SourceFile): void {
@@ -90,7 +90,7 @@ export class ClassesBuilder {
         },
         {
           moduleSpecifier: './interfaces',
-          namespaceImport: 'interfaces',
+          namespaceImport: 'Interfaces',
         },
       ]);
     }

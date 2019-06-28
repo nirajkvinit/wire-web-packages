@@ -17,13 +17,18 @@
  *
  */
 
+export function lowercaseFirstLetter(word: string): string {
+  const firstLetter = word.charAt(0).toLowerCase();
+  return `${firstLetter}${word.slice(1)}`;
+}
+
 export function camelCase(words: string[], isPascalCase: boolean = false): string {
   const casedWords = words.map(
     word =>
       word
         .toLowerCase()
         .charAt(0)
-        .toUpperCase() + word.slice(1)
+        .toUpperCase() + word.slice(1),
   );
   if (!isPascalCase) {
     casedWords[0] = casedWords[0].toLowerCase();

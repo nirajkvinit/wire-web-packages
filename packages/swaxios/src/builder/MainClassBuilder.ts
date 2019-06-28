@@ -27,6 +27,7 @@ import {
   SourceFile,
 } from 'ts-morph';
 
+import {StringUtil} from '../util';
 import {header} from './header';
 import {TypeScriptType} from './TypeScriptType';
 
@@ -42,9 +43,10 @@ export class MainClassBuilder {
     this.spec = spec;
   }
 
-  buildMainClass(): SourceFile {
+  build(): SourceFile {
     const {info} = this.spec;
     const sourceFile = this.project.createSourceFile(`${this.outputDir}/APIClient.ts`);
+    const apiInfo = this.buildAPIInfo();
 
     sourceFile.addImportDeclaration({
       defaultImport: 'axios',
@@ -58,6 +60,24 @@ export class MainClassBuilder {
         },
       ],
     });
+
+    if (this.separateFiles) {
+      for (const importClassName of apiInfo.imports) {
+        sourceFile.addImportDeclaration({
+          moduleSpecifier: `./services/${importClassName}.ts`,
+          namedImports: [
+            {
+              name: importClassName,
+            },
+          ],
+        });
+      }
+    } else {
+      sourceFile.addImportDeclaration({
+        moduleSpecifier: './services',
+        namespaceImport: 'Services',
+      });
+    }
 
     const ctor: OptionalKind<ConstructorDeclarationStructure> = {
       overloads: [
@@ -106,7 +126,7 @@ export class MainClassBuilder {
         },
         {
           name: 'rest',
-          statements: ['return ""'],
+          statements: apiInfo.api,
         },
       ],
       isExported: true,
@@ -129,13 +149,57 @@ export class MainClassBuilder {
     return sourceFile;
   }
 
-  buildAPI(): void {
+  private buildAPIInfo(): {api: string[]; imports: string[]} {
+    const classes: {className: string; classType: string; namespace: string}[] = [];
+    const imports: string[] = [];
+
     const sourceFiles = this.separateFiles
       ? this.project.getSourceFiles(`${this.outputDir}/services/*.ts`)
       : [this.project.getSourceFile(`${this.outputDir}/services.ts`)];
 
-    for (const sourceFile of sourceFiles) {
-      console.log('sourceFile', sourceFile);
+    for (const sourceFile of sourceFiles.filter(Boolean) as SourceFile[]) {
+      if (this.separateFiles) {
+        const sourceClasses = sourceFile.getClasses();
+        for (const sourceClass of sourceClasses) {
+          const className = sourceClass.getName();
+          if (className) {
+            classes.push({
+              className,
+              classType: className,
+              namespace: sourceFile.getBaseNameWithoutExtension(),
+            });
+            imports.push(sourceClass.getName() || '');
+          }
+        }
+      } else {
+        const namespaces = sourceFile.getNamespaces();
+        for (const namesp of namespaces) {
+          const sourceClasses = namesp.getClasses();
+          const namespaceName = namesp.getName();
+          for (const sourceClass of sourceClasses) {
+            const className = sourceClass.getName();
+            if (className) {
+              classes.push({
+                className,
+                classType: `Services.${namespaceName}.${className}`,
+                namespace: namesp.getName(),
+              });
+              imports.push(sourceClass.getName() || '');
+            }
+          }
+        }
+      }
     }
+
+    const classesStructure = classes.reduce((result, className) => {
+      if (!className) {
+        return result;
+      }
+      return `${result}  ${StringUtil.lowercaseFirstLetter(className.className)}: ${className.classType},\n`;
+    }, '');
+
+    const api = ['return {', classesStructure, '}'];
+
+    return {api, imports: imports.filter(Boolean)};
   }
 }

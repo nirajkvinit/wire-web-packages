@@ -18,7 +18,7 @@
  */
 
 export * from './Builder';
-export * from './ClassesBuilder';
+export * from './ServicesBuilder';
 export * from './InterfacesBuilder';
 export * from './MainClassBuilder';
 export * from './SwaggerType';
