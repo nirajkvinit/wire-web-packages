@@ -21,8 +21,8 @@ import * as path from 'path';
 import * as SwaggerParser from 'swagger-parser';
 import {Spec} from 'swagger-schema-official';
 
-import {Builder} from './builder/Builder';
 import {FileUtil, UrlUtil} from './util/';
+import {APIClientGenerator} from './generators/APIClientGenerator';
 
 export interface Options {
   forceDeletion?: boolean;
@@ -35,13 +35,13 @@ export class Swaxios {
   private readonly forceDeletion?: boolean;
   private readonly inputFile: string;
   private readonly outputDir: string;
-  private readonly separateFiles?: boolean;
+  //private readonly separateFiles?: boolean;
 
   constructor(options: Options) {
     this.forceDeletion = options.forceDeletion;
     this.inputFile = path.resolve(options.inputFile);
     this.outputDir = path.resolve(options.outputDir);
-    this.separateFiles = options.separateFiles;
+    //this.separateFiles = options.separateFiles;
   }
 
   private async validateConfig(swaggerJson: Spec): Promise<void> {
@@ -61,7 +61,7 @@ export class Swaxios {
       : await FileUtil.readInputFile(this.inputFile);
     await this.validateConfig(specification);
 
-    await new Builder(specification, this.outputDir, this.separateFiles).save();
+    const structure = new APIClientGenerator(specification);
 
     return this.outputDir;
   }
