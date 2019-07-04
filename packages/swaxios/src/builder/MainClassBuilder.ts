@@ -123,17 +123,27 @@ export class MainClassBuilder {
       ],
     };
 
+    // const simpleLet: StatementStructures = {
+    //   kind: StructureKind.VariableStatement,
+    //   declarations: [
+    //     {
+    //       name: 'api',
+    //       initializer: '{}',
+    //     }
+    //   ],
+    // }
+
     const mainClass: OptionalKind<ClassDeclarationStructure> = {
       ctors: [ctor],
       docs: [info.description || ''],
       getAccessors: [
         {
           name: 'defaults',
-          statements: ['return this.httpClient.defaults;'],
+          statements: 'return this.httpClient.defaults',
         },
         {
           name: 'interceptors',
-          statements: ['return this.httpClient.interceptors;'],
+          statements: 'return this.httpClient.interceptors;',
         },
         {
           name: 'rest',
