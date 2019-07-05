@@ -31,17 +31,18 @@ export enum TypeScriptType {
   ARRAY = 'Array',
   BOOLEAN = 'boolean',
   EMPTY_OBJECT = '{}',
+  FUNCTION = 'function',
   INTERFACE = 'interface',
   NUMBER = 'number',
   STRING = 'string',
+  THIS = 'this',
   TYPE = 'type',
 }
 
 export interface SwaxiosConstructor extends SwaxiosFunction {
-  async: false;
-  constructor: true;
+  header: SwaxiosConstructorHeader;
   name: 'constructor';
-  returnType: TypeScriptType;
+  returnType: TypeScriptType.THIS;
 }
 
 export interface SwaxiosGetter extends SwaxiosFunction {
@@ -54,54 +55,62 @@ export interface SwaxiosSetter extends SwaxiosFunction {
 
 export interface SwaxiosArgument {
   name: string;
-  required?: boolean;
-  type: SwaxiosType | SwaxiosFunction;
+  optional?: boolean;
+  type: TypeScriptType | string | (TypeScriptType | string)[];
+}
+
+export interface SwaxiosConstructorHeader extends SwaxiosFunctionHeader {
+  isAsync: false;
+  isConstructor: true;
+}
+
+export interface SwaxiosFunctionHeader {
+  arguments?: SwaxiosArgument[];
+  description?: string;
+  isAsync?: boolean;
+  isPrivate?: boolean;
+  isStatic?: boolean;
+  overloads?: Omit<SwaxiosFunctionHeader, 'returnType'>[];
+  returnType?: TypeScriptType | string;
 }
 
 export interface SwaxiosFunction {
-  arguments?: SwaxiosArgument;
-  async?: boolean;
+  header?: SwaxiosFunctionHeader;
   content?: SwaxiosFunctionContent;
-  description?: string;
   name: string;
-  private?: boolean;
-  returnType: TypeScriptType;
-  static?: boolean;
 }
 
 export interface SwaxiosClassValue extends SwaxiosInterfaceValue {
-  private?: boolean;
-  readonly?: boolean;
-  static?: boolean;
+  isPrivate?: boolean;
+  isReadonly?: boolean;
+  isStatic?: boolean;
 }
 
 export interface SwaxiosInterfaceValue {
   description?: string;
   name: string;
-  required?: boolean;
-  type: TypeScriptType;
+  isOptional?: boolean;
+  type: TypeScriptType | string;
 }
 
 export interface SwaxiosClass {
   description?: string;
   constructor: SwaxiosConstructor;
-  functions?: SwaxiosFunction[];
-  getter?: SwaxiosGetter[];
+  functions?: (SwaxiosFunction | SwaxiosGetter | SwaxiosSetter)[];
   name: string;
-  setter?: SwaxiosSetter[];
-  values?: Record<string, SwaxiosClassValue>;
+  values?: SwaxiosClassValue[];
 }
 
 export interface SwaxiosInterface {
   description?: string;
   name: string;
-  values: Record<string, SwaxiosInterfaceValue>;
+  values: SwaxiosInterfaceValue[];
 }
 
 export interface SwaxiosType {
   description?: string;
   name: string;
-  type: TypeScriptType;
+  type: TypeScriptType | string;
 }
 
 export type SwaxiosFunctionContent = string;

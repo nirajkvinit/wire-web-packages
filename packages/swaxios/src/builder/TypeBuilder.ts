@@ -17,8 +17,23 @@
  *
  */
 
-export * from './Swaxios';
-import * as builder from './ts-generator';
-import * as util from './util';
+import {SwaggerType, TypeScriptType} from '../definitions';
 
-export {builder, util};
+export class TypeGenerator {
+  constructor() {}
+
+  buildType(type?: string): TypeScriptType {
+    switch (type) {
+      case SwaggerType.INTEGER:
+      case SwaggerType.NUMBER: {
+        return TypeScriptType.NUMBER;
+      }
+      case SwaggerType.STRING: {
+        return TypeScriptType.STRING;
+      }
+      default: {
+        return TypeScriptType.ANY;
+      }
+    }
+  }
+}

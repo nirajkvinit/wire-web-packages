@@ -21,8 +21,8 @@ import * as path from 'path';
 import * as SwaggerParser from 'swagger-parser';
 import {Spec} from 'swagger-schema-official';
 
+import {APIClientBuilder} from './builder/APIClientBuilder';
 import {FileUtil, UrlUtil} from './util/';
-import {APIClientGenerator} from './generators/APIClientGenerator';
 
 export interface Options {
   forceDeletion?: boolean;
@@ -61,7 +61,8 @@ export class Swaxios {
       : await FileUtil.readInputFile(this.inputFile);
     await this.validateConfig(specification);
 
-    const structure = new APIClientGenerator(specification);
+    const structure = new APIClientBuilder(specification);
+    console.log('structure', structure);
 
     return this.outputDir;
   }

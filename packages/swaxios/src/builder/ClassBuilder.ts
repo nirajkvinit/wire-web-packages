@@ -17,9 +17,19 @@
  *
  */
 
-export * from './Builder';
-export * from './ServicesBuilder';
-export * from './InterfacesBuilder';
-export * from './MainClassBuilder';
-export * from './SwaggerType';
-export * from './TypeScriptType';
+import {Path} from 'swagger-schema-official';
+import {SwaxiosClass} from '../definitions';
+
+export class ClassGenerator {
+  private readonly name: string;
+  private readonly path: Path;
+
+  constructor(name: string, path: Path) {
+    this.name = name;
+    this.path = path;
+  }
+
+  buildClass(): SwaxiosClass {
+    return `${this.path}/${this.name}` as any;
+  }
+}

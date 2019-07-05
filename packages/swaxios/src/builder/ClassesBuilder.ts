@@ -17,8 +17,20 @@
  *
  */
 
-export * from './Swaxios';
-import * as builder from './ts-generator';
-import * as util from './util';
+import {Spec} from 'swagger-schema-official';
+import {SwaxiosClass} from '../definitions';
+import {ClassGenerator} from './ClassBuilder';
 
-export {builder, util};
+export class ClassesGenerator {
+  private readonly spec: Spec;
+
+  constructor(spec: Spec) {
+    this.spec = spec;
+  }
+
+  buildClasses(): SwaxiosClass[] {
+    return Object.entries(this.spec.paths).map(([name, path]) => {
+      return new ClassGenerator(name, path).buildClass();
+    });
+  }
+}

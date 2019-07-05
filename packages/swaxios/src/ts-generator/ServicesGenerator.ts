@@ -30,7 +30,7 @@ import {
 import {StringUtil} from '../util';
 import {header} from './header';
 
-export class ServicesBuilder {
+export class ServicesGenerator {
   private readonly outputDir: string;
   private readonly project: Project;
   private readonly separateFiles?: boolean;
@@ -67,7 +67,7 @@ export class ServicesBuilder {
       });
   }
 
-  build(): SourceFile[] {
+  generateSourceFiles(): SourceFile[] {
     let sourceFile: SourceFile;
 
     function addDefaultImports(source: SourceFile): void {

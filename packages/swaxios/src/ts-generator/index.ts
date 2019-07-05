@@ -17,8 +17,7 @@
  *
  */
 
-export * from './Swaxios';
-import * as builder from './ts-generator';
-import * as util from './util';
-
-export {builder, util};
+export * from './Generator';
+export * from './ServicesGenerator';
+export * from './InterfacesGenerator';
+export * from './MainClassGenerator';

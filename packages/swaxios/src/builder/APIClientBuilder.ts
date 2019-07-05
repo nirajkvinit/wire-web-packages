@@ -18,23 +18,33 @@
  */
 
 import {Spec} from 'swagger-schema-official';
-import {SwaxiosInterface} from '../definitions';
-import {InterfaceGenerator} from './InterfaceBuilder';
+import {SwaxiosClass, SwaxiosInterface} from '../definitions';
+import {ClassesGenerator} from './ClassesBuilder';
+import {InterfacesGenerator} from './InterfacesBuilder';
+import {MainClassGenerator} from './MainClassBuilder';
 
-export class InterfacesGenerator {
+export class APIClientBuilder {
   private readonly spec: Spec;
+  private readonly interfacesBuilder: InterfacesGenerator;
+  private readonly classesBuilder: ClassesGenerator;
+  private readonly mainClassBuilder: MainClassGenerator;
 
   constructor(spec: Spec) {
     this.spec = spec;
+    this.interfacesBuilder = new InterfacesGenerator(this.spec);
+    this.classesBuilder = new ClassesGenerator(this.spec);
+    this.mainClassBuilder = new MainClassGenerator(this.spec);
   }
 
   buildInterfaces(): SwaxiosInterface[] {
-    if (this.spec.definitions) {
-      return Object.entries(this.spec.definitions).map(([name, definition]) => {
-        return new InterfaceGenerator(name, definition).buildInterface();
-      });
-    }
+    return this.interfacesBuilder.buildInterfaces();
+  }
 
-    return [];
+  buildClasses(): SwaxiosClass[] {
+    return this.classesBuilder.buildClasses();
+  }
+
+  buildMainClass(): SwaxiosClass {
+    return this.mainClassBuilder.buildMainClass();
   }
 }

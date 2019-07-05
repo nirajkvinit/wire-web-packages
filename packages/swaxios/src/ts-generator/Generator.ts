@@ -20,11 +20,11 @@
 import {Spec} from 'swagger-schema-official';
 import {IndentationText, NewLineKind, Project, QuoteKind, SourceFile} from 'ts-morph';
 
-import {InterfacesBuilder} from './InterfacesBuilder';
-import {MainClassBuilder} from './MainClassBuilder';
-import {ServicesBuilder} from './ServicesBuilder';
+import {InterfacesGenerator} from './InterfacesGenerator';
+import {MainClassGenerator} from './MainClassGenerator';
+import {ServicesGenerator} from './ServicesGenerator';
 
-export class Builder {
+export class Generator {
   public classes: SourceFile[];
   public interfaces: SourceFile[];
   public mainClass: SourceFile;
@@ -47,14 +47,14 @@ export class Builder {
       },
     });
 
-    const interfacesBuilder = new InterfacesBuilder(this.spec, this.project, this.outputDir, this.separateFiles);
-    this.interfaces = interfacesBuilder.build();
+    const interfacesGenerator = new InterfacesGenerator(this.spec, this.project, this.outputDir, this.separateFiles);
+    this.interfaces = interfacesGenerator.generateSourceFiles();
 
-    const servicesBuilder = new ServicesBuilder(this.spec, this.project, this.outputDir, this.separateFiles);
-    this.classes = servicesBuilder.build();
+    const servicesGenerator = new ServicesGenerator(this.spec, this.project, this.outputDir, this.separateFiles);
+    this.classes = servicesGenerator.generateSourceFiles();
 
-    const mainClassBuilder = new MainClassBuilder(this.spec, this.project, this.outputDir, this.separateFiles);
-    this.mainClass = mainClassBuilder.build();
+    const mainClassGenerator = new MainClassGenerator(this.spec, this.project, this.outputDir, this.separateFiles);
+    this.mainClass = mainClassGenerator.generateSourceFile();
   }
 
   public async save(): Promise<void> {
