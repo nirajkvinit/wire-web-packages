@@ -18,8 +18,9 @@
  */
 
 /** @jsx jsx */
-import {ObjectInterpolation, jsx} from '@emotion/core';
-import {COLOR, Opacity, Slide, YAxisMovement} from '../../Identity';
+import {ObjectInterpolation, css, jsx, keyframes} from '@emotion/core';
+import Reveal from 'react-reveal/Reveal';
+import {COLOR} from '../../Identity';
 import {DURATION} from '../../Identity/motions';
 import {QUERY} from '../../mediaQueries';
 import {MenuSubLink} from './MenuSubLink';
@@ -87,6 +88,34 @@ export interface HeaderSubMenuProps<T = HTMLParagraphElement> extends React.HTML
   isOpen: boolean;
 }
 
+const HeaderSubMenuDesktopFadeAnimation = keyframes`
+  0% {
+    transform: translateY(-30px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+`;
+const HeaderSubMenuDesktopFadeAnimationClass = css`
+  .animation-desktop {
+    animation-name: ${HeaderSubMenuDesktopFadeAnimation};
+  }
+`;
+
+const HeaderSubMenuMobileFadeAnimation = keyframes`
+  0% {
+    transform: translateY(-56%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+`;
+const HeaderSubMenuMobileFadeAnimationClass = css`
+  .animation-mobile {
+    animation-name: ${HeaderSubMenuMobileFadeAnimation};
+  }
+`;
+
 export const HeaderSubMenu: React.SFC<HeaderSubMenuProps> = ({caption, isOpen, children, ...props}) => {
   const isDesktop = typeof window !== 'undefined' && window.matchMedia(`(${QUERY.desktop})`).matches;
   return (
@@ -95,43 +124,33 @@ export const HeaderSubMenu: React.SFC<HeaderSubMenuProps> = ({caption, isOpen, c
       style={{textAlign: 'center', display: 'inline-block', position: 'relative', cursor: 'pointer'}}
     >
       <span>{caption}</span>
-      <Opacity
-        in={isOpen && isDesktop}
-        timeout={DURATION.DEFAULT}
-        style={{display: 'inline-block', position: 'absolute', left: -18, zIndex: 1, paddingTop: 20, marginTop: 10}}
-        mountOnEnter={false}
-        unmountOnExit={false}
-      >
-        <YAxisMovement
-          in={isOpen && isDesktop}
-          startValue={'-30px'}
-          endValue={'0px'}
-          style={{display: 'inline-block'}}
-          timeout={DURATION.DEFAULT}
-          mountOnEnter={false}
-          unmountOnExit={true}
-        >
-          <DesktopStyledHeaderSubMenu>{children}</DesktopStyledHeaderSubMenu>
-        </YAxisMovement>
-      </Opacity>
-      <Opacity
-        in={isOpen && !isDesktop}
-        timeout={DURATION.DEFAULT}
-        mountOnEnter={false}
-        unmountOnExit={false}
-        style={{position: 'relative', display: 'block'}}
-      >
-        <Slide
-          in={isOpen && !isDesktop}
-          startValue={'-56%'}
-          endValue={'0'}
-          timeout={DURATION.DEFAULT}
-          mountOnEnter={false}
-          unmountOnExit={true}
-        >
-          <MobileStyledHeaderSubMenu>{children}</MobileStyledHeaderSubMenu>
-        </Slide>
-      </Opacity>
+      {isDesktop && (
+        <div css={HeaderSubMenuDesktopFadeAnimationClass}>
+          <Reveal in={isOpen} effect="animation-desktop" duration={DURATION.DEFAULT} durationOut={DURATION.DEFAULT}>
+            <div
+              style={{
+                display: 'inline-block',
+                left: -18,
+                marginTop: 10,
+                paddingTop: 20,
+                position: 'absolute',
+                zIndex: 1,
+              }}
+            >
+              <DesktopStyledHeaderSubMenu>{children}</DesktopStyledHeaderSubMenu>
+            </div>
+          </Reveal>
+        </div>
+      )}
+      {!isDesktop && (
+        <div css={HeaderSubMenuMobileFadeAnimationClass}>
+          <Reveal in={isOpen} effect="animation-mobile" duration={DURATION.DEFAULT}>
+            <div style={{position: 'relative', display: 'block'}}>
+              <MobileStyledHeaderSubMenu>{children}</MobileStyledHeaderSubMenu>
+            </div>
+          </Reveal>
+        </div>
+      )}
     </MenuSubLink>
   );
 };

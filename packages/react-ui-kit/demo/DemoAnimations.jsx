@@ -17,32 +17,20 @@
  *
  */
 
-import {
-  BottomUpMovement,
-  Button,
-  Column,
-  Columns,
-  Container,
-  H1,
-  LeftRightMovement,
-  Line,
-  Opacity,
-  RightLeftMovement,
-  TopDownMovement,
-  XAxisMovement,
-  YAxisMovement,
-} from '@wireapp/react-ui-kit';
+import {Button, Column, Columns, Container, Fade, H1, Line} from '@wireapp/react-ui-kit';
 import React, {useState} from 'react';
 
 export const DemoAnimations = () => {
   const [animateBottomUp, setAnimateBottomUp] = useState(false);
   const [animateCombined, setAnimateCombined] = useState(false);
   const [animateLeftRight, setAnimateLeftRight] = useState(false);
-  const [animateOpacity, setAnimateOpacity] = useState(true);
+  const [animateFade, setAnimateFade] = useState(true);
   const [animateRightLeft, setAnimateRightLeft] = useState(false);
   const [animateTopDown, setAnimateTopDown] = useState(false);
   const [animateXAxis, setAnimateXAxis] = useState(false);
   const [animateYAxis, setAnimateYAxis] = useState(false);
+
+  const [test, setTest] = useState(false);
 
   return (
     <Container>
@@ -50,53 +38,51 @@ export const DemoAnimations = () => {
       <H1>Animations</H1>
       <Columns>
         <Column>
-          <Button onClick={() => setAnimateOpacity(!animateOpacity)}>{'Toggle Opacity Animation'}</Button>
-          <Opacity in={animateOpacity} startValue={'0'} endValue={'1'}>
-            {'Opacity'}
-          </Opacity>
+          <Button onClick={() => setAnimateFade(!animateFade)}>{'Toggle Fade Animation'}</Button>
+          <Fade when={animateFade}>{'Fade'}</Fade>
         </Column>
       </Columns>
       <Columns>
         <Column>
           <Button onClick={() => setAnimateTopDown(!animateTopDown)}>{'Toggle TopDown Animation'}</Button>
-          <TopDownMovement in={animateTopDown}>{'TopDown'}</TopDownMovement>
+          {/* <TopDownMovement in={animateTopDown}>{'TopDown'}</TopDownMovement> */}
         </Column>
         <Column>
           <Button onClick={() => setAnimateBottomUp(!animateBottomUp)}>{'Toggle BottomUp Animation'}</Button>
-          <BottomUpMovement in={animateBottomUp}>{'BottomUpMovement'}</BottomUpMovement>
+          {/* <BottomUpMovement in={animateBottomUp}>{'BottomUpMovement'}</BottomUpMovement> */}
         </Column>
         <Column>
           <Button onClick={() => setAnimateYAxis(!animateYAxis)}>{'Toggle YAxis Animation'}</Button>
-          <YAxisMovement in={animateYAxis} startValue={'50%'} endValue={'-50%'}>
+          {/* <YAxisMovement in={animateYAxis} startValue={'50%'} endValue={'-50%'}>
             {'YAxisMovement'}
-          </YAxisMovement>
+          </YAxisMovement> */}
         </Column>
       </Columns>
       <Columns>
         <Column>
           <Button onClick={() => setAnimateLeftRight(!animateLeftRight)}>{'Toggle LeftRight Animation'}</Button>
-          <LeftRightMovement in={animateLeftRight}>{'LeftRightMovement'}</LeftRightMovement>
+          {/* <LeftRightMovement in={animateLeftRight}>{'LeftRightMovement'}</LeftRightMovement> */}
         </Column>
         <Column>
           <Button onClick={() => setAnimateXAxis(!animateXAxis)}>{'Toggle XAxis Animation'}</Button>
-          <XAxisMovement in={animateXAxis} startValue={'10vh'} endValue={'-10vh'}>
+          {/* <XAxisMovement in={animateXAxis} startValue={'10vh'} endValue={'-10vh'}>
             {'XAxisMovement'}
-          </XAxisMovement>
+          </XAxisMovement> */}
         </Column>
         <Column>
           <Button onClick={() => setAnimateRightLeft(!animateRightLeft)}>{'Toggle RightLeft Animation'}</Button>
-          <RightLeftMovement in={animateRightLeft}>{'RightLeftMovement'}</RightLeftMovement>
+          {/* <RightLeftMovement in={animateRightLeft}>{'RightLeftMovement'}</RightLeftMovement> */}
         </Column>
       </Columns>
       <br />
       <Button onClick={() => setAnimateCombined(!animateCombined)}>{'Toggle Combined Animation'}</Button>
-      <TopDownMovement in={animateCombined}>
+      {/* <TopDownMovement in={animateCombined}>
         <Opacity in={animateCombined}>
           <XAxisMovement in={animateCombined} startValue={'40vh'} endValue={'10vh'}>
             {'Combined Animation'}
           </XAxisMovement>
         </Opacity>
-      </TopDownMovement>
+      </TopDownMovement> */}
     </Container>
   );
 };
