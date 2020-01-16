@@ -22,6 +22,7 @@ import {USER_EVENT, UserConnectionEvent} from '@wireapp/api-client/dist/event';
 
 import {PayloadBundle, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '../conversation';
 import {UserMapper} from './UserMapper';
+import {ServerTimeHandler} from '../time';
 
 describe('UserMapper', () => {
   describe('"mapUserEvent"', () => {
@@ -42,7 +43,8 @@ describe('UserMapper', () => {
         },
       };
 
-      const incomingEvent = UserMapper.mapUserEvent(
+      const serverTimeHandler = new ServerTimeHandler();
+      const incomingEvent = new UserMapper(serverTimeHandler).mapUserEvent(
         event,
         selfUserId,
         PayloadBundleSource.WEBSOCKET,

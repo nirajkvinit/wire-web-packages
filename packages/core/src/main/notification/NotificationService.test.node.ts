@@ -20,9 +20,11 @@
 import {APIClient} from '@wireapp/api-client';
 import {Notification} from '@wireapp/api-client/dist/notification';
 import {MemoryEngine} from '@wireapp/store-engine';
+
 import {PayloadBundleSource} from '../conversation';
 import {CryptographyService} from '../cryptography';
 import {NotificationService} from './NotificationService';
+import {ServerTimeHandler} from '../time';
 
 const BASE_URL = 'mock-backend.wire.com';
 const MOCK_BACKEND = {
@@ -30,6 +32,7 @@ const MOCK_BACKEND = {
   rest: `https://${BASE_URL}`,
   ws: `wss://${BASE_URL}`,
 };
+const serverTimeHandler = new ServerTimeHandler();
 
 describe('NotificationService', () => {
   describe('handleEvent', () => {
@@ -40,7 +43,12 @@ describe('NotificationService', () => {
       const apiClient = new APIClient({urls: MOCK_BACKEND});
 
       const cryptographyService = ({} as unknown) as CryptographyService;
-      const notificationService = new NotificationService(apiClient, cryptographyService, storeEngine);
+      const notificationService = new NotificationService(
+        apiClient,
+        cryptographyService,
+        storeEngine,
+        serverTimeHandler,
+      );
 
       spyOn<any>(notificationService, 'handleEvent').and.throwError('Test error');
 
@@ -67,6 +75,7 @@ describe('NotificationService', () => {
         apiClient,
         ({} as unknown) as CryptographyService,
         storeEngine,
+        serverTimeHandler,
       );
 
       spyOn<any>(notificationService, 'handleEvent').and.returnValue({});
@@ -91,6 +100,7 @@ describe('NotificationService', () => {
         apiClient,
         ({} as unknown) as CryptographyService,
         storeEngine,
+        serverTimeHandler,
       );
 
       spyOn<any>(notificationService, 'handleEvent').and.returnValue({});
@@ -115,6 +125,7 @@ describe('NotificationService', () => {
         apiClient,
         ({} as unknown) as CryptographyService,
         storeEngine,
+        serverTimeHandler,
       );
       notificationService.on(NotificationService.TOPIC.NOTIFICATION_ERROR, notificationError => {
         expect(notificationError.error.message).toBe('Test error');

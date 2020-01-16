@@ -17,6 +17,9 @@
  *
  */
 import {AvailableMessageContent, MessageHashService} from './MessageHashService';
+import {ServerTimeHandler} from '../time';
+
+const serverTimeHandler = new ServerTimeHandler();
 
 describe('MessageHashService', () => {
   describe('"getHash"', () => {
@@ -25,7 +28,7 @@ describe('MessageHashService', () => {
         text: 'Hello!',
       };
 
-      const messageHashService = new MessageHashService(content);
+      const messageHashService = new MessageHashService(serverTimeHandler, content);
 
       spyOn<any>(messageHashService, 'getTextBytes').and.callThrough();
       spyOn<any>(messageHashService, 'getLocationBytes').and.callThrough();
@@ -43,7 +46,7 @@ describe('MessageHashService', () => {
       };
       const timestamp = 1540213769;
 
-      const messageHashService = new MessageHashService(content, timestamp);
+      const messageHashService = new MessageHashService(serverTimeHandler, content, timestamp);
       const buffer = messageHashService['getTimestampBuffer'](timestamp);
 
       const hexValue = buffer.toString('hex');
@@ -58,7 +61,7 @@ describe('MessageHashService', () => {
       };
       const timestamp = 1540213965000;
 
-      const messageHashService = new MessageHashService(content, timestamp);
+      const messageHashService = new MessageHashService(serverTimeHandler, content, timestamp);
 
       const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
@@ -72,7 +75,7 @@ describe('MessageHashService', () => {
       };
       const timestamp = 1540213965000;
 
-      const messageHashService = new MessageHashService(content, timestamp);
+      const messageHashService = new MessageHashService(serverTimeHandler, content, timestamp);
 
       const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
@@ -86,7 +89,7 @@ describe('MessageHashService', () => {
       };
       const timestamp = 1540213769000;
 
-      const messageHashService = new MessageHashService(content, timestamp);
+      const messageHashService = new MessageHashService(serverTimeHandler, content, timestamp);
 
       const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
@@ -100,7 +103,7 @@ describe('MessageHashService', () => {
       };
       const timestamp = 1540213769000;
 
-      const messageHashService = new MessageHashService(content, timestamp);
+      const messageHashService = new MessageHashService(serverTimeHandler, content, timestamp);
 
       const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
@@ -115,7 +118,7 @@ describe('MessageHashService', () => {
       };
       const timestamp = 1540213769000;
 
-      const messageHashService = new MessageHashService(content, timestamp);
+      const messageHashService = new MessageHashService(serverTimeHandler, content, timestamp);
 
       const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
@@ -130,7 +133,7 @@ describe('MessageHashService', () => {
       };
       const timestamp = 1540213769000;
 
-      const messageHashService = new MessageHashService(content, timestamp);
+      const messageHashService = new MessageHashService(serverTimeHandler, content, timestamp);
 
       const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
@@ -148,7 +151,7 @@ describe('MessageHashService', () => {
       };
       const timestamp = 1540213769000;
 
-      const messageHashService = new MessageHashService(content, timestamp);
+      const messageHashService = new MessageHashService(serverTimeHandler, content, timestamp);
 
       const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
@@ -166,7 +169,7 @@ describe('MessageHashService', () => {
       };
       const timestamp = 1540213965000;
 
-      const messageHashService = new MessageHashService(content, timestamp);
+      const messageHashService = new MessageHashService(serverTimeHandler, content, timestamp);
 
       const hashValue = messageHashService.getHash().toString('hex');
       expect(hashValue).toBe(expectedHashValue);
