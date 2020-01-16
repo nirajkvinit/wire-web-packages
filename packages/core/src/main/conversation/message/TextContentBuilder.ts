@@ -22,7 +22,6 @@ import {
   LegalHoldStatus,
   LinkPreviewUploadedContent,
   MentionContent,
-  QuoteContent,
   QuoteMessageContent,
   TextContent,
 } from '../content';
@@ -61,25 +60,16 @@ export class TextContentBuilder {
     return this;
   }
 
-  public withQuote(quote: QuoteMessageContent, timestamp: number): TextContentBuilder;
-  public withQuote(quote?: QuoteContent): TextContentBuilder;
-  public withQuote(quote?: QuoteContent | QuoteMessageContent, timestamp?: number): TextContentBuilder {
+  public withQuote(quote?: QuoteMessageContent): TextContentBuilder {
     if (quote) {
-      if (timestamp) {
-        const messageHashService = new MessageHashService(
-          this.serverTimeHandler,
-          (quote as QuoteMessageContent).content,
-          timestamp,
-        );
-        const messageHashBuffer = messageHashService.getHash();
+      const timestamp = this.serverTimeHandler.getServerTimestamp().getTime();
+      const messageHashService = new MessageHashService((quote as QuoteMessageContent).content, timestamp);
+      const messageHashBuffer = messageHashService.getHash();
 
-        this.content.quote = {
-          quotedMessageId: quote.quotedMessageId,
-          quotedMessageSha256: new Uint8Array(messageHashBuffer),
-        };
-      } else {
-        this.content.quote = quote as QuoteContent;
-      }
+      this.content.quote = {
+        quotedMessageId: quote.quotedMessageId,
+        quotedMessageSha256: new Uint8Array(messageHashBuffer),
+      };
     }
 
     return this;
