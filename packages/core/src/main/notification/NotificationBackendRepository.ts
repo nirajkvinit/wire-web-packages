@@ -23,11 +23,16 @@ import {Notification} from '@wireapp/api-client/dist/notification/';
 export class NotificationBackendRepository {
   constructor(private readonly apiClient: APIClient) {}
 
-  public async getAllNotifications(clientId?: string, lastNotificationId?: string): Promise<Notification[]> {
+  public getAllNotifications(clientId?: string, lastNotificationId?: string): Promise<Notification[]> {
     return this.apiClient.notification.api.getAllNotifications(clientId, lastNotificationId);
   }
 
   public getLastNotification(clientId?: string): Promise<Notification> {
     return this.apiClient.notification.api.getLastNotification(clientId);
+  }
+
+  public async getServerTimestamp(clientId?: string): Promise<string> {
+    const {time: serverTime} = await this.apiClient.notification.api.getNotifications(clientId, 1);
+    return serverTime;
   }
 }

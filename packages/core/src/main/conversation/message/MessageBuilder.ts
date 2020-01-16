@@ -19,7 +19,8 @@
 
 import {APIClient} from '@wireapp/api-client';
 import {ClientAction, Confirmation} from '@wireapp/protocol-messaging';
-import {AbortReason, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '..';
+
+import {AbortReason, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '../';
 import {AssetService} from '../AssetService';
 import {
   CallingContent,
@@ -56,16 +57,19 @@ import {
   TextMessage,
 } from './OtrMessage';
 import {TextContentBuilder} from './TextContentBuilder';
+import {ServerTimeHandler} from '../../time';
 
 const UUID = require('pure-uuid');
 
 export class MessageBuilder {
   private readonly apiClient: APIClient;
   private readonly assetService: AssetService;
+  private readonly serverTimeHandler: ServerTimeHandler;
 
-  constructor(apiClient: APIClient, assetService: AssetService) {
+  constructor(apiClient: APIClient, assetService: AssetService, serverTimeHandler: ServerTimeHandler) {
     this.apiClient = apiClient;
     this.assetService = assetService;
+    this.serverTimeHandler = serverTimeHandler;
   }
 
   public createEditedText(
@@ -86,11 +90,11 @@ export class MessageBuilder {
       id: messageId,
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.MESSAGE_EDIT,
     };
 
-    return new TextContentBuilder(payloadBundle);
+    return new TextContentBuilder(payloadBundle, this.serverTimeHandler);
   }
 
   public async createFileData(
@@ -116,7 +120,7 @@ export class MessageBuilder {
       id: originalMessageId,
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.ASSET,
     };
   }
@@ -141,7 +145,7 @@ export class MessageBuilder {
       id: messageId,
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.ASSET_META,
     };
   }
@@ -166,7 +170,7 @@ export class MessageBuilder {
       id: originalMessageId,
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.ASSET_ABORT,
     };
   }
@@ -194,7 +198,7 @@ export class MessageBuilder {
       id: messageId,
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.ASSET_IMAGE,
     };
   }
@@ -211,7 +215,7 @@ export class MessageBuilder {
       id: messageId,
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.LOCATION,
     };
   }
@@ -228,7 +232,7 @@ export class MessageBuilder {
       id: messageId,
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.CALL,
     };
   }
@@ -245,7 +249,7 @@ export class MessageBuilder {
       id: messageId,
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.REACTION,
     };
   }
@@ -260,11 +264,11 @@ export class MessageBuilder {
       id: messageId,
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.TEXT,
     };
 
-    return new TextContentBuilder(payloadBundle);
+    return new TextContentBuilder(payloadBundle, this.serverTimeHandler);
   }
 
   public createConfirmation(
@@ -282,7 +286,7 @@ export class MessageBuilder {
       id: messageId,
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.CONFIRMATION,
     };
   }
@@ -299,7 +303,7 @@ export class MessageBuilder {
       id: messageId,
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.PING,
     };
   }
@@ -315,7 +319,7 @@ export class MessageBuilder {
       id: messageId,
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_UNSENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.CLIENT_ACTION,
     };
   }

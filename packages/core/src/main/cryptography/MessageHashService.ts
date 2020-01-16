@@ -21,16 +21,19 @@ import * as hash from 'hash.js';
 import Long from 'long';
 
 import {AssetContent, ContentType, ConversationContent, LocationContent, TextContent} from '../conversation/content';
+import {ServerTimeHandler} from '../time';
 
 export type AvailableMessageContent = AssetContent | LocationContent | TextContent;
 
 export class MessageHashService {
   private readonly messageContent: AvailableMessageContent;
   private readonly timestamp: number;
+  private readonly serverTimeHandler: ServerTimeHandler;
 
-  constructor(messageContent: AvailableMessageContent, timestamp: number = Date.now()) {
+  constructor(serverTimeHandler: ServerTimeHandler, messageContent: AvailableMessageContent, timestamp?: number) {
+    this.serverTimeHandler = serverTimeHandler;
     this.messageContent = messageContent;
-    const unixTimestamp = new Date(timestamp).getTime();
+    const unixTimestamp = new Date(timestamp || this.serverTimeHandler.getServerTimestamp()).getTime();
     this.timestamp = Math.floor(unixTimestamp / 1e3);
   }
 

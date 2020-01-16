@@ -98,18 +98,29 @@ import {
   ResetSessionMessage,
   TextMessage,
 } from './message/OtrMessage';
+import {ServerTimeHandler} from '../time';
 
 export class ConversationService {
+  private readonly apiClient: APIClient;
+  private readonly cryptographyService: CryptographyService;
+  private readonly assetService: AssetService;
+  private readonly serverTimeHandler: ServerTimeHandler;
   public readonly messageTimer: MessageTimer;
   public readonly messageBuilder: MessageBuilder;
 
   constructor(
-    private readonly apiClient: APIClient,
-    private readonly cryptographyService: CryptographyService,
-    private readonly assetService: AssetService,
+    apiClient: APIClient,
+    cryptographyService: CryptographyService,
+    assetService: AssetService,
+    serverTimeHandler: ServerTimeHandler,
   ) {
+    this.apiClient = apiClient;
+    this.cryptographyService = cryptographyService;
+    this.assetService = assetService;
+    this.serverTimeHandler = serverTimeHandler;
+
     this.messageTimer = new MessageTimer();
-    this.messageBuilder = new MessageBuilder(this.apiClient, this.assetService);
+    this.messageBuilder = new MessageBuilder(this.apiClient, this.assetService, this.serverTimeHandler);
   }
 
   private createEphemeral(originalGenericMessage: GenericMessage, expireAfterMillis: number): GenericMessage {
@@ -742,7 +753,7 @@ export class ConversationService {
 
   public async clearConversation(
     conversationId: string,
-    timestamp: number | Date = new Date(),
+    timestamp: number | Date = this.serverTimeHandler.getServerTimestamp(),
     messageId: string = MessageBuilder.createId(),
   ): Promise<ClearConversationMessage> {
     if (timestamp instanceof Date) {
@@ -773,7 +784,7 @@ export class ConversationService {
       messageTimer: 0,
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_SENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.CONVERSATION_CLEAR,
     };
   }
@@ -803,7 +814,7 @@ export class ConversationService {
       messageTimer: this.messageTimer.getMessageTimer(conversationId),
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_SENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.MESSAGE_HIDE,
     };
   }
@@ -834,7 +845,7 @@ export class ConversationService {
       messageTimer: this.messageTimer.getMessageTimer(conversationId),
       source: PayloadBundleSource.LOCAL,
       state: PayloadBundleState.OUTGOING_SENT,
-      timestamp: Date.now(),
+      timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
       type: PayloadBundleType.MESSAGE_DELETE,
     };
   }
@@ -1032,7 +1043,7 @@ export class ConversationService {
   public setConversationMutedStatus(
     conversationId: string,
     status: MutedStatus,
-    muteTimestamp: number | Date,
+    muteTimestamp: number | Date = this.serverTimeHandler.getServerTimestamp(),
   ): Promise<void> {
     if (typeof muteTimestamp === 'number') {
       muteTimestamp = new Date(muteTimestamp);
@@ -1049,7 +1060,7 @@ export class ConversationService {
   public toggleArchiveConversation(
     conversationId: string,
     archived: boolean,
-    archiveTimestamp: number | Date = new Date(),
+    archiveTimestamp: number | Date = this.serverTimeHandler.getServerTimestamp(),
   ): Promise<void> {
     if (typeof archiveTimestamp === 'number') {
       archiveTimestamp = new Date(archiveTimestamp);

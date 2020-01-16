@@ -27,13 +27,16 @@ import {
   TextContent,
 } from '../content';
 import {EditedTextMessage, TextMessage} from './OtrMessage';
+import {ServerTimeHandler} from '../../time';
 
 export class TextContentBuilder {
   private readonly content: TextContent;
   private readonly payloadBundle: TextMessage | EditedTextMessage;
+  private readonly serverTimeHandler: ServerTimeHandler;
 
-  constructor(payloadBundle: TextMessage | EditedTextMessage) {
+  constructor(payloadBundle: TextMessage | EditedTextMessage, serverTimeHandler: ServerTimeHandler) {
     this.payloadBundle = payloadBundle;
+    this.serverTimeHandler = serverTimeHandler;
     this.content = this.payloadBundle.content as TextContent;
   }
 
@@ -63,7 +66,11 @@ export class TextContentBuilder {
   public withQuote(quote?: QuoteContent | QuoteMessageContent, timestamp?: number): TextContentBuilder {
     if (quote) {
       if (timestamp) {
-        const messageHashService = new MessageHashService((quote as QuoteMessageContent).content, timestamp);
+        const messageHashService = new MessageHashService(
+          this.serverTimeHandler,
+          (quote as QuoteMessageContent).content,
+          timestamp,
+        );
         const messageHashBuffer = messageHashService.getHash();
 
         this.content.quote = {

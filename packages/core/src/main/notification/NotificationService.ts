@@ -33,6 +33,7 @@ import {CryptographyService} from '../cryptography';
 import {UserMapper} from '../user/UserMapper';
 import {NotificationBackendRepository} from './NotificationBackendRepository';
 import {NotificationDatabaseRepository} from './NotificationDatabaseRepository';
+import {ServerTimeHandler} from '../time';
 
 enum TOPIC {
   NOTIFICATION_ERROR = 'NotificationService.TOPIC.NOTIFICATION_ERROR',
@@ -79,18 +80,25 @@ export class NotificationService extends EventEmitter {
   private readonly backend: NotificationBackendRepository;
   private readonly cryptographyService: CryptographyService;
   private readonly database: NotificationDatabaseRepository;
+  private readonly serverTimeHandler: ServerTimeHandler;
   private readonly logger = logdown('@wireapp/core/notification/NotificationService', {
     logger: console,
     markdown: false,
   });
   public static readonly TOPIC = TOPIC;
 
-  constructor(apiClient: APIClient, cryptographyService: CryptographyService, storeEngine: CRUDEngine) {
+  constructor(
+    apiClient: APIClient,
+    cryptographyService: CryptographyService,
+    storeEngine: CRUDEngine,
+    serverTimeHandler: ServerTimeHandler,
+  ) {
     super();
     this.apiClient = apiClient;
     this.cryptographyService = cryptographyService;
     this.backend = new NotificationBackendRepository(this.apiClient);
     this.database = new NotificationDatabaseRepository(storeEngine);
+    this.serverTimeHandler = serverTimeHandler;
   }
 
   public async getAllNotifications(): Promise<Notification[]> {
@@ -104,6 +112,8 @@ export class NotificationService extends EventEmitter {
     const clientId = this.apiClient.clientId;
     await this.setLastEventDate(new Date(0));
     const latestNotification = await this.backend.getLastNotification(clientId);
+    const serverTimestamp = await this.backend.getServerTimestamp(clientId);
+    this.serverTimeHandler.updateTimeOffset(serverTimestamp);
     return this.setLastNotificationId(latestNotification);
   }
 
@@ -241,7 +251,7 @@ export class NotificationService extends EventEmitter {
       case Events.USER_EVENT.CLIENT_ADD:
       case Events.USER_EVENT.UPDATE:
       case Events.USER_EVENT.CLIENT_REMOVE: {
-        return UserMapper.mapUserEvent(event, this.apiClient.context!.userId, source);
+        return new UserMapper(this.serverTimeHandler).mapUserEvent(event, this.apiClient.context!.userId, source);
       }
     }
   }

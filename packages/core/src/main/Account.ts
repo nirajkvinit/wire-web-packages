@@ -54,6 +54,7 @@ import {NotificationHandler, NotificationService} from './notification/';
 import {SelfService} from './self/';
 import {TeamService} from './team/';
 import {UserService} from './user/';
+import {ServerTimeHandler} from './time';
 
 enum TOPIC {
   ERROR = 'Account.TOPIC.ERROR',
@@ -99,6 +100,7 @@ export class Account extends EventEmitter {
   private readonly logger: logdown.Logger;
   private readonly storeEngineProvider: StoreEngineProvider;
   private readonly apiClient: APIClient;
+  private readonly serverTimeHandler: ServerTimeHandler;
   private storeEngine?: CRUDEngine;
 
   public static readonly TOPIC = TOPIC;
@@ -118,7 +120,14 @@ export class Account extends EventEmitter {
 
   constructor(apiClient: APIClient = new APIClient(), storeEngineProvider?: StoreEngineProvider) {
     super();
+
+    this.logger = logdown('@wireapp/core/Account', {
+      logger: console,
+      markdown: false,
+    });
+
     this.apiClient = apiClient;
+
     if (storeEngineProvider) {
       this.storeEngineProvider = storeEngineProvider;
     } else {
@@ -139,10 +148,7 @@ export class Account extends EventEmitter {
       }
     });
 
-    this.logger = logdown('@wireapp/core/Account', {
-      logger: console,
-      markdown: false,
-    });
+    this.serverTimeHandler = new ServerTimeHandler();
   }
 
   private persistCookie(storeEngine: CRUDEngine, cookie: Cookie): Promise<string> {
@@ -179,8 +185,18 @@ export class Account extends EventEmitter {
     const clientService = new ClientService(this.apiClient, storeEngine, cryptographyService);
     const connectionService = new ConnectionService(this.apiClient);
     const giphyService = new GiphyService(this.apiClient);
-    const conversationService = new ConversationService(this.apiClient, cryptographyService, assetService);
-    const notificationService = new NotificationService(this.apiClient, cryptographyService, storeEngine);
+    const conversationService = new ConversationService(
+      this.apiClient,
+      cryptographyService,
+      assetService,
+      this.serverTimeHandler,
+    );
+    const notificationService = new NotificationService(
+      this.apiClient,
+      cryptographyService,
+      storeEngine,
+      this.serverTimeHandler,
+    );
     const selfService = new SelfService(this.apiClient);
     const teamService = new TeamService(this.apiClient);
 

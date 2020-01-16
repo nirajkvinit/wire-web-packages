@@ -28,7 +28,7 @@ export class NotificationAPI {
 
   public static readonly URL = {
     LAST: 'last',
-    NOTIFICATION: '/notifications',
+    NOTIFICATIONS: '/notifications',
   };
 
   /**
@@ -41,7 +41,7 @@ export class NotificationAPI {
       params: {
         client: clientId,
       },
-      url: `${NotificationAPI.URL.NOTIFICATION}/${NotificationAPI.URL.LAST}`,
+      url: `${NotificationAPI.URL.NOTIFICATIONS}/${NotificationAPI.URL.LAST}`,
     };
 
     const response = await this.client.sendJSON<Notification>(config);
@@ -64,7 +64,7 @@ export class NotificationAPI {
         since,
         size,
       },
-      url: NotificationAPI.URL.NOTIFICATION,
+      url: NotificationAPI.URL.NOTIFICATIONS,
     };
 
     const response = await this.client.sendJSON<NotificationList>(config);
@@ -112,7 +112,7 @@ export class NotificationAPI {
       params: {
         client: clientId,
       },
-      url: `${NotificationAPI.URL.NOTIFICATION}/${notificationId}`,
+      url: `${NotificationAPI.URL.NOTIFICATIONS}/${notificationId}`,
     };
 
     const response = await this.client.sendJSON<Notification>(config);

@@ -25,11 +25,19 @@ import {
   UserEvent,
   UserUpdateEvent,
 } from '@wireapp/api-client/dist/event';
+
 import {PayloadBundle, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '../conversation';
 import {MessageBuilder} from '../conversation/message/MessageBuilder';
+import {ServerTimeHandler} from '../time';
 
 export class UserMapper {
-  public static mapUserEvent(event: UserEvent, selfUserId: string, source: PayloadBundleSource): PayloadBundle | void {
+  private readonly serverTimeHandler: ServerTimeHandler;
+
+  constructor(serverTimeHandler: ServerTimeHandler) {
+    this.serverTimeHandler = serverTimeHandler;
+  }
+
+  public mapUserEvent(event: UserEvent, selfUserId: string, source: PayloadBundleSource): PayloadBundle | void {
     switch (event.type) {
       case USER_EVENT.CONNECTION: {
         const {connection} = event as UserConnectionEvent;
@@ -55,7 +63,7 @@ export class UserMapper {
           messageTimer: 0,
           source,
           state: PayloadBundleState.INCOMING,
-          timestamp: new Date().getTime(),
+          timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
           type: PayloadBundleType.CLIENT_ADD,
         };
       }
@@ -68,7 +76,7 @@ export class UserMapper {
           id: MessageBuilder.createId(),
           source,
           state: PayloadBundleState.INCOMING,
-          timestamp: new Date().getTime(),
+          timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
           type: PayloadBundleType.USER_UPDATE,
         };
       }
@@ -82,7 +90,7 @@ export class UserMapper {
           messageTimer: 0,
           source,
           state: PayloadBundleState.INCOMING,
-          timestamp: new Date().getTime(),
+          timestamp: this.serverTimeHandler.getServerTimestamp().getTime(),
           type: PayloadBundleType.CLIENT_REMOVE,
         };
       }
