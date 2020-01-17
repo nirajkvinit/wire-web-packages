@@ -18,7 +18,7 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {ClientAction, Confirmation} from '@wireapp/protocol-messaging';
+import {ClientAction, Confirmation, IMention} from '@wireapp/protocol-messaging';
 import {AbortReason, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '..';
 import {AssetService} from '../AssetService';
 import {
@@ -59,6 +59,12 @@ import {TextContentBuilder} from './TextContentBuilder';
 
 const UUID = require('pure-uuid');
 
+export interface Mention {
+  prefix: string;
+  userId: string;
+  userName: string;
+}
+
 export class MessageBuilder {
   private readonly apiClient: APIClient;
   private readonly assetService: AssetService;
@@ -66,6 +72,25 @@ export class MessageBuilder {
   constructor(apiClient: APIClient, assetService: AssetService) {
     this.apiClient = apiClient;
     this.assetService = assetService;
+  }
+
+  public createTextWithMentions(
+    conversationId: string,
+    mentions: Mention[],
+    messageId = MessageBuilder.createId(),
+  ): TextContentBuilder {
+    const iMentions: IMention[] = [];
+    const completeText = mentions
+      .map(mention => {
+        iMentions.push({
+          length: mention.userName.length + 1,
+          start: mention.prefix.length,
+          userId: mention.userId,
+        });
+        return `${mention.prefix}@${mention.userName}`;
+      })
+      .join('');
+    return this.createText(conversationId, completeText, messageId).withMentions(iMentions);
   }
 
   public createEditedText(
