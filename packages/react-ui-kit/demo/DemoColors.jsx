@@ -87,6 +87,9 @@ export const DemoColors = () => {
       <Container>
         <H2>Base Colors </H2>
         {allColors.map(color => (
+          <div data-sketch-color={Color(COLOR[color]).hex()}>lala</div>
+        ))}
+        {allColors.map(color => (
           <ColorElement name={color} key={color} />
         ))}
         <H2>Darken</H2>

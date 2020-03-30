@@ -92,13 +92,15 @@ export const DemoInputs = () => {
       <Columns>
         <Column>Button</Column>
         <Column>
-          <Button backgroundColor={COLOR.BLUE}>Button</Button>
+          <Button backgroundColor={COLOR.BLUE} data-sketch-symbol="Button/Primary">
+            Button
+          </Button>
         </Column>
       </Columns>
       <Columns>
         <Column>Disabled Button</Column>
         <Column>
-          <Button disabled onClick={() => alert('This should not work')}>
+          <Button disabled onClick={() => alert('This should not work')} data-sketch-symbol="Button/Disabled">
             Disabled Button
           </Button>
         </Column>
@@ -106,7 +108,12 @@ export const DemoInputs = () => {
       <Columns>
         <Column>Loading Button</Column>
         <Column>
-          <Button showLoading disabled onClick={() => alert('This should not work')}>
+          <Button
+            showLoading
+            disabled
+            onClick={() => alert('This should not work')}
+            data-sketch-symbol="Button/Loading"
+          >
             Loading Button
           </Button>
         </Column>
@@ -131,7 +138,7 @@ export const DemoInputs = () => {
       <Columns>
         <Column>Link</Column>
         <Column>
-          <Link block href="#">
+          <Link block href="#" data-sketch-symbol="Link/Primary">
             Link
           </Link>
           <Link block color={COLOR.RED} href="#">
@@ -143,7 +150,7 @@ export const DemoInputs = () => {
         <Column>TextLink</Column>
         <Column>
           <Text>
-            You can download it <TextLink>here</TextLink>.
+            You can download it <TextLink data-sketch-symbol="Link/TextLink">here</TextLink>.
           </Text>
         </Column>
       </Columns>
@@ -161,7 +168,7 @@ export const DemoInputs = () => {
       <Columns>
         <Column>ErrorMessage with link</Column>
         <Column>
-          <ErrorMessage>
+          <ErrorMessage data-sketch-symbol="Error">
             Error. <Link>Learn more</Link>
           </ErrorMessage>
         </Column>
@@ -171,7 +178,7 @@ export const DemoInputs = () => {
       <Line />
       <Columns>
         <Column>Checkbox</Column>
-        <Column>
+        <Column data-sketch-symbol="Checkbox/Primary">
           <Checkbox id="ToU">
             <CheckboxLabel>{'ToU'}</CheckboxLabel>
           </Checkbox>
@@ -212,7 +219,7 @@ export const DemoInputs = () => {
       <Columns>
         <Column>Select</Column>
         <Column>
-          <Select>
+          <Select data-sketch-symbol="Select/Primary">
             <option>a</option>
             <option>b</option>
             <option>c</option>
@@ -223,7 +230,7 @@ export const DemoInputs = () => {
       <Columns>
         <Column>Disabled Select</Column>
         <Column>
-          <Select disabled>
+          <Select disabled data-sketch-symbol="Select/Disabled">
             <option>a</option>
           </Select>
         </Column>
@@ -231,7 +238,7 @@ export const DemoInputs = () => {
       <Columns>
         <Column>Invalid Select</Column>
         <Column>
-          <Select markInvalid>
+          <Select markInvalid data-sketch-symbol="Select/Invalid">
             <option>a</option>
           </Select>
         </Column>
@@ -242,19 +249,30 @@ export const DemoInputs = () => {
       <Columns>
         <Column>TextInput</Column>
         <Column>
-          <Input placeholder="Placeholder" />
+          <Input placeholder="Placeholder" data-sketch-symbol="Input/Primary" />
         </Column>
       </Columns>
       <Columns>
         <Column>Disabled TextInput</Column>
         <Column>
-          <Input disabled placeholder="Placeholder" />
+          <Input disabled placeholder="Placeholder" data-sketch-symbol="Input/Disabled" />
         </Column>
       </Columns>
       <Columns>
         <Column>Invalid TextInput</Column>
         <Column>
-          <Input markInvalid placeholder="Placeholder" />
+          <Input markInvalid placeholder="Placeholder" data-sketch-symbol="Input/Invalid" />
+        </Column>
+      </Columns>
+      <Columns>
+        <Column>TextInput Submit Combo</Column>
+        <Column>
+          <InputSubmitCombo data-sketch-symbol="Input/Submit">
+            <Input placeholder="InputSubmitCombo" name="password" />
+            <RoundIconButton type="submit" formNoValidate>
+              <ArrowIcon />
+            </RoundIconButton>
+          </InputSubmitCombo>
         </Column>
       </Columns>
 
@@ -263,19 +281,19 @@ export const DemoInputs = () => {
       <Columns>
         <Column>TextArea</Column>
         <Column>
-          <TextArea rows="6" placeholder="Placeholder" />
+          <TextArea rows="6" placeholder="Placeholder" data-sketch-symbol="TextArea/Primary" />
         </Column>
       </Columns>
       <Columns>
         <Column>Disabled TextArea</Column>
         <Column>
-          <TextArea rows="3" disabled placeholder="Placeholder" />
+          <TextArea rows="3" disabled placeholder="Placeholder" data-sketch-symbol="TextArea/Disabled" />
         </Column>
       </Columns>
       <Columns>
         <Column>Invalid TextArea</Column>
         <Column>
-          <TextArea rows="4" markInvalid placeholder="Placeholder" />
+          <TextArea rows="4" markInvalid placeholder="Placeholder" data-sketch-symbol="TextArea/Invalid" />
         </Column>
       </Columns>
 

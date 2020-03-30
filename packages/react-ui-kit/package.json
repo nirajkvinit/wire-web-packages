@@ -22,6 +22,7 @@
     "babel-jest": "25.1.0",
     "babel-loader": "8.0.6",
     "babel-plugin-emotion": "10.0.29",
+    "html-sketchapp-cli": "0.6.2",
     "jest": "25.1.0",
     "jest-emotion": "10.0.32",
     "react": "16.13.0",
@@ -62,7 +63,9 @@
     "test:coverage": "yarn test --coverage",
     "test:watch": "yarn test --watch",
     "test:update": "yarn test --updateSnapshot",
-    "test:project": "yarn dist && yarn test"
+    "test:project": "yarn dist && yarn test",
+    "sketch:install": "html-sketchapp install",
+    "sketch": "html-sketchapp --config sketch.config.js"
   },
   "version": "7.26.13"
 }

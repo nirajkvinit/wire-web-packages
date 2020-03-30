@@ -158,7 +158,7 @@ export const DemoIcons = () => (
     >
       {icons.map((Icon, index) => (
         <span key={index} title={Icon.name}>
-          <Icon height={32} width={32} />
+          <Icon height={32} width={32} data-sketch-symbol={`Icon/${Icon.name}`} />
         </span>
       ))}
     </div>
@@ -192,7 +192,7 @@ export const DemoIcons = () => (
     >
       {brandIcons.map((Icon, index) => (
         <span key={index} title={Icon.name}>
-          <Icon height={48} width={48} />
+          <Icon height={48} width={48} data-sketch-symbol={`IconBrand/${Icon.name}`} />
         </span>
       ))}
     </div>

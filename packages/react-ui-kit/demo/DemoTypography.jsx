@@ -47,7 +47,7 @@ export const DemoTypography = () => (
     <Columns>
       <Column>Title</Column>
       <Column>
-        <Title>Title</Title>
+        <Title data-sketch-text="Typo/Title">Title</Title>
       </Column>
     </Columns>
     <Columns>
@@ -59,25 +59,25 @@ export const DemoTypography = () => (
     <Columns>
       <Column>Heading1</Column>
       <Column>
-        <H1>Heading1</H1>
+        <H1 data-sketch-text="Typo/H1">Heading1</H1>
       </Column>
     </Columns>
     <Columns>
       <Column>Heading2</Column>
       <Column>
-        <H2>Heading2</H2>
+        <H2 data-sketch-text="Typo/H2">Heading2</H2>
       </Column>
     </Columns>
     <Columns>
       <Column>Heading3</Column>
       <Column>
-        <H3>Heading3</H3>
+        <H3 data-sketch-text="Typo/H3">Heading3</H3>
       </Column>
     </Columns>
     <Columns>
       <Column>Heading4</Column>
       <Column>
-        <H4>Heading4</H4>
+        <H4 data-sketch-text="Typo/H4">Heading4</H4>
       </Column>
     </Columns>
 
@@ -88,25 +88,25 @@ export const DemoTypography = () => (
     <Columns>
       <Column>Normal text</Column>
       <Column>
-        <Text>Normal text</Text>
+        <Text data-sketch-text="Typo/Text">Normal text</Text>
       </Column>
     </Columns>
     <Columns>
       <Column>Bold text</Column>
       <Column>
-        <Bold>Bold text</Bold>
+        <Bold data-sketch-text="Typo/Bold">Bold text</Bold>
       </Column>
     </Columns>
     <Columns>
       <Column>Muted text</Column>
       <Column>
-        <Muted>Muted text</Muted>
+        <Muted data-sketch-text="Typo/Muted">Muted text</Muted>
       </Column>
     </Columns>
     <Columns>
       <Column>Small text</Column>
       <Column>
-        <Small>Small text</Small>
+        <Small data-sketch-text="Typo/Small">Small text</Small>
       </Column>
     </Columns>
     <Columns>
