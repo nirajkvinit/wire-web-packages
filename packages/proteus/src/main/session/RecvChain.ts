@@ -19,31 +19,31 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import {PublicKey} from '../keys/PublicKey';
+import { DHPublicKey } from '../keys/DHPublicKey';
 import * as ClassUtil from '../util/ClassUtil';
 
-import {DecryptError} from '../errors/DecryptError';
-import {ProteusError} from '../errors/ProteusError';
+import { DecryptError } from '../errors/DecryptError';
+import { ProteusError } from '../errors/ProteusError';
 
-import {CipherMessage} from '../message/CipherMessage';
-import {Envelope} from '../message/Envelope';
+import { CipherMessage } from '../message/CipherMessage';
+import { Envelope } from '../message/Envelope';
 
-import {ChainKey} from './ChainKey';
-import {MessageKeys} from './MessageKeys';
+import { ChainKey } from './ChainKey';
+import { MessageKeys } from './MessageKeys';
 
 export class RecvChain {
   chain_key: ChainKey;
   message_keys: MessageKeys[];
-  ratchet_key: PublicKey;
+  ratchet_key: DHPublicKey;
   static MAX_COUNTER_GAP = 1000;
 
   constructor() {
     this.chain_key = new ChainKey();
     this.message_keys = [];
-    this.ratchet_key = new PublicKey();
+    this.ratchet_key = new DHPublicKey();
   }
 
-  static new(chain_key: ChainKey, public_key: PublicKey): RecvChain {
+  static new(chain_key: ChainKey, public_key: DHPublicKey): RecvChain {
     const rc = ClassUtil.new_instance(RecvChain);
     rc.chain_key = chain_key;
     rc.ratchet_key = public_key;
@@ -147,7 +147,7 @@ export class RecvChain {
           break;
         }
         case 1: {
-          self.ratchet_key = PublicKey.decode(decoder);
+          self.ratchet_key = DHPublicKey.decode(decoder);
           break;
         }
         case 2: {

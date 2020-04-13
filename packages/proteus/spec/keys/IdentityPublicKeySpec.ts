@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,13 +25,14 @@ beforeAll(async () => {
   await sodium.ready;
 });
 
-describe('IdentityKeyPair', () => {
+describe('IdentityPublicKey', () => {
   it('serialises and deserialises', async () => {
     const ikp = await Proteus.keys.IdentityKeyPair.new();
-    const ikp_bytes = ikp.serialise();
-    const ikp_deser = Proteus.keys.IdentityKeyPair.deserialise(ikp_bytes);
+    const pk = ikp.public_key.public_key;
+    const pk_bytes = pk.serialise();
+    const pk_deser = Proteus.keys.IdentityPublicKey.deserialise(pk_bytes);
 
-    expect(ikp.public_key.fingerprint()).toBe(ikp_deser.public_key.fingerprint());
-    expect(sodium.to_hex(new Uint8Array(ikp_bytes))).toBe(sodium.to_hex(new Uint8Array(ikp_deser.serialise())));
+    expect(ikp.public_key.fingerprint()).toBe(pk_deser.fingerprint());
+    expect(sodium.to_hex(new Uint8Array(pk_bytes))).toBe(sodium.to_hex(new Uint8Array(pk_deser.serialise())));
   });
 });

@@ -18,31 +18,26 @@
  */
 
 import * as CBOR from '@wireapp/cbor';
+import * as sodium from 'libsodium-wrappers-sumo';
 
+import { InputError } from '../errors/InputError';
 import * as ClassUtil from '../util/ClassUtil';
-import { IdentityPublicKey } from './IdentityPublicKey';
 
-/**
- * Construct a long-term identity key pair.
- *
- * Every client has a long-term identity key pair.
- * Long-term identity keys are used to initialise "sessions" with other clients (triple DH).
- */
-export class IdentityKey {
-  public_key: IdentityPublicKey;
+export class IdentityPublicKey {
+  pub_edward: Uint8Array;
+  pub_curve: Uint8Array;
 
   constructor() {
-    this.public_key = new IdentityPublicKey();
+    this.pub_edward = new Uint8Array([]);
+    this.pub_curve = new Uint8Array([]);
   }
 
-  static new(public_key: IdentityPublicKey): IdentityKey {
-    const key = ClassUtil.new_instance(IdentityKey);
-    key.public_key = public_key;
-    return key;
-  }
+  static new(pub_edward: Uint8Array, pub_curve: Uint8Array): IdentityPublicKey {
+    const pk = ClassUtil.new_instance(IdentityPublicKey);
 
-  fingerprint(): string {
-    return this.public_key.fingerprint();
+    pk.pub_edward = pub_edward;
+    pk.pub_curve = pub_curve;
+    return pk;
   }
 
   /**
@@ -53,7 +48,11 @@ export class IdentityKey {
    * @returns `true` if the signature is valid, `false` otherwise.
    */
   verify(signature: Uint8Array, message: Uint8Array | string): boolean {
-    return this.public_key.verify(signature, message);
+    return sodium.crypto_sign_verify_detached(signature, message, this.pub_edward);
+  }
+
+  fingerprint(): string {
+    return sodium.to_hex(this.pub_edward);
   }
 
   serialise(): ArrayBuffer {
@@ -62,31 +61,48 @@ export class IdentityKey {
     return encoder.get_buffer();
   }
 
-  static deserialise(buf: ArrayBuffer): IdentityKey {
+  static deserialise(buf: ArrayBuffer): IdentityPublicKey {
     const decoder = new CBOR.Decoder(buf);
-    return IdentityKey.decode(decoder);
+    return IdentityPublicKey.decode(decoder);
   }
 
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
-    encoder.object(1);
+    encoder.object(2);
     encoder.u8(0);
-    return this.public_key.encode(encoder);
+    encoder.bytes(this.pub_edward);
+    encoder.u8(1);
+    return encoder.bytes(this.pub_curve);
   }
 
-  static decode(decoder: CBOR.Decoder): IdentityKey {
-    let public_key = ClassUtil.new_instance(IdentityPublicKey);
+  static decode(decoder: CBOR.Decoder): IdentityPublicKey {
+    const self = ClassUtil.new_instance(IdentityPublicKey);
 
     const nprops = decoder.object();
+    let pub_edward;
+    let pub_curve;
     for (let index = 0; index <= nprops - 1; index++) {
       switch (decoder.u8()) {
         case 0:
-          public_key = IdentityPublicKey.decode(decoder);
+          pub_edward = new Uint8Array(decoder.bytes());
+          break;
+        case 1:
+          pub_curve = new Uint8Array(decoder.bytes());
           break;
         default:
           decoder.skip();
       }
     }
 
-    return IdentityKey.new(public_key);
+    if (pub_edward) {
+      self.pub_edward = pub_edward;
+      if (!pub_curve) {
+        self.pub_curve = sodium.crypto_sign_ed25519_pk_to_curve25519(pub_edward);
+      } else {
+        self.pub_curve = pub_curve;
+      }
+    } else {
+      throw new InputError.ConversionError('Could not convert public key with ed2curve.', 409);
+    }
+    return self;
   }
 }

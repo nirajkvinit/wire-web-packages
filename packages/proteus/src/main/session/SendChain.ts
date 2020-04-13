@@ -19,20 +19,20 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import {KeyPair} from '../keys/KeyPair';
+import { DHKeyPair } from '../keys/DHKeyPair';
 import * as ClassUtil from '../util/ClassUtil';
-import {ChainKey} from './ChainKey';
+import { ChainKey } from './ChainKey';
 
 export class SendChain {
   chain_key: ChainKey;
-  ratchet_key: KeyPair;
+  ratchet_key: DHKeyPair;
 
   constructor() {
     this.chain_key = new ChainKey();
-    this.ratchet_key = new KeyPair();
+    this.ratchet_key = new DHKeyPair();
   }
 
-  static new(chain_key: ChainKey, keypair: KeyPair): SendChain {
+  static new(chain_key: ChainKey, keypair: DHKeyPair): SendChain {
     const sc = ClassUtil.new_instance(SendChain);
     sc.chain_key = chain_key;
     sc.ratchet_key = keypair;
@@ -56,7 +56,7 @@ export class SendChain {
           self.chain_key = ChainKey.decode(decoder);
           break;
         case 1:
-          self.ratchet_key = KeyPair.decode(decoder);
+          self.ratchet_key = DHKeyPair.decode(decoder);
           break;
         default:
           decoder.skip();

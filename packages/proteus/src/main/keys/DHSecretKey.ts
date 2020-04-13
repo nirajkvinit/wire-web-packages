@@ -1,6 +1,6 @@
 /*
  * Wire
- * Copyright (C) 2018 Wire Swiss GmbH
+ * Copyright (C) 2020 Wire Swiss GmbH
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,39 +18,24 @@
  */
 
 import * as CBOR from '@wireapp/cbor';
-import * as ed2curve from 'ed2curve';
 import * as sodium from 'libsodium-wrappers-sumo';
-
 import * as ClassUtil from '../util/ClassUtil';
-
-import {InputError} from '../errors/InputError';
+import { InputError } from '../errors/InputError';
 import * as ArrayUtil from '../util/ArrayUtil';
-import {PublicKey} from './PublicKey';
+import { DHPublicKey } from './DHPublicKey';
 
-export class SecretKey {
+export class DHSecretKey {
   sec_curve: Uint8Array;
-  sec_edward: Uint8Array;
 
   constructor() {
     this.sec_curve = new Uint8Array([]);
-    this.sec_edward = new Uint8Array([]);
   }
 
-  static new(sec_edward: Uint8Array, sec_curve: Uint8Array): SecretKey {
-    const sk = ClassUtil.new_instance(SecretKey);
+  static new(sec_curve: Uint8Array): DHSecretKey {
+    const sk = ClassUtil.new_instance(DHSecretKey);
 
-    sk.sec_edward = sec_edward;
     sk.sec_curve = sec_curve;
     return sk;
-  }
-
-  /**
-   * This function can be used to compute a message signature.
-   * @param message Message to be signed
-   * @returns A message signature
-   */
-  sign(message: Uint8Array | string): Uint8Array {
-    return sodium.crypto_sign_detached(message, this.sec_edward);
   }
 
   /**
@@ -59,39 +44,56 @@ export class SecretKey {
    * @param public_key Another user's public key
    * @returns Array buffer view of the computed shared secret
    */
-  shared_secret(public_key: PublicKey): Uint8Array {
+  shared_secret(public_key: DHPublicKey): Uint8Array {
     const shared_secret = sodium.crypto_scalarmult(this.sec_curve, public_key.pub_curve);
-
     ArrayUtil.assert_is_not_zeros(shared_secret);
-
     return shared_secret;
+  }
+
+  serialise(): ArrayBuffer {
+    const encoder = new CBOR.Encoder();
+    this.encode(encoder);
+    return encoder.get_buffer();
+  }
+
+  static deserialise(buf: ArrayBuffer): DHSecretKey {
+    const decoder = new CBOR.Decoder(buf);
+    return DHSecretKey.decode(decoder);
   }
 
   encode(encoder: CBOR.Encoder): CBOR.Encoder {
     encoder.object(1);
-    encoder.u8(0);
-    return encoder.bytes(this.sec_edward);
+    encoder.u8(1);
+    return encoder.bytes(this.sec_curve);
   }
 
-  static decode(decoder: CBOR.Decoder): SecretKey {
-    const self = ClassUtil.new_instance(SecretKey);
+  static decode(decoder: CBOR.Decoder): DHSecretKey {
+    const self = ClassUtil.new_instance(DHSecretKey);
 
     const nprops = decoder.object();
+    let sec_edward;
+    let sec_curve;
     for (let index = 0; index <= nprops - 1; index++) {
       switch (decoder.u8()) {
         case 0:
-          self.sec_edward = new Uint8Array(decoder.bytes());
+          sec_edward = new Uint8Array(decoder.bytes());
+          break;
+        case 1:
+          sec_curve = new Uint8Array(decoder.bytes());
           break;
         default:
           decoder.skip();
       }
     }
 
-    const sec_curve = ed2curve.convertSecretKey(self.sec_edward);
-    if (sec_curve) {
-      self.sec_curve = sec_curve;
-      return self;
+    if (!sec_curve) {
+      if (sec_edward) {
+        sec_curve = sodium.crypto_sign_ed25519_sk_to_curve25519(sec_edward);
+      } else {
+        throw new InputError.ConversionError('Could not convert secret key with ed2curve.', 408);
+      }
     }
-    throw new InputError.ConversionError('Could not convert public key with ed2curve.', 408);
+    self.sec_curve = sec_curve;
+    return self;
   }
 }

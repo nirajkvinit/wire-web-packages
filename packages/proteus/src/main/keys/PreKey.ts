@@ -18,12 +18,9 @@
  */
 
 import * as CBOR from '@wireapp/cbor';
-
 import * as ClassUtil from '../util/ClassUtil';
-
-import {InputError} from '../errors/InputError';
-
-import {KeyPair} from './KeyPair';
+import { InputError } from '../errors/InputError';
+import { DHKeyPair } from './DHKeyPair';
 
 /**
  * Pre-generated (and regularly refreshed) pre-keys.
@@ -32,12 +29,12 @@ import {KeyPair} from './KeyPair';
 export class PreKey {
   static MAX_PREKEY_ID = 0xffff;
   key_id: number;
-  key_pair: KeyPair;
+  key_pair: DHKeyPair;
   version: number;
 
   constructor() {
     this.key_id = -1;
-    this.key_pair = new KeyPair();
+    this.key_pair = new DHKeyPair();
     this.version = -1;
   }
 
@@ -48,7 +45,7 @@ export class PreKey {
 
     pk.version = 1;
     pk.key_id = pre_key_id;
-    pk.key_pair = await KeyPair.new();
+    pk.key_pair = await DHKeyPair.new();
     return pk;
   }
 
@@ -84,7 +81,7 @@ export class PreKey {
     }
 
     return Promise.all(
-      Array.from({length: size}).map((_, index) => PreKey.new((start + index) % PreKey.MAX_PREKEY_ID)),
+      Array.from({ length: size }).map((_, index) => PreKey.new((start + index) % PreKey.MAX_PREKEY_ID)),
     );
   }
 
@@ -121,7 +118,7 @@ export class PreKey {
           self.key_id = decoder.u16();
           break;
         case 2:
-          self.key_pair = KeyPair.decode(decoder);
+          self.key_pair = DHKeyPair.decode(decoder);
           break;
         default:
           decoder.skip();

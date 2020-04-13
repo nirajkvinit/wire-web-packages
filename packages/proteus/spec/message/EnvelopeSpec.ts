@@ -18,7 +18,8 @@
  */
 
 import * as CBOR from '@wireapp/cbor';
-import * as Proteus from '@wireapp/proteus';
+//import * as Proteus from '@wireapp/proteus';
+import * as Proteus from '../../src/main';
 
 describe('Envelope', () => {
   const mac_key = new Proteus.derived.MacKey(new Uint8Array(32).fill(1));
@@ -26,13 +27,13 @@ describe('Envelope', () => {
   const session_tag = Proteus.message.SessionTag.new();
 
   let identity_key: Proteus.keys.IdentityKey;
-  let base_key: Proteus.keys.PublicKey;
-  let ratchet_key: Proteus.keys.PublicKey;
+  let base_key: Proteus.keys.DHPublicKey;
+  let ratchet_key: Proteus.keys.DHPublicKey;
 
   beforeAll(async () => {
-    identity_key = Proteus.keys.IdentityKey.new((await Proteus.keys.KeyPair.new()).public_key);
-    base_key = (await Proteus.keys.KeyPair.new()).public_key;
-    ratchet_key = (await Proteus.keys.KeyPair.new()).public_key;
+    identity_key = Proteus.keys.IdentityKey.new((await Proteus.keys.IdentityKeyPair.new()).public_key.public_key);
+    base_key = (await Proteus.keys.DHKeyPair.new()).public_key;
+    ratchet_key = (await Proteus.keys.DHKeyPair.new()).public_key;
   });
 
   it('encapsulates a CipherMessage', () => {

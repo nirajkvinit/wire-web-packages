@@ -17,7 +17,8 @@
  *
  */
 
-import * as Proteus from '@wireapp/proteus';
+//import * as Proteus from '@wireapp/proteus';
+import * as Proteus from '../../src/main';
 
 describe('DecryptError', () => {
   describe('constructor', () => {

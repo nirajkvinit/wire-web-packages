@@ -19,17 +19,17 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import {InputError} from '../errors/InputError';
-import {PublicKey} from '../keys/PublicKey';
+import { InputError } from '../errors/InputError';
+import { DHPublicKey } from '../keys/DHPublicKey';
 import * as ClassUtil from '../util/ClassUtil';
-import {Message} from './Message';
-import {SessionTag} from './SessionTag';
+import { Message } from './Message';
+import { SessionTag } from './SessionTag';
 
 export class CipherMessage extends Message {
   cipher_text: Uint8Array;
   counter: number;
   prev_counter: number;
-  ratchet_key: PublicKey;
+  ratchet_key: DHPublicKey;
   session_tag: SessionTag;
 
   constructor() {
@@ -37,7 +37,7 @@ export class CipherMessage extends Message {
     this.cipher_text = new Uint8Array([]);
     this.counter = -1;
     this.prev_counter = -1;
-    this.ratchet_key = new PublicKey();
+    this.ratchet_key = new DHPublicKey();
     this.session_tag = new SessionTag();
   }
 
@@ -45,7 +45,7 @@ export class CipherMessage extends Message {
     session_tag: SessionTag,
     counter: number,
     prev_counter: number,
-    ratchet_key: PublicKey,
+    ratchet_key: DHPublicKey,
     cipher_text: Uint8Array,
   ): CipherMessage {
     const cm = ClassUtil.new_instance(CipherMessage);
@@ -94,7 +94,7 @@ export class CipherMessage extends Message {
           prev_counter = decoder.u32();
           break;
         case 3:
-          ratchet_key = PublicKey.decode(decoder);
+          ratchet_key = DHPublicKey.decode(decoder);
           break;
         case 4:
           cipher_text = new Uint8Array(decoder.bytes());

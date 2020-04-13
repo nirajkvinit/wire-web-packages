@@ -17,7 +17,8 @@
  *
  */
 
-import * as Proteus from '@wireapp/proteus';
+//import * as Proteus from '@wireapp/proteus';
+import * as Proteus from '../../src/main';
 
 describe('MemoryUtil', () => {
   describe('zeroize', () => {
@@ -39,18 +40,25 @@ describe('MemoryUtil', () => {
       const random_max = 10;
       const random_min = 1;
 
-      const array_random = Uint8Array.from({length: array_length}, () => Math.random() * random_max + random_min);
+      const array_random = Uint8Array.from({ length: array_length }, () => Math.random() * random_max + random_min);
 
       expect(array_random.length).toBe(array_length);
       Proteus.util.MemoryUtil.zeroize(array_random);
       array_random.every(value => expect(value).toBe(0));
     });
 
-    it('deeply zeroizes a KeyPair', async () => {
-      const key_pair = await Proteus.keys.KeyPair.new();
+    it('deeply zeroizes an IdentityKeyPair', async () => {
+      const key_pair = await Proteus.keys.IdentityKeyPair.new();
 
       Proteus.util.MemoryUtil.zeroize(key_pair);
       key_pair.secret_key.sec_edward.every(value => expect(value).toBe(0));
+      key_pair.secret_key.sec_curve.every(value => expect(value).toBe(0));
+    });
+
+    it('deeply zeroizes a DHKeyPair', async () => {
+      const key_pair = await Proteus.keys.DHKeyPair.new();
+
+      Proteus.util.MemoryUtil.zeroize(key_pair);
       key_pair.secret_key.sec_curve.every(value => expect(value).toBe(0));
     });
 
@@ -58,7 +66,6 @@ describe('MemoryUtil', () => {
       const prekey = await Proteus.keys.PreKey.new(0);
 
       Proteus.util.MemoryUtil.zeroize(prekey);
-      prekey.key_pair.secret_key.sec_edward.every(value => expect(value).toBe(0));
       prekey.key_pair.secret_key.sec_curve.every(value => expect(value).toBe(0));
     });
   });

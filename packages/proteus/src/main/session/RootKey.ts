@@ -19,13 +19,13 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import {CipherKey} from '../derived/CipherKey';
-import {DerivedSecrets} from '../derived/DerivedSecrets';
-import {InputError} from '../errors/InputError';
-import {KeyPair} from '../keys/KeyPair';
-import {PublicKey} from '../keys/PublicKey';
+import { CipherKey } from '../derived/CipherKey';
+import { DerivedSecrets } from '../derived/DerivedSecrets';
+import { InputError } from '../errors/InputError';
+import { DHKeyPair } from '../keys/DHKeyPair';
+import { DHPublicKey } from '../keys/DHPublicKey';
 import * as ClassUtil from '../util/ClassUtil';
-import {ChainKey} from './ChainKey';
+import { ChainKey } from './ChainKey';
 
 export class RootKey {
   key: CipherKey;
@@ -47,7 +47,7 @@ export class RootKey {
    * @param ours Our key pair
    * @param theirs Their public key
    */
-  dh_ratchet(ours: KeyPair, theirs: PublicKey): [RootKey, ChainKey] {
+  dh_ratchet(ours: DHKeyPair, theirs: DHPublicKey): [RootKey, ChainKey] {
     const secret = ours.secret_key.shared_secret(theirs);
     const derived_secrets = DerivedSecrets.kdf(secret, this.key.key, 'dh_ratchet');
 

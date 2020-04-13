@@ -23,27 +23,27 @@ import * as ArrayUtil from '../util/ArrayUtil';
 import * as ClassUtil from '../util/ClassUtil';
 import * as MemoryUtil from '../util/MemoryUtil';
 
-import {DecryptError} from '../errors/DecryptError';
+import { DecryptError } from '../errors/DecryptError';
 
-import {DerivedSecrets} from '../derived/DerivedSecrets';
+import { DerivedSecrets } from '../derived/DerivedSecrets';
 
-import {IdentityKey} from '../keys/IdentityKey';
-import {IdentityKeyPair} from '../keys/IdentityKeyPair';
-import {KeyPair} from '../keys/KeyPair';
-import {PreKeyBundle} from '../keys/PreKeyBundle';
-import {PublicKey} from '../keys/PublicKey';
+import { IdentityKey } from '../keys/IdentityKey';
+import { IdentityKeyPair } from '../keys/IdentityKeyPair';
+import { DHKeyPair } from '../keys/DHKeyPair';
+import { PreKeyBundle } from '../keys/PreKeyBundle';
+import { DHPublicKey } from '../keys/DHPublicKey';
 
-import {CipherMessage} from '../message/CipherMessage';
-import {Envelope} from '../message/Envelope';
-import {Message} from '../message/Message';
-import {PreKeyMessage} from '../message/PreKeyMessage';
-import {SessionTag} from '../message/SessionTag';
+import { CipherMessage } from '../message/CipherMessage';
+import { Envelope } from '../message/Envelope';
+import { Message } from '../message/Message';
+import { PreKeyMessage } from '../message/PreKeyMessage';
+import { SessionTag } from '../message/SessionTag';
 
-import {ChainKey} from './ChainKey';
-import {RecvChain} from './RecvChain';
-import {RootKey} from './RootKey';
-import {SendChain} from './SendChain';
-import {Session} from './Session';
+import { ChainKey } from './ChainKey';
+import { RecvChain } from './RecvChain';
+import { RootKey } from './RootKey';
+import { SendChain } from './SendChain';
+import { Session } from './Session';
 
 export class SessionState {
   prev_counter: number;
@@ -60,7 +60,7 @@ export class SessionState {
 
   static async init_as_alice(
     alice_identity_pair: IdentityKeyPair,
-    alice_base: IdentityKeyPair | KeyPair,
+    alice_base: IdentityKeyPair | DHKeyPair,
     bob_pkbundle: PreKeyBundle,
   ): Promise<SessionState> {
     const master_key = ArrayUtil.concatenate_array_buffers([
@@ -77,7 +77,7 @@ export class SessionState {
 
     const recv_chains = [RecvChain.new(chainkey, bob_pkbundle.public_key)];
 
-    const send_ratchet = await KeyPair.new();
+    const send_ratchet = await DHKeyPair.new();
     const [rok, chk] = rootkey.dh_ratchet(send_ratchet, bob_pkbundle.public_key);
     const send_chain = SendChain.new(chk, send_ratchet);
 
@@ -91,9 +91,9 @@ export class SessionState {
 
   static init_as_bob(
     bob_ident: IdentityKeyPair,
-    bob_prekey: KeyPair,
+    bob_prekey: DHKeyPair,
     alice_ident: IdentityKey,
-    alice_base: PublicKey,
+    alice_base: DHPublicKey,
   ): SessionState {
     const master_key = ArrayUtil.concatenate_array_buffers([
       bob_prekey.secret_key.shared_secret(alice_ident.public_key),
@@ -116,8 +116,8 @@ export class SessionState {
     return state;
   }
 
-  async ratchet(ratchet_key: PublicKey): Promise<void> {
-    const new_ratchet = await KeyPair.new();
+  async ratchet(ratchet_key: DHPublicKey): Promise<void> {
+    const new_ratchet = await DHKeyPair.new();
 
     const [recv_root_key, recv_chain_key] = this.root_key.dh_ratchet(this.send_chain.ratchet_key, ratchet_key);
 
@@ -149,7 +149,7 @@ export class SessionState {
    */
   encrypt(
     identity_key: IdentityKey,
-    pending: (number | PublicKey)[] | null,
+    pending: (number | DHPublicKey)[] | null,
     tag: SessionTag,
     plaintext: string | Uint8Array,
   ): Envelope {
@@ -166,7 +166,7 @@ export class SessionState {
     if (pending) {
       message = PreKeyMessage.new(
         pending[0] as number,
-        pending[1] as PublicKey,
+        pending[1] as DHPublicKey,
         identity_key,
         message as CipherMessage,
       );

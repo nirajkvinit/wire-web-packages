@@ -19,13 +19,12 @@
 
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
-
 import * as ClassUtil from '../util/ClassUtil';
-import {IdentityKey} from './IdentityKey';
-import {IdentityKeyPair} from './IdentityKeyPair';
-import {PreKey} from './PreKey';
-import {PreKeyAuth} from './PreKeyAuth';
-import {PublicKey} from './PublicKey';
+import { IdentityKey } from './IdentityKey';
+import { IdentityKeyPair } from './IdentityKeyPair';
+import { PreKey } from './PreKey';
+import { PreKeyAuth } from './PreKeyAuth';
+import { DHPublicKey } from './DHPublicKey';
 
 export interface SerialisedJSON {
   id: number;
@@ -35,14 +34,14 @@ export interface SerialisedJSON {
 export class PreKeyBundle {
   version: number;
   prekey_id: number;
-  public_key: PublicKey;
+  public_key: DHPublicKey;
   identity_key: IdentityKey;
   signature: Uint8Array | null | undefined;
 
   constructor() {
     this.version = -1;
     this.prekey_id = -1;
-    this.public_key = new PublicKey();
+    this.public_key = new DHPublicKey();
     this.identity_key = new IdentityKey();
     this.signature = null;
   }
@@ -61,7 +60,7 @@ export class PreKeyBundle {
 
   static signed(identity_pair: IdentityKeyPair, prekey: PreKey): PreKeyBundle {
     const ratchet_key = prekey.key_pair.public_key;
-    const signature = identity_pair.secret_key.sign(ratchet_key.pub_edward);
+    const signature = identity_pair.secret_key.sign(ratchet_key.pub_curve);
 
     const bundle = ClassUtil.new_instance(PreKeyBundle);
 
@@ -79,7 +78,7 @@ export class PreKeyBundle {
       return PreKeyAuth.UNKNOWN;
     }
 
-    if (this.identity_key.public_key.verify(this.signature, this.public_key.pub_edward)) {
+    if (this.identity_key.public_key.verify(this.signature, this.public_key.pub_curve)) {
       return PreKeyAuth.VALID;
     }
     return PreKeyAuth.INVALID;
@@ -133,7 +132,7 @@ export class PreKeyBundle {
           self.prekey_id = decoder.u16();
           break;
         case 2:
-          self.public_key = PublicKey.decode(decoder);
+          self.public_key = DHPublicKey.decode(decoder);
           break;
         case 3:
           self.identity_key = IdentityKey.decode(decoder);

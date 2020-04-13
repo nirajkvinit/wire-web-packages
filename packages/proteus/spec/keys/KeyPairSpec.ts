@@ -17,11 +17,12 @@
  *
  */
 
-import * as Proteus from '@wireapp/proteus';
+//import * as Proteus from '@wireapp/proteus';
+import * as Proteus from '../../src/main';
 
-describe('KeyPair', () => {
+describe('DHKeyPair', () => {
   it('signs a message and verifies the signature', async () => {
-    const kp = await Proteus.keys.KeyPair.new();
+    const kp = await Proteus.keys.IdentityKeyPair.new();
     const msg = 'what do ya want for nothing?';
     const sig = kp.secret_key.sign(msg);
     const bad_sig = new Uint8Array(sig);
@@ -35,7 +36,7 @@ describe('KeyPair', () => {
   });
 
   it('computes a Diffie-Hellman shared secret', async () => {
-    const [keypair_a, keypair_b] = await Promise.all([Proteus.keys.KeyPair.new(), Proteus.keys.KeyPair.new()]);
+    const [keypair_a, keypair_b] = await Promise.all([Proteus.keys.DHKeyPair.new(), Proteus.keys.DHKeyPair.new()]);
     const shared_a = keypair_a.secret_key.shared_secret(keypair_b.public_key);
     const shared_b = keypair_b.secret_key.shared_secret(keypair_a.public_key);
     expect(shared_a).toEqual(shared_b);

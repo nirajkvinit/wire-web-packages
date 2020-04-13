@@ -22,24 +22,24 @@ import * as CBOR from '@wireapp/cbor';
 import * as ClassUtil from '../util/ClassUtil';
 import * as MemoryUtil from '../util/MemoryUtil';
 
-import {DecodeError} from '../errors/DecodeError';
-import {DecryptError} from '../errors/DecryptError';
-import {ProteusError} from '../errors/ProteusError';
-import {SessionState} from './SessionState';
+import { DecodeError } from '../errors/DecodeError';
+import { DecryptError } from '../errors/DecryptError';
+import { ProteusError } from '../errors/ProteusError';
+import { SessionState } from './SessionState';
 
-import {IdentityKey} from '../keys/IdentityKey';
-import {IdentityKeyPair} from '../keys/IdentityKeyPair';
-import {KeyPair} from '../keys/KeyPair';
-import {PreKey} from '../keys/PreKey';
-import {PreKeyBundle} from '../keys/PreKeyBundle';
-import {PublicKey} from '../keys/PublicKey';
+import { IdentityKey } from '../keys/IdentityKey';
+import { IdentityKeyPair } from '../keys/IdentityKeyPair';
+import { DHKeyPair } from '../keys/DHKeyPair';
+import { PreKey } from '../keys/PreKey';
+import { PreKeyBundle } from '../keys/PreKeyBundle';
+import { DHPublicKey } from '../keys/DHPublicKey';
 
-import {CipherMessage} from '../message/CipherMessage';
-import {Envelope} from '../message/Envelope';
-import {PreKeyMessage} from '../message/PreKeyMessage';
-import {SessionTag} from '../message/SessionTag';
+import { CipherMessage } from '../message/CipherMessage';
+import { Envelope } from '../message/Envelope';
+import { PreKeyMessage } from '../message/PreKeyMessage';
+import { SessionTag } from '../message/SessionTag';
 
-import {PreKeyStore} from './PreKeyStore';
+import { PreKeyStore } from './PreKeyStore';
 
 export interface IntermediateSessionState {
   [index: string]: {
@@ -55,7 +55,7 @@ export class Session {
 
   counter = 0;
   local_identity: IdentityKeyPair;
-  pending_prekey: (number | PublicKey)[] | null;
+  pending_prekey: (number | DHPublicKey)[] | null;
   remote_identity: IdentityKey;
   session_states: IntermediateSessionState;
   session_tag: SessionTag;
@@ -74,7 +74,7 @@ export class Session {
    * @param remote_pkbundle Bob's Pre-Key Bundle
    */
   static async init_from_prekey(local_identity: IdentityKeyPair, remote_pkbundle: PreKeyBundle): Promise<Session> {
-    const alice_base = await KeyPair.new();
+    const alice_base = await DHKeyPair.new();
 
     const state = await SessionState.init_as_alice(local_identity, alice_base, remote_pkbundle);
 
@@ -322,7 +322,7 @@ export class Session {
       encoder.u8(0);
       encoder.u16(this.pending_prekey[0] as number);
       encoder.u8(1);
-      (this.pending_prekey[1] as PublicKey).encode(encoder);
+      (this.pending_prekey[1] as DHPublicKey).encode(encoder);
     } else {
       encoder.null();
     }
@@ -376,7 +376,7 @@ export class Session {
                     self.pending_prekey[0] = decoder.u16();
                     break;
                   case 1:
-                    self.pending_prekey[1] = PublicKey.decode(decoder);
+                    self.pending_prekey[1] = DHPublicKey.decode(decoder);
                     break;
                 }
               }

@@ -18,30 +18,47 @@
  */
 
 import * as CBOR from '@wireapp/cbor';
-
+import * as _sodium from 'libsodium-wrappers-sumo';
 import * as ClassUtil from '../util/ClassUtil';
-import {IdentityKey} from './IdentityKey';
-import {KeyPair} from './KeyPair';
-import {SecretKey} from './SecretKey';
+import { IdentityKey } from './IdentityKey';
+//import { KeyPair } from './KeyPair';
+import { IdentitySecretKey } from './IdentitySecretKey';
+import { IdentityPublicKey } from './IdentityPublicKey';
 
 export class IdentityKeyPair {
   public_key: IdentityKey;
-  secret_key: SecretKey;
+  secret_key: IdentitySecretKey;
   version: number;
 
   constructor() {
     this.public_key = new IdentityKey();
-    this.secret_key = new SecretKey();
+    this.secret_key = new IdentitySecretKey();
     this.version = -1;
   }
 
   static async new(): Promise<IdentityKeyPair> {
-    const key_pair = await KeyPair.new();
+    await _sodium.ready;
+    const sodium = _sodium;
+
+    const ed25519_key_pair = sodium.crypto_sign_keypair();
+    const sec_edward = ed25519_key_pair.privateKey;
+    const pub_edward = ed25519_key_pair.publicKey;
+
+    const sec_curve = sodium.crypto_sign_ed25519_sk_to_curve25519(sec_edward);
+    const pub_curve = sodium.crypto_sign_ed25519_pk_to_curve25519(pub_edward);
+
+    let identity_secret_key = new IdentitySecretKey();
+    identity_secret_key.sec_edward = sec_edward;
+    identity_secret_key.sec_curve = sec_curve;
+
+    let identity_public_key = new IdentityPublicKey();
+    identity_public_key.pub_edward = pub_edward;
+    identity_public_key.pub_curve = pub_curve;
 
     const ikp = ClassUtil.new_instance(IdentityKeyPair);
-    ikp.version = 1;
-    ikp.secret_key = key_pair.secret_key;
-    ikp.public_key = IdentityKey.new(key_pair.public_key);
+    ikp.version = 2;
+    ikp.secret_key = identity_secret_key;
+    ikp.public_key = IdentityKey.new(identity_public_key);
 
     return ikp;
   }
@@ -77,7 +94,7 @@ export class IdentityKeyPair {
           self.version = decoder.u8();
           break;
         case 1:
-          self.secret_key = SecretKey.decode(decoder);
+          self.secret_key = IdentitySecretKey.decode(decoder);
           break;
         case 2:
           self.public_key = IdentityKey.decode(decoder);
