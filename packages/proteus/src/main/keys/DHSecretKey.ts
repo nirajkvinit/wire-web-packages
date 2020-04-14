@@ -20,9 +20,9 @@
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 import * as ClassUtil from '../util/ClassUtil';
-import { InputError } from '../errors/InputError';
+import {InputError} from '../errors/InputError';
 import * as ArrayUtil from '../util/ArrayUtil';
-import { DHPublicKey } from './DHPublicKey';
+import {DHPublicKey} from './DHPublicKey';
 
 export class DHSecretKey {
   sec_curve: Uint8Array;

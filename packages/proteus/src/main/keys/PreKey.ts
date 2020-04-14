@@ -19,8 +19,8 @@
 
 import * as CBOR from '@wireapp/cbor';
 import * as ClassUtil from '../util/ClassUtil';
-import { InputError } from '../errors/InputError';
-import { DHKeyPair } from './DHKeyPair';
+import {InputError} from '../errors/InputError';
+import {DHKeyPair} from './DHKeyPair';
 
 /**
  * Pre-generated (and regularly refreshed) pre-keys.
@@ -81,7 +81,7 @@ export class PreKey {
     }
 
     return Promise.all(
-      Array.from({ length: size }).map((_, index) => PreKey.new((start + index) % PreKey.MAX_PREKEY_ID)),
+      Array.from({length: size}).map((_, index) => PreKey.new((start + index) % PreKey.MAX_PREKEY_ID)),
     );
   }
 

@@ -16,11 +16,10 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
-
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
-import { InputError } from '../errors/InputError';
+import {InputError} from '../errors/InputError';
 import * as ClassUtil from '../util/ClassUtil';
 
 export class DHPublicKey {
@@ -33,7 +32,6 @@ export class DHPublicKey {
   static new(pub_curve: Uint8Array): DHPublicKey {
     const pk = ClassUtil.new_instance(DHPublicKey);
 
-    //pk.pub_edward = pub_edward;
     pk.pub_curve = pub_curve;
     return pk;
   }

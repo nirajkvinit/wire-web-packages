@@ -20,7 +20,7 @@
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
-import { InputError } from '../errors/InputError';
+import {InputError} from '../errors/InputError';
 import * as ClassUtil from '../util/ClassUtil';
 
 export class IdentityPublicKey {

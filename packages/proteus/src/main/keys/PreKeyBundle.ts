@@ -20,11 +20,11 @@
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 import * as ClassUtil from '../util/ClassUtil';
-import { IdentityKey } from './IdentityKey';
-import { IdentityKeyPair } from './IdentityKeyPair';
-import { PreKey } from './PreKey';
-import { PreKeyAuth } from './PreKeyAuth';
-import { DHPublicKey } from './DHPublicKey';
+import {IdentityKey} from './IdentityKey';
+import {IdentityKeyPair} from './IdentityKeyPair';
+import {PreKey} from './PreKey';
+import {PreKeyAuth} from './PreKeyAuth';
+import {DHPublicKey} from './DHPublicKey';
 
 export interface SerialisedJSON {
   id: number;

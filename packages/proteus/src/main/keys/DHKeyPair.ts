@@ -19,8 +19,8 @@
 
 import * as CBOR from '@wireapp/cbor';
 import * as _sodium from 'libsodium-wrappers-sumo';
-import { DHPublicKey } from './DHPublicKey';
-import { DHSecretKey } from './DHSecretKey';
+import {DHPublicKey} from './DHPublicKey';
+import {DHSecretKey} from './DHSecretKey';
 import * as RandomUtil from '../util/RandomUtil';
 
 /** Construct an ephemeral key pair. */

@@ -20,7 +20,7 @@
 import * as CBOR from '@wireapp/cbor';
 
 import * as ClassUtil from '../util/ClassUtil';
-import { IdentityPublicKey } from './IdentityPublicKey';
+import {IdentityPublicKey} from './IdentityPublicKey';
 
 /**
  * Construct a long-term identity key pair.

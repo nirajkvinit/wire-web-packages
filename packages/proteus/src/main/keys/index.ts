@@ -17,13 +17,13 @@
  *
  */
 
-export { IdentityKey } from './IdentityKey';
-export { IdentityKeyPair } from './IdentityKeyPair';
-export { DHKeyPair } from './DHKeyPair';
-export { PreKey } from './PreKey';
-export { PreKeyAuth } from './PreKeyAuth';
-export { PreKeyBundle } from './PreKeyBundle';
-export { IdentityPublicKey } from './IdentityPublicKey';
-export { IdentitySecretKey } from './IdentitySecretKey';
-export { DHPublicKey } from './DHPublicKey';
-export { DHSecretKey } from './DHSecretKey';
+export {IdentityKey} from './IdentityKey';
+export {IdentityKeyPair} from './IdentityKeyPair';
+export {DHKeyPair} from './DHKeyPair';
+export {PreKey} from './PreKey';
+export {PreKeyAuth} from './PreKeyAuth';
+export {PreKeyBundle} from './PreKeyBundle';
+export {IdentityPublicKey} from './IdentityPublicKey';
+export {IdentitySecretKey} from './IdentitySecretKey';
+export {DHPublicKey} from './DHPublicKey';
+export {DHSecretKey} from './DHSecretKey';
