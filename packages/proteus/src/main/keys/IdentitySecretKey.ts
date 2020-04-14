@@ -108,7 +108,7 @@ export class IdentitySecretKey {
         self.sec_curve = sec_curve;
       }
     } else {
-      throw new InputError.ConversionError('Could not convert secret key with ed2curve.', 408);
+      throw new InputError.ConversionError('Could not convert secret key with libsodium.', 408);
     }
     return self;
   }

@@ -19,13 +19,13 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import { CipherKey } from '../derived/CipherKey';
-import { DerivedSecrets } from '../derived/DerivedSecrets';
-import { InputError } from '../errors/InputError';
-import { DHKeyPair } from '../keys/DHKeyPair';
-import { DHPublicKey } from '../keys/DHPublicKey';
+import {CipherKey} from '../derived/CipherKey';
+import {DerivedSecrets} from '../derived/DerivedSecrets';
+import {InputError} from '../errors/InputError';
+import {DHKeyPair} from '../keys/DHKeyPair';
+import {DHPublicKey} from '../keys/DHPublicKey';
 import * as ClassUtil from '../util/ClassUtil';
-import { ChainKey } from './ChainKey';
+import {ChainKey} from './ChainKey';
 
 export class RootKey {
   key: CipherKey;

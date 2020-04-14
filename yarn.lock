@@ -2157,13 +2157,6 @@
   dependencies:
     "@types/vinyl" "*"
 
-"@types/ed2curve@0.2.2":
-  version "0.2.2"
-  resolved "https://registry.npmjs.org/@types/ed2curve/-/ed2curve-0.2.2.tgz#8f8bc7e2c9a5895a941c63a4f7acd7a6a62a5b15"
-  integrity sha512-G1sTX5xo91ydevQPINbL2nfgVAj/s1ZiqZxC8OCWduwu+edoNGUm5JXtTkg9F3LsBZbRI46/0HES4CPUE2wc9g==
-  dependencies:
-    tweetnacl "^1.0.0"
-
 "@types/emscripten@1.38.0":
   version "1.38.0"
   resolved "https://registry.npmjs.org/@types/emscripten/-/emscripten-1.38.0.tgz#eba859e3bf94249dcd25bcf853481065a92a6c5c"
@@ -5453,13 +5446,6 @@ ecc-jsbn@~0.1.1:
   dependencies:
     jsbn "~0.1.0"
     safer-buffer "^2.1.0"
-
-ed2curve@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.npmjs.org/ed2curve/-/ed2curve-0.3.0.tgz#322b575152a45305429d546b071823a93129a05d"
-  integrity sha512-8w2fmmq3hv9rCrcI7g9hms2pMunQr1JINfcjwR9tAyZqhtyaMN991lF/ZfHfr5tzZQ8c7y7aBgZbjfbd0fjFwQ==
-  dependencies:
-    tweetnacl "1.x.x"
 
 ee-first@1.1.1:
   version "1.1.1"
@@ -13843,11 +13829,6 @@ tunnel-agent@^0.6.0:
   integrity sha1-J6XeoGs2sEoKmWZ3SykIaPD8QP0=
   dependencies:
     safe-buffer "^5.0.1"
-
-tweetnacl@1.x.x, tweetnacl@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/tweetnacl/-/tweetnacl-1.0.2.tgz#39fba8d1f7a34706a3fc1fd8c04afcad7bb9e689"
-  integrity sha512-+8aPRjmXgf1VqvyxSlBUzKzeYqVS9Ai8vZ28g+mL7dNQl1jlUTCMDZnvNQdAS1xTywMkIXwJsfipsR/6s2+syw==
 
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"

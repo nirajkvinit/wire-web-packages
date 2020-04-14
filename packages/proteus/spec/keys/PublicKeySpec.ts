@@ -17,13 +17,12 @@
  *
  */
 
-//import * as Proteus from '@wireapp/proteus';
-import * as Proteus from '../../src/main';
+import * as Proteus from '@wireapp/proteus';
 
 describe('Public Key', () => {
   it('rejects shared secrets at the point of infinity', async () => {
     try {
-      const emptyCurve = new Uint8Array([1].concat(Array.from({ length: 30 })));
+      const emptyCurve = new Uint8Array([1].concat(Array.from({length: 30})));
       const alice_keypair = await Proteus.keys.DHKeyPair.new();
       const bob_keypair = await Proteus.keys.DHKeyPair.new();
 

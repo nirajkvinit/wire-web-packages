@@ -101,7 +101,7 @@ export class IdentityPublicKey {
         self.pub_curve = pub_curve;
       }
     } else {
-      throw new InputError.ConversionError('Could not convert public key with ed2curve.', 409);
+      throw new InputError.ConversionError('Could not convert public key with libsodium.', 409);
     }
     return self;
   }

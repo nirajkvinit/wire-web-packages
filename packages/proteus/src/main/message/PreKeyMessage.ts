@@ -19,13 +19,13 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import { IdentityKey } from '../keys/IdentityKey';
-import { DHPublicKey } from '../keys/DHPublicKey';
+import {IdentityKey} from '../keys/IdentityKey';
+import {DHPublicKey} from '../keys/DHPublicKey';
 import * as ClassUtil from '../util/ClassUtil';
 
-import { InputError } from '../errors/InputError';
-import { CipherMessage } from './CipherMessage';
-import { Message } from './Message';
+import {InputError} from '../errors/InputError';
+import {CipherMessage} from './CipherMessage';
+import {Message} from './Message';
 
 export class PreKeyMessage extends Message {
   base_key: DHPublicKey;
@@ -41,7 +41,12 @@ export class PreKeyMessage extends Message {
     this.prekey_id = -1;
   }
 
-  static new(prekey_id: number, base_key: DHPublicKey, identity_key: IdentityKey, message: CipherMessage): PreKeyMessage {
+  static new(
+    prekey_id: number,
+    base_key: DHPublicKey,
+    identity_key: IdentityKey,
+    message: CipherMessage,
+  ): PreKeyMessage {
     const pkm = ClassUtil.new_instance(PreKeyMessage);
 
     pkm.prekey_id = prekey_id;

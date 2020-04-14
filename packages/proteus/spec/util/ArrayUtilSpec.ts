@@ -19,8 +19,7 @@
 
 /* eslint-disable no-magic-numbers */
 
-//import * as Proteus from '@wireapp/proteus';
-import * as Proteus from '../../src/main';
+import * as Proteus from '@wireapp/proteus';
 
 describe('HMAC-based Key Derivation Function', () => {
   it('creates a new buffer from a given buffer', () => {

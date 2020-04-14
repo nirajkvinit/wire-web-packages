@@ -19,10 +19,11 @@
 
 import * as CBOR from '@wireapp/cbor';
 import * as _sodium from 'libsodium-wrappers-sumo';
+
 import * as ClassUtil from '../util/ClassUtil';
-import { IdentityKey } from './IdentityKey';
-import { IdentitySecretKey } from './IdentitySecretKey';
-import { IdentityPublicKey } from './IdentityPublicKey';
+import {IdentityKey} from './IdentityKey';
+import {IdentitySecretKey} from './IdentitySecretKey';
+import {IdentityPublicKey} from './IdentityPublicKey';
 
 export class IdentityKeyPair {
   public_key: IdentityKey;
@@ -46,11 +47,11 @@ export class IdentityKeyPair {
     const sec_curve = sodium.crypto_sign_ed25519_sk_to_curve25519(sec_edward);
     const pub_curve = sodium.crypto_sign_ed25519_pk_to_curve25519(pub_edward);
 
-    let identity_secret_key = new IdentitySecretKey();
+    const identity_secret_key = new IdentitySecretKey();
     identity_secret_key.sec_edward = sec_edward;
     identity_secret_key.sec_curve = sec_curve;
 
-    let identity_public_key = new IdentityPublicKey();
+    const identity_public_key = new IdentityPublicKey();
     identity_public_key.pub_edward = pub_edward;
     identity_public_key.pub_curve = pub_curve;
 

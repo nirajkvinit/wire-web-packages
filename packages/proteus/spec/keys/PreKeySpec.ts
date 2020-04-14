@@ -17,8 +17,7 @@
  *
  */
 
-//import * as Proteus from '@wireapp/proteus';
-import * as Proteus from '../../src/main';
+import * as Proteus from '@wireapp/proteus';
 import * as sodium from 'libsodium-wrappers-sumo';
 
 beforeAll(async () => {
@@ -111,7 +110,7 @@ describe('PreKey', () => {
       expect(prekeys[0].key_id).toBe(0);
       expect(prekeys[9].key_id).toBe(9);
 
-      prekeys = await Proteus.keys.PreKey.generate_prekeys(3000, 10);
+      prekeys = await Proteus.keys.PreKey.generate_prekeys(3_000, 10);
       expect(prekeys.length).toBe(10);
       expect(prekeys[0].key_id).toBe(3000);
       expect(prekeys[9].key_id).toBe(3009);

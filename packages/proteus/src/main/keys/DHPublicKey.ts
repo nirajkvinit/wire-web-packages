@@ -16,6 +16,7 @@
  * along with this program. If not, see http://www.gnu.org/licenses/.
  *
  */
+
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
 
@@ -64,15 +65,16 @@ export class DHPublicKey {
           decoder.skip();
       }
     }
+
     if (!pub_curve) {
       if (pub_edward) {
         pub_curve = sodium.crypto_sign_ed25519_pk_to_curve25519(pub_edward);
       } else {
-        throw new InputError.ConversionError('Could not convert public key with ed2curve.', 409);
+        throw new InputError.ConversionError('Could not convert public key with libsodium.', 409);
       }
-    } else {
-      self.pub_curve = pub_curve;
     }
+
+    self.pub_curve = pub_curve;
     return self;
   }
 }

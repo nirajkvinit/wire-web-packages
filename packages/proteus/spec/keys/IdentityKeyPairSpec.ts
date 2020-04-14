@@ -17,8 +17,7 @@
  *
  */
 
-//import * as Proteus from '@wireapp/proteus';
-import * as Proteus from '../../src/main';
+import * as Proteus from '@wireapp/proteus';
 import * as sodium from 'libsodium-wrappers-sumo';
 
 beforeAll(async () => {

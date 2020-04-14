@@ -18,8 +18,7 @@
  */
 
 import * as CBOR from '@wireapp/cbor';
-//import * as Proteus from '@wireapp/proteus';
-import * as Proteus from '../../src/main';
+import * as Proteus from '@wireapp/proteus';
 
 describe('Envelope', () => {
   const mac_key = new Proteus.derived.MacKey(new Uint8Array(32).fill(1));

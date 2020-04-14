@@ -19,8 +19,7 @@
 
 /* eslint-disable no-magic-numbers */
 
-//import * as Proteus from '@wireapp/proteus';
-import * as Proteus from '../../src/main';
+import * as Proteus from '@wireapp/proteus';
 import * as sodium from 'libsodium-wrappers-sumo';
 
 const assert_serialise_deserialise = (
@@ -201,7 +200,7 @@ describe('Session', () => {
       expect(bob.session_states[bob.session_tag.toString()].state.recv_chains.length).toBe(1);
 
       await Promise.all(
-        Array.from({ length: Proteus.session.Session.MAX_RECV_CHAINS * 2 }, async () => {
+        Array.from({length: Proteus.session.Session.MAX_RECV_CHAINS * 2}, async () => {
           const bob_to_alice = await bob.encrypt('ping');
           expect(sodium.to_string(await alice.decrypt(alice_store, bob_to_alice))).toBe('ping');
 
@@ -603,7 +602,7 @@ describe('Session', () => {
       expect(Object.keys(bob.session_states).length).toBe(1);
 
       await Promise.all(
-        Array.from({ length: 1001 }, async () => {
+        Array.from({length: 1001}, async () => {
           const hello_bob2_plaintext = 'Hello Bob2!';
           const hello_bob2_encrypted = await alice.encrypt(hello_bob2_plaintext);
           const hello_bob2_decrypted = await bob.decrypt(bob_store, hello_bob2_encrypted);
@@ -636,7 +635,7 @@ describe('Session', () => {
 
       await Promise.all(
         alices.map(async alice => {
-          await Promise.all(Array.from({ length: 900 }, () => alice.encrypt('hello')));
+          await Promise.all(Array.from({length: 900}, () => alice.encrypt('hello')));
           const encrypted_message = await alice.encrypt('Hello Bob!');
           expect(sodium.to_string(await bob.decrypt(bob_store, encrypted_message))).toBe('Hello Bob!');
         }),
@@ -668,7 +667,7 @@ describe('Session', () => {
       const bob = await assert_init_from_message(bob_ident, bob_store, hello_bob, 'Hello Bob!');
 
       // TODO: need to serialize/deserialize to/from CBOR here
-      const messages = await Promise.all(Array.from({ length: 999 }, () => bob.encrypt('Hello Alice!')));
+      const messages = await Promise.all(Array.from({length: 999}, () => bob.encrypt('Hello Alice!')));
 
       await Promise.all(
         messages.map(async message => {

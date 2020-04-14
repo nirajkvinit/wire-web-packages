@@ -19,11 +19,11 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import { InputError } from '../errors/InputError';
-import { DHPublicKey } from '../keys/DHPublicKey';
+import {InputError} from '../errors/InputError';
+import {DHPublicKey} from '../keys/DHPublicKey';
 import * as ClassUtil from '../util/ClassUtil';
-import { Message } from './Message';
-import { SessionTag } from './SessionTag';
+import {Message} from './Message';
+import {SessionTag} from './SessionTag';
 
 export class CipherMessage extends Message {
   cipher_text: Uint8Array;

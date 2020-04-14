@@ -19,23 +19,23 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import { DHPublicKey } from '../keys/DHPublicKey';
+import {DHPublicKey} from '../keys/DHPublicKey';
 import * as ClassUtil from '../util/ClassUtil';
 
-import { DecryptError } from '../errors/DecryptError';
-import { ProteusError } from '../errors/ProteusError';
+import {DecryptError} from '../errors/DecryptError';
+import {ProteusError} from '../errors/ProteusError';
 
-import { CipherMessage } from '../message/CipherMessage';
-import { Envelope } from '../message/Envelope';
+import {CipherMessage} from '../message/CipherMessage';
+import {Envelope} from '../message/Envelope';
 
-import { ChainKey } from './ChainKey';
-import { MessageKeys } from './MessageKeys';
+import {ChainKey} from './ChainKey';
+import {MessageKeys} from './MessageKeys';
 
 export class RecvChain {
   chain_key: ChainKey;
   message_keys: MessageKeys[];
   ratchet_key: DHPublicKey;
-  static MAX_COUNTER_GAP = 1000;
+  static MAX_COUNTER_GAP = 1_000;
 
   constructor() {
     this.chain_key = new ChainKey();

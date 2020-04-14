@@ -19,6 +19,7 @@
 
 import * as CBOR from '@wireapp/cbor';
 import * as sodium from 'libsodium-wrappers-sumo';
+
 import * as ClassUtil from '../util/ClassUtil';
 import {InputError} from '../errors/InputError';
 import * as ArrayUtil from '../util/ArrayUtil';
@@ -90,9 +91,10 @@ export class DHSecretKey {
       if (sec_edward) {
         sec_curve = sodium.crypto_sign_ed25519_sk_to_curve25519(sec_edward);
       } else {
-        throw new InputError.ConversionError('Could not convert secret key with ed2curve.', 408);
+        throw new InputError.ConversionError('Could not convert secret key with libsodium.', 408);
       }
     }
+
     self.sec_curve = sec_curve;
     return self;
   }

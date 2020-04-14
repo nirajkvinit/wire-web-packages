@@ -19,9 +19,9 @@
 
 import * as CBOR from '@wireapp/cbor';
 
-import { DHKeyPair } from '../keys/DHKeyPair';
+import {DHKeyPair} from '../keys/DHKeyPair';
 import * as ClassUtil from '../util/ClassUtil';
-import { ChainKey } from './ChainKey';
+import {ChainKey} from './ChainKey';
 
 export class SendChain {
   chain_key: ChainKey;
