@@ -24,6 +24,7 @@ export interface NewOTRMessage {
   native_priority?: 'low' | 'high';
   native_push?: boolean;
   recipients: OTRRecipients;
+  report_missing?: string[];
   sender: string;
   transient?: boolean;
 }

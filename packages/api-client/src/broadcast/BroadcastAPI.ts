@@ -38,11 +38,8 @@ export class BroadcastAPI {
    */
   public async postBroadcastMessage(
     clientId: string,
-    messageData?: NewOTRMessage,
-    params?: {
-      ignore_missing?: boolean;
-      report_missing?: string;
-    },
+    messageData: NewOTRMessage,
+    ignore_missing: boolean = false,
   ): Promise<ClientMismatch> {
     if (!clientId) {
       throw new ValidationError('Unable to send OTR message without client ID.');
@@ -59,8 +56,7 @@ export class BroadcastAPI {
       data: messageData,
       method: 'post',
       params: {
-        ignore_missing: !!messageData.data,
-        ...params,
+        ignore_missing,
       },
       url: BroadcastAPI.URL.BROADCAST,
     };
