@@ -18,7 +18,7 @@
  */
 
 import {APIClient} from '@wireapp/api-client';
-import {RegisterData} from '@wireapp/api-client/dist/auth';
+import type {RegisterData} from '@wireapp/api-client/dist/auth';
 import {
   AUTH_COOKIE_KEY,
   AUTH_TABLE_NAME,
@@ -35,6 +35,7 @@ import * as cryptobox from '@wireapp/cryptobox';
 import {CRUDEngine, MemoryEngine, error as StoreEngineError} from '@wireapp/store-engine';
 import {EventEmitter} from 'events';
 import logdown from 'logdown';
+
 import {LoginSanitizer} from './auth/';
 import {BroadcastService} from './broadcast/';
 import {ClientInfo, ClientService} from './client/';
@@ -47,7 +48,7 @@ import {
   PayloadBundleType,
 } from './conversation/';
 import * as OtrMessage from './conversation/message/OtrMessage';
-import {CoreError, NotificationError} from './CoreError';
+import type {CoreError, NotificationError} from './CoreError';
 import {CryptographyService} from './cryptography/';
 import {GiphyService} from './giphy/';
 import {NotificationHandler, NotificationService} from './notification/';

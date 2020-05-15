@@ -19,6 +19,7 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
+
 import {GlobalStyle} from '../GlobalStyle';
 import {filterProps} from '../util';
 import {THEME_ID, Theme, ThemeProvider} from './Theme';

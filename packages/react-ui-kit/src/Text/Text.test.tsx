@@ -18,6 +18,7 @@
  */
 
 import React from 'react';
+
 import {COLOR} from '../Identity';
 import {THEME_ID} from '../Layout';
 import {matchComponent} from '../test/testUtil';

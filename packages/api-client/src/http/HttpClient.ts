@@ -22,6 +22,7 @@ import {PriorityQueue} from '@wireapp/priority-queue';
 import axios, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
 import {EventEmitter} from 'events';
 import logdown from 'logdown';
+
 import {AccessTokenData, AccessTokenStore, AuthAPI} from '../auth/';
 import {BackendErrorMapper, ConnectionState, ContentType, NetworkError, StatusCode} from '../http/';
 import {ObfuscationUtil} from '../obfuscation/';

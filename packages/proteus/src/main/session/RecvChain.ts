@@ -23,10 +23,8 @@ import {PublicKey} from '../keys/PublicKey';
 
 import {DecryptError} from '../errors/DecryptError';
 import {ProteusError} from '../errors/ProteusError';
-
-import {CipherMessage} from '../message/CipherMessage';
-import {Envelope} from '../message/Envelope';
-
+import type {CipherMessage} from '../message/CipherMessage';
+import type {Envelope} from '../message/Envelope';
 import {ChainKey} from './ChainKey';
 import {MessageKeys} from './MessageKeys';
 import {DecodeError} from '../errors';

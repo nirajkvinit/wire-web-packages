@@ -17,12 +17,12 @@
  *
  */
 
-import {AxiosRequestConfig, AxiosResponse} from 'axios';
+import type {AxiosRequestConfig, AxiosResponse} from 'axios';
 
-import {HttpClient} from '../http/';
-import {ChangePassword, Delete, Self} from '../self/';
-import {UserUpdate} from '../user/';
-import {Consent} from './Consent';
+import type {HttpClient} from '../http/';
+import type {ChangePassword, Delete, Self} from '../self/';
+import type {UserUpdate} from '../user/';
+import type {Consent} from './Consent';
 
 export class SelfAPI {
   constructor(private readonly client: HttpClient) {}

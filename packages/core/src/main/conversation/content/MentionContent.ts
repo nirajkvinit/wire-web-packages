@@ -17,5 +17,4 @@
  *
  */
 
-import {IMention} from '@wireapp/protocol-messaging';
-export {IMention as MentionContent};
+export {IMention as MentionContent} from '@wireapp/protocol-messaging';

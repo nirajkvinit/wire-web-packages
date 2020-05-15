@@ -17,5 +17,4 @@
  *
  */
 
-import {IButtonAction} from '@wireapp/protocol-messaging';
-export {IButtonAction as ButtonActionContent};
+export {IButtonAction as ButtonActionContent} from '@wireapp/protocol-messaging';

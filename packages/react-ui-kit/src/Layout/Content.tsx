@@ -19,6 +19,7 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
+
 import {GUTTER} from './sizes';
 
 export type ContentProps<T = HTMLDivElement> = React.HTMLProps<T>;

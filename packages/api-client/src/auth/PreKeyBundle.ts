@@ -17,7 +17,7 @@
  *
  */
 
-import {ClientPreKey} from '../auth/';
+import type {ClientPreKey} from '../auth/';
 
 export interface PreKeyBundle {
   clients: ClientPreKey[];

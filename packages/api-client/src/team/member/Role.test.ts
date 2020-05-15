@@ -18,7 +18,7 @@
  */
 
 import {Permissions, combinePermissions} from './Permissions';
-import {PermissionsData} from './PermissionsData';
+import type {PermissionsData} from './PermissionsData';
 import {
   Role,
   isAdmin,

@@ -17,11 +17,12 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
-import {ClientAction, Confirmation} from '@wireapp/protocol-messaging';
-import {AbortReason, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '..';
-import {AssetService} from '../AssetService';
-import {
+import type {APIClient} from '@wireapp/api-client';
+import type {ClientAction, Confirmation} from '@wireapp/protocol-messaging';
+
+import type {AbortReason, PayloadBundleSource, PayloadBundleState, PayloadBundleType} from '..';
+import type {AssetService} from '../AssetService';
+import type {
   ButtonActionConfirmationContent,
   ButtonActionContent,
   CallingContent,
@@ -44,8 +45,8 @@ import {
   ReactionContent,
   TextContent,
 } from '../content';
-import {CompositeContentBuilder} from './CompositeContentBuilder';
-import {
+import type {CompositeContentBuilder} from './CompositeContentBuilder';
+import type {
   ButtonActionConfirmationMessage,
   ButtonActionMessage,
   CallMessage,
@@ -62,7 +63,7 @@ import {
   ResetSessionMessage,
   TextMessage,
 } from './OtrMessage';
-import {TextContentBuilder} from './TextContentBuilder';
+import type {TextContentBuilder} from './TextContentBuilder';
 
 const UUID = require('pure-uuid');
 

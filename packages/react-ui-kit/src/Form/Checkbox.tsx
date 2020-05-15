@@ -20,6 +20,7 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
 import React from 'react';
+
 import {COLOR} from '../Identity';
 import {Text, TextProps, linkStyle, textStyle} from '../Text';
 import {filterProps} from '../util';

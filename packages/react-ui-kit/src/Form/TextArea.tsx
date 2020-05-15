@@ -19,11 +19,12 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
-import {TextTransformProperty} from 'csstype';
+import type {TextTransformProperty} from 'csstype';
 import React from 'react';
+
 import {COLOR} from '../Identity';
-import {Theme} from '../Layout';
-import {TextProps} from '../Text';
+import type {Theme} from '../Layout';
+import type {TextProps} from '../Text';
 import {filterProps} from '../util';
 
 export interface TextAreaProps<T = HTMLTextAreaElement> extends TextProps<T> {

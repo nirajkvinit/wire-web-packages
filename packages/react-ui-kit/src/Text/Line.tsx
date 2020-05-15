@@ -19,6 +19,7 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
+
 import {COLOR} from '../Identity';
 import {GUTTER} from '../Layout/sizes';
 

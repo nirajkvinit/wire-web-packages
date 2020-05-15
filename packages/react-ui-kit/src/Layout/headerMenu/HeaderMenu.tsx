@@ -20,6 +20,7 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
 import {useState} from 'react';
+
 import {MenuContent} from './MenuContent';
 import {MenuItems} from './MenuItems';
 import {MenuOpenButton} from './MenuOpenButton';

@@ -17,7 +17,7 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
+import type {APIClient} from '@wireapp/api-client';
 import {Connection, ConnectionStatus} from '@wireapp/api-client/dist/connection/';
 
 export class ConnectionService {

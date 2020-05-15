@@ -19,8 +19,9 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
-import {FlexWrapProperty} from 'csstype';
+import type {FlexWrapProperty} from 'csstype';
 import React from 'react';
+
 import {filterProps} from '../util';
 
 export interface FlexBoxProps<T = HTMLDivElement> extends React.HTMLProps<T> {

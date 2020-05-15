@@ -17,7 +17,7 @@
  *
  */
 
-import {CRUDEngine} from '@wireapp/store-engine';
+import type {CRUDEngine} from '@wireapp/store-engine';
 import {FileEngine} from '@wireapp/store-engine-fs';
 import logdown from 'logdown';
 import path from 'path';

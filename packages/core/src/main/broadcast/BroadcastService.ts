@@ -17,12 +17,13 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
-import {NewOTRMessage, OTRRecipients} from '@wireapp/api-client/dist/conversation/';
-import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/user/';
-import {GenericMessage} from '@wireapp/protocol-messaging';
-import {ConversationService} from '../conversation/';
-import {CryptographyService} from '../cryptography/';
+import type {APIClient} from '@wireapp/api-client';
+import type {NewOTRMessage, OTRRecipients} from '@wireapp/api-client/dist/conversation/';
+import type {UserPreKeyBundleMap} from '@wireapp/api-client/dist/user/';
+import type {GenericMessage} from '@wireapp/protocol-messaging';
+
+import type {ConversationService} from '../conversation/';
+import type {CryptographyService} from '../cryptography/';
 
 export class BroadcastService {
   constructor(

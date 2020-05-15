@@ -26,7 +26,7 @@ import {AccessTokenData, AccessTokenStore, AuthAPI, Context, Cookie, LoginData, 
 import {CookieStore} from './auth/CookieStore';
 import {BroadcastAPI} from './broadcast/';
 import {ClientAPI, ClientType} from './client/';
-import {Config} from './Config';
+import type {Config} from './Config';
 import {ConnectionAPI} from './connection/';
 import {ConversationAPI} from './conversation/';
 import {Backend} from './env/';

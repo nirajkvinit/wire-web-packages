@@ -23,7 +23,7 @@ import {BackendErrorLabel} from '@wireapp/api-client/dist/http/';
 import {Account} from '@wireapp/core';
 import {PayloadBundleType} from '@wireapp/core/dist/conversation/';
 import {FileEngine} from '@wireapp/store-engine-fs';
-import {AxiosError} from 'axios';
+import type {AxiosError} from 'axios';
 import program from 'commander';
 import dotenv from 'dotenv';
 import fs from 'fs-extra';

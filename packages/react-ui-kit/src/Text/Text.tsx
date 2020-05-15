@@ -19,8 +19,9 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
-import {TextTransformProperty} from 'csstype';
-import {Theme} from '../Layout';
+import type {TextTransformProperty} from 'csstype';
+
+import type {Theme} from '../Layout';
 import {filterProps} from '../util';
 
 export interface TextProps<T = HTMLSpanElement> extends React.HTMLProps<T> {

@@ -17,9 +17,10 @@
  *
  */
 
-import {Connection} from '@wireapp/api-client/dist/connection/';
-import {ClientActionType} from '../';
-import {
+import type {Connection} from '@wireapp/api-client/dist/connection/';
+
+import type {ClientActionType} from '../';
+import type {
   AssetContent,
   ClearedContent,
   ClientActionContent,

@@ -18,13 +18,13 @@
  */
 
 import Axios, {AxiosRequestConfig} from 'axios';
-
 import {ArrayUtil} from '@wireapp/commons';
-import {ClientPreKey, PreKeyBundle} from '../auth/';
-import {PublicClient} from '../client/';
-import {UserClients} from '../conversation/UserClients';
+
+import type {ClientPreKey, PreKeyBundle} from '../auth/';
+import type {PublicClient} from '../client/';
+import type {UserClients} from '../conversation/UserClients';
 import {HttpClient, RequestCancelable, SyntheticErrorLabel} from '../http/';
-import {
+import type {
   Activate,
   ActivationResponse,
   CheckHandles,
@@ -37,7 +37,7 @@ import {
   UserPreKeyBundleMap,
   VerifyDelete,
 } from '../user/';
-import {RichInfo} from './RichInfo';
+import type {RichInfo} from './RichInfo';
 import {RequestCancellationError} from './UserError';
 
 export class UserAPI {

@@ -17,10 +17,10 @@
  *
  */
 
-import {AxiosRequestConfig} from 'axios';
+import type {AxiosRequestConfig} from 'axios';
 
 import {HttpClient, BackendErrorLabel} from '../../http/';
-import {NewTeamInvitation, TeamInvitation, TeamInvitationChunk} from '../invitation/';
+import type {NewTeamInvitation, TeamInvitation, TeamInvitationChunk} from '../invitation/';
 import {TeamAPI} from '../team/';
 import {InvitationInvalidPhoneError, InvitationInvalidEmailError, InvitationEmailExistsError} from './InvitationError';
 

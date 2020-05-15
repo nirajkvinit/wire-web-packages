@@ -17,13 +17,13 @@
  *
  */
 
-import {Conversation} from '@wireapp/api-client/dist/conversation';
+import type {Conversation} from '@wireapp/api-client/dist/conversation';
 import {CONVERSATION_TYPING} from '@wireapp/api-client/dist/conversation/data';
-import {ConversationEvent, TeamEvent, UserEvent} from '@wireapp/api-client/dist/event';
-import {User} from '@wireapp/api-client/dist/user/';
-import {Account} from '@wireapp/core';
-import {PayloadBundle, ReactionType} from '@wireapp/core/dist/conversation/';
-import {
+import type {ConversationEvent, TeamEvent, UserEvent} from '@wireapp/api-client/dist/event';
+import type {User} from '@wireapp/api-client/dist/user/';
+import type {Account} from '@wireapp/core';
+import type {PayloadBundle, ReactionType} from '@wireapp/core/dist/conversation/';
+import type {
   ButtonActionConfirmationContent,
   CallingContent,
   FileContent,
@@ -33,7 +33,7 @@ import {
   LocationContent,
   MentionContent,
 } from '@wireapp/core/dist/conversation/content/';
-import {QuotableMessage} from '@wireapp/core/dist/conversation/message/OtrMessage';
+import type {QuotableMessage} from '@wireapp/core/dist/conversation/message/OtrMessage';
 import {Asset, Confirmation, Text} from '@wireapp/protocol-messaging';
 
 export abstract class MessageHandler {

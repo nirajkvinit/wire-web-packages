@@ -23,21 +23,17 @@ import * as ArrayUtil from '../util/ArrayUtil';
 import * as MemoryUtil from '../util/MemoryUtil';
 
 import {DecryptError} from '../errors/DecryptError';
-
 import {DerivedSecrets} from '../derived/DerivedSecrets';
-
-import {IdentityKey} from '../keys/IdentityKey';
-import {IdentityKeyPair} from '../keys/IdentityKeyPair';
+import type {IdentityKey} from '../keys/IdentityKey';
+import type {IdentityKeyPair} from '../keys/IdentityKeyPair';
 import {KeyPair} from '../keys/KeyPair';
-import {PreKeyBundle} from '../keys/PreKeyBundle';
-import {PublicKey} from '../keys/PublicKey';
-
+import type {PreKeyBundle} from '../keys/PreKeyBundle';
+import type {PublicKey} from '../keys/PublicKey';
 import {CipherMessage} from '../message/CipherMessage';
 import {Envelope} from '../message/Envelope';
-import {Message} from '../message/Message';
+import type {Message} from '../message/Message';
 import {PreKeyMessage} from '../message/PreKeyMessage';
-import {SessionTag} from '../message/SessionTag';
-
+import type {SessionTag} from '../message/SessionTag';
 import {ChainKey} from './ChainKey';
 import {RecvChain} from './RecvChain';
 import {RootKey} from './RootKey';

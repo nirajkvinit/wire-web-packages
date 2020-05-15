@@ -19,6 +19,7 @@
 
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
+
 import {INPUT_CLASSNAME, InputProps, inputStyle} from './Input';
 
 export type InputSubmitComboProps<T = HTMLDivElement> = InputProps<T>;

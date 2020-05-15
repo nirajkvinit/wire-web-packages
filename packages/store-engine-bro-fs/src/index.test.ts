@@ -27,7 +27,8 @@ import {readSpec} from '@wireapp/store-engine/dist/commonjs/test/readSpec';
 import {updateOrCreateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateOrCreateSpec';
 import {updateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateSpec';
 import * as fs from 'bro-fs';
-import {FileSystemEngine} from './index';
+
+import {FileSystemEngine} from './';
 
 describe('FileSystemEngine', () => {
   const STORE_NAME = 'store-name';

@@ -17,14 +17,14 @@
  *
  */
 
-import {
+import type {
   TeamConversationCreateData,
   TeamConversationDeleteData,
   TeamMemberJoinData,
   TeamMemberLeaveData,
   TeamUpdateData,
 } from '@wireapp/api-client/dist/team/data';
-import {BasePayloadBundle, PayloadBundleType} from './PayloadBundle';
+import type {BasePayloadBundle, PayloadBundleType} from './PayloadBundle';
 
 export interface TeamConversationCreateMessage extends BasePayloadBundle {
   content: TeamConversationCreateData;

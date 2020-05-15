@@ -17,7 +17,7 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
+import type {APIClient} from '@wireapp/api-client';
 import {
   Conversation,
   CONVERSATION_TYPE,
@@ -29,9 +29,9 @@ import {
   UserClients,
 } from '@wireapp/api-client/dist/conversation/';
 import {CONVERSATION_TYPING, ConversationMemberUpdateData} from '@wireapp/api-client/dist/conversation/data/';
-import {ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/event/';
+import type {ConversationMemberLeaveEvent} from '@wireapp/api-client/dist/event/';
 import {StatusCode} from '@wireapp/api-client/dist/http/';
-import {UserPreKeyBundleMap} from '@wireapp/api-client/dist/user/';
+import type {UserPreKeyBundleMap} from '@wireapp/api-client/dist/user/';
 import {
   Asset,
   ButtonAction,
@@ -50,7 +50,7 @@ import {
   MessageHide,
   Reaction,
 } from '@wireapp/protocol-messaging';
-import {AxiosError} from 'axios';
+import type {AxiosError} from 'axios';
 import {Encoder} from 'bazinga64';
 import {
   AssetService,
@@ -62,13 +62,12 @@ import {
   PayloadBundleType,
 } from '../conversation/';
 
-import {AssetContent, ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../conversation/content/';
-
-import {CryptographyService, EncryptedAsset} from '../cryptography/';
+import type {AssetContent, ClearedContent, DeletedContent, HiddenContent, RemoteData} from '../conversation/content/';
+import type {CryptographyService, EncryptedAsset} from '../cryptography/';
 import * as AssetCryptography from '../cryptography/AssetCryptography.node';
 import {MessageBuilder} from './message/MessageBuilder';
 import {MessageToProtoMapper} from './message/MessageToProtoMapper';
-import {
+import type {
   ButtonActionConfirmationMessage,
   ButtonActionMessage,
   CallMessage,

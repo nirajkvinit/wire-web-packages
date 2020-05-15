@@ -21,8 +21,8 @@
 
 import {TimeUtil} from '@wireapp/commons';
 import {Server as WebSocketServer} from 'ws';
+import type {AddressInfo} from 'net';
 
-import {AddressInfo} from 'net';
 import {ReconnectingWebsocket} from './ReconnectingWebsocket';
 
 const reservedPorts: number[] = [];

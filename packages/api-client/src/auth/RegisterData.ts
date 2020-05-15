@@ -17,9 +17,10 @@
  *
  */
 
-import {AccentColor} from '@wireapp/commons';
-import {TeamData} from '../team/team/TeamData';
-import {UserAsset} from '../user/';
+import type {AccentColor} from '@wireapp/commons';
+
+import type {TeamData} from '../team/team/TeamData';
+import type {UserAsset} from '../user/';
 
 export interface RegisterData {
   accent_id?: AccentColor.AccentColorID;

@@ -17,10 +17,10 @@
  *
  */
 
-import {AxiosRequestConfig} from 'axios';
+import type {AxiosRequestConfig} from 'axios';
 
-import {ClientMismatch, NewOTRMessage} from '../conversation/';
-import {HttpClient} from '../http/';
+import type {ClientMismatch, NewOTRMessage} from '../conversation/';
+import type {HttpClient} from '../http/';
 import {ValidationError} from '../validation/';
 
 export class BroadcastAPI {

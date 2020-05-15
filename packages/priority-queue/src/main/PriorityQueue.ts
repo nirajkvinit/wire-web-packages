@@ -18,7 +18,8 @@
  */
 
 import logdown from 'logdown';
-import {Config} from './Config';
+
+import type {Config} from './Config';
 import {Item} from './Item';
 import {Priority} from './Priority';
 

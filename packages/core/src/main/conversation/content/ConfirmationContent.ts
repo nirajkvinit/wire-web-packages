@@ -17,5 +17,4 @@
  *
  */
 
-import {IConfirmation} from '@wireapp/protocol-messaging';
-export {IConfirmation as ConfirmationContent};
+export {IConfirmation as ConfirmationContent} from '@wireapp/protocol-messaging';

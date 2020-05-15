@@ -17,5 +17,4 @@
  *
  */
 
-import {ITweet} from '@wireapp/protocol-messaging';
-export {ITweet as TweetContent};
+export {ITweet as TweetContent} from '@wireapp/protocol-messaging';

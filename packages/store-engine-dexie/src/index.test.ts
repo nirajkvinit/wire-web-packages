@@ -29,7 +29,7 @@ import {readSpec} from '@wireapp/store-engine/dist/commonjs/test/readSpec';
 import {updateOrCreateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateOrCreateSpec';
 import {updateSpec} from '@wireapp/store-engine/dist/commonjs/test/updateSpec';
 
-import {IndexedDBEngine} from './index';
+import {IndexedDBEngine} from './';
 
 describe('IndexedDBEngine', () => {
   const STORE_NAME = 'store-name';

@@ -17,10 +17,11 @@
  *
  */
 
-import {APIClient} from '@wireapp/api-client';
-import {User} from '@wireapp/api-client/dist/user/';
+import type {APIClient} from '@wireapp/api-client';
+import type {User} from '@wireapp/api-client/dist/user/';
 import {Availability, GenericMessage} from '@wireapp/protocol-messaging';
-import {AvailabilityType, BroadcastService} from '../broadcast/';
+
+import type {AvailabilityType, BroadcastService} from '../broadcast/';
 
 const UUID = require('pure-uuid');
 

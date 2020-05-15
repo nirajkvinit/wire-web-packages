@@ -1,10 +1,11 @@
 import {APIClient} from '@wireapp/api-client';
-import {LoginData} from '@wireapp/api-client/dist/auth';
+import type {LoginData} from '@wireapp/api-client/dist/auth';
 import {ClientType} from '@wireapp/api-client/dist/client';
+import {Text} from '@wireapp/protocol-messaging';
+
 import {Account} from '../main/Account';
 import {PayloadBundleType} from '../main/conversation';
-import {ButtonActionContent, ButtonActionConfirmationContent} from '../main/conversation/content';
-import {Text} from '@wireapp/protocol-messaging';
+import type {ButtonActionContent, ButtonActionConfirmationContent} from '../main/conversation/content';
 
 require('dotenv').config();
 

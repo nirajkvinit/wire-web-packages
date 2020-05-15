@@ -17,5 +17,4 @@
  *
  */
 
-import {IButtonActionConfirmation} from '@wireapp/protocol-messaging';
-export {IButtonActionConfirmation as ButtonActionConfirmationContent};
+export {IButtonActionConfirmation as ButtonActionConfirmationContent} from '@wireapp/protocol-messaging';

@@ -17,5 +17,4 @@
  *
  */
 
-import {IComposite} from '@wireapp/protocol-messaging';
-export {IComposite as CompositeContent};
+export {IComposite as CompositeContent} from '@wireapp/protocol-messaging';

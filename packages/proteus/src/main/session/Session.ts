@@ -25,20 +25,17 @@ import {DecodeError} from '../errors/DecodeError';
 import {DecryptError} from '../errors/DecryptError';
 import {ProteusError} from '../errors/ProteusError';
 import {SessionState} from './SessionState';
-
 import {IdentityKey} from '../keys/IdentityKey';
-import {IdentityKeyPair} from '../keys/IdentityKeyPair';
+import type {IdentityKeyPair} from '../keys/IdentityKeyPair';
 import {KeyPair} from '../keys/KeyPair';
 import {PreKey} from '../keys/PreKey';
-import {PreKeyBundle} from '../keys/PreKeyBundle';
+import type {PreKeyBundle} from '../keys/PreKeyBundle';
 import {PublicKey} from '../keys/PublicKey';
-
 import {CipherMessage} from '../message/CipherMessage';
-import {Envelope} from '../message/Envelope';
+import type {Envelope} from '../message/Envelope';
 import {PreKeyMessage} from '../message/PreKeyMessage';
 import {SessionTag} from '../message/SessionTag';
-
-import {PreKeyStore} from './PreKeyStore';
+import type {PreKeyStore} from './PreKeyStore';
 
 export interface IntermediateSessionState {
   [index: string]: {

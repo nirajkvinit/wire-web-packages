@@ -19,10 +19,11 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
+
 import {COLOR, Opacity, Slide, YAxisMovement} from '../../Identity';
 import {DURATION} from '../../Identity/motions';
 import {QUERY} from '../../mediaQueries';
-import {Theme} from '../Theme';
+import type {Theme} from '../Theme';
 import {MenuSubLink} from './MenuSubLink';
 import {MENU_LINK_CLASSNAME} from './MenuLink';
 

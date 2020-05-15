@@ -19,8 +19,9 @@
 
 /** @jsx jsx */
 import {ObjectInterpolation, jsx} from '@emotion/core';
+
 import {COLOR} from '../Identity';
-import {Theme} from '../Layout';
+import type {Theme} from '../Layout';
 import {TextProps, filterTextProps, textStyle} from './Text';
 
 export type TitleProps<T = HTMLDivElement> = TextProps<T>;

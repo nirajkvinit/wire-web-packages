@@ -22,7 +22,7 @@ import * as sodium from 'libsodium-wrappers-sumo';
 
 import {InputError} from '../errors/InputError';
 import * as ArrayUtil from '../util/ArrayUtil';
-import {PublicKey} from './PublicKey';
+import type {PublicKey} from './PublicKey';
 import {DecodeError} from '../errors';
 
 export class SecretKey {

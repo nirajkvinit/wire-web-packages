@@ -20,6 +20,7 @@
 /** @jsx jsx */
 import {jsx} from '@emotion/core';
 import {ThemeProvider as EmotionThemeProvider} from 'emotion-theming';
+
 import {COLOR} from '../Identity/colors';
 import {filterProps} from '../util';
 

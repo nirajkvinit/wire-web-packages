@@ -20,6 +20,7 @@
 import {APIClient} from '@wireapp/api-client';
 import {MemoryEngine} from '@wireapp/store-engine';
 import UUID from 'pure-uuid';
+
 import {Account} from '../Account';
 
 describe('AssetService', () => {

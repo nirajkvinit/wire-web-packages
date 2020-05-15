@@ -17,10 +17,10 @@
  *
  */
 
-import {AxiosRequestConfig} from 'axios';
+import type {AxiosRequestConfig} from 'axios';
 
-import {HttpClient} from '../../http';
-import {IdentityProviderStatus} from './IdentityProviderStatus';
+import type {HttpClient} from '../../http';
+import type {IdentityProviderStatus} from './IdentityProviderStatus';
 
 export class FeatureAPI {
   constructor(private readonly client: HttpClient) {}

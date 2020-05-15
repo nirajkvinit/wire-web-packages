@@ -20,6 +20,7 @@
 import {APIClient} from '@wireapp/api-client';
 import {Notification} from '@wireapp/api-client/dist/notification';
 import {MemoryEngine} from '@wireapp/store-engine';
+
 import {PayloadBundleSource} from '../conversation';
 import {CryptographyService} from '../cryptography';
 import {NotificationService} from './NotificationService';

@@ -17,9 +17,10 @@
  *
  */
 
-import {AxiosRequestConfig} from 'axios';
-import {HttpClient} from '../../http';
-import {PropertyData} from './PropertyData';
+import type {AxiosRequestConfig} from 'axios';
+
+import type {HttpClient} from '../../http';
+import type {PropertyData} from './PropertyData';
 
 export class PropertyAPI {
   constructor(private readonly client: HttpClient) {}

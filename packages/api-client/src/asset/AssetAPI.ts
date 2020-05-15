@@ -24,7 +24,7 @@ import {base64MD5FromBuffer, concatToBuffer} from '../shims/node/buffer';
 import {unsafeAlphanumeric} from '../shims/node/random';
 import {RequestCancellationError} from '../user';
 import {AssetRetentionPolicy} from './AssetRetentionPolicy';
-import {AssetUploadData} from './AssetUploadData';
+import type {AssetUploadData} from './AssetUploadData';
 import {isValidAssetId, isValidToken} from './AssetUtil';
 
 export interface AssetOptions {
